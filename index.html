@@ -1,609 +1,809 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Price Ledger</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@300;400&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>40s and Blunts Dynasty League</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:#f5f0e8;font-family:'Source Serif 4',Georgia,serif;color:#2a2015;min-height:100vh;}
-button,input,select{font-family:inherit;}
-a{color:#c0622f;}
-::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-thumb{background:#c8b99a;border-radius:3px;}
-@keyframes spin{to{transform:rotate(360deg);}}
-@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.fadein{animation:fadein .2s ease;}
-.btn-primary{background:#2a2015;color:#f5f0e8;border:none;padding:11px 22px;border-radius:8px;cursor:pointer;font-size:15px;font-weight:600;transition:background .15s;}
-.btn-primary:hover{background:#3d2e18;}
-.btn-ghost{background:transparent;color:#5a4a30;border:1px solid #c8b88a;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;transition:background .15s;}
-.btn-ghost:hover{background:#ede8df;}
-.card{background:#fdf8f0;border:1px solid #d8cdb8;border-radius:10px;padding:20px;}
-.item-card{background:#fdf8f0;border:1px solid #d8cdb8;border-radius:10px;padding:18px;cursor:pointer;transition:background .15s;border-left-width:3px;}
-.item-card:hover{background:#ede8df;}
-table{width:100%;border-collapse:collapse;}
-th{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#9a8a6a;text-align:left;padding:10px 14px;text-transform:uppercase;letter-spacing:1px;font-weight:400;border-bottom:2px solid #d8cdb8;}
-td{padding:9px 14px;font-size:14px;border-bottom:1px solid #ede8df;}
-tr:last-child td{border-bottom:none;}
-.editable{border:none;border-bottom:1px solid #d8cdb8;background:transparent;color:#2a2015;padding:2px 4px;outline:none;width:100%;font-size:14px;}
-.editable:focus{border-bottom-color:#c0622f;}
-#toast{position:fixed;top:16px;right:16px;z-index:9999;padding:10px 18px;border-radius:8px;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.25);display:none;}
-.upload-zone{border:2px dashed #c8b88a;border-radius:12px;padding:56px 30px;text-align:center;cursor:pointer;background:#fdf8f0;max-width:500px;transition:border-color .2s;}
-.upload-zone:hover{border-color:#c0622f;}
-.spinner{width:36px;height:36px;border:3px solid #d8cdb8;border-top-color:#c0622f;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
-#setup{display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px;}
-#layout{display:none;min-height:100vh;display:none;}
-.sidebar{width:210px;background:#2a2015;color:#f5f0e8;display:flex;flex-direction:column;justify-content:space-between;padding:28px 14px 24px;position:sticky;top:0;height:100vh;flex-shrink:0;}
-.sidebar-nav{display:flex;flex-direction:column;gap:3px;}
-.nav-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;border:none;color:#d8c8a8;cursor:pointer;text-align:left;font-size:14px;background:transparent;width:100%;transition:background .15s;}
-.nav-btn:hover,.nav-btn.active{background:#3a3025;}
-main{flex:1;min-width:0;overflow:auto;}
-.main-pad{padding:32px 40px;}
-.page{display:none;}
-.page.active{display:block;}
-.stat-box{background:#fdf8f0;border:1px solid #d8cdb8;border-radius:8px;padding:12px 16px;}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:24px;}
-@media(max-width:640px){
-  #layout{flex-direction:column!important;}
-  .sidebar{width:100%!important;height:auto!important;position:static!important;flex-direction:row!important;align-items:center!important;padding:12px 14px!important;}
-  .sidebar>div:first-child{display:flex;align-items:center;gap:8px;flex:1;}
-  .sidebar-nav{flex-direction:row!important;}
-  .logo-label{display:none!important;}
-  .sidebar-bottom{display:none!important;}
-  .main-pad{padding:16px!important;}
-  .card-grid{grid-template-columns:1fr!important;}
-}
+  :root {
+    --navy:   #1B3A6B;
+    --gold:   #C9A84C;
+    --cream:  #F5F0E8;
+    --dark:   #0D1B2A;
+    --mid:    #1E2D3D;
+    --muted:  #4A6080;
+    --text:   #E8E0D0;
+    --dim:    #8A9BB0;
+    --green:  #4CAF82;
+    --red:    #E05A5A;
+    --border: rgba(201,168,76,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(27,58,107,0.4) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201,168,76,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 32px 40px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .league-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 72px);
+    letter-spacing: 4px;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  h1 span { color: var(--gold); }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 12px;
+    padding-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 1px;
+  }
+
+  .meta-pill strong { color: var(--gold); }
+
+  .last-updated {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    gap: 0;
+    padding: 0 40px;
+    background: rgba(13,27,42,0.8);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+  }
+
+  .nav-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 16px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── MAIN ── */
+  main {
+    position: relative;
+    z-index: 1;
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── LOADING ── */
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+    gap: 16px;
+    color: var(--dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── PRIZE POOL BANNER ── */
+  .prize-banner {
+    background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 24px;
+  }
+
+  .prize-stat { text-align: center; }
+
+  .prize-stat .val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .prize-stat .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* ── PAYROLL TABLE ── */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: rgba(27,58,107,0.6);
+  }
+
+  th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  tbody tr { transition: background 0.15s; }
+  tbody tr:hover { background: rgba(201,168,76,0.05); }
+
+  .mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+  .muted { color: var(--dim); }
+  .gold { color: var(--gold); }
+  .green { color: var(--green); }
+  .red { color: var(--red); }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    background: rgba(27,58,107,0.4);
+    color: var(--dim);
+  }
+
+  .rank-badge.top { background: rgba(201,168,76,0.2); color: var(--gold); }
+
+  .tax-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+
+  .tax-badge.over { background: rgba(224,90,90,0.15); color: var(--red); }
+  .tax-badge.clean { background: rgba(76,175,130,0.15); color: var(--green); }
+
+  /* ── ROSTER VIEW ── */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .team-card {
+    background: rgba(30,45,61,0.6);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .team-card:hover {
+    border-color: var(--gold);
+    background: rgba(30,45,61,0.9);
+    transform: translateY(-2px);
+  }
+
+  .team-card.selected {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+
+  .team-card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .team-card-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--dim);
+    display: flex;
+    gap: 12px;
+  }
+
+  .roster-detail { display: none; }
+  .roster-detail.active { display: block; }
+
+  .roster-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .roster-team-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 3px;
+  }
+
+  .back-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .back-btn:hover { background: rgba(201,168,76,0.1); }
+
+  .slot-group { margin-bottom: 24px; }
+
+  .slot-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .player-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 60px 80px 80px;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    align-items: center;
+    font-size: 13px;
+  }
+
+  .pos-pill {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: rgba(27,58,107,0.5);
+    color: var(--dim);
+    text-align: center;
+  }
+
+  .pos-pill.SP { background: rgba(100,80,200,0.3); color: #A090FF; }
+  .pos-pill.RP { background: rgba(200,80,80,0.3); color: #FF9090; }
+  .pos-pill.C  { background: rgba(27,58,107,0.5); color: #6090FF; }
+  .pos-pill.OF { background: rgba(80,160,80,0.3); color: #80D080; }
+
+  .year-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--dim);
+    text-align: center;
+  }
+
+  /* ── RULES VIEW ── */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  .rules-card {
+    background: rgba(30,45,61,0.5);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+
+  .rules-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rule-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 13px;
+    gap: 16px;
+  }
+
+  .rule-key { color: var(--dim); font-size: 12px; }
+  .rule-val { color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; text-align: right; }
+
+  .salary-tier-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .salary-tier-table td { padding: 6px 8px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .salary-tier-table td:first-child { color: var(--dim); }
+  .salary-tier-table td:last-child { font-family: 'DM Mono', monospace; color: var(--gold); text-align: right; }
+
+  .escalation-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .escalation-table td { padding: 5px 8px; font-size: 11px; font-family: 'DM Mono', monospace; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .escalation-table td:first-child { color: var(--dim); }
+  .escalation-table td:last-child { color: var(--gold); text-align: right; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    header { padding: 20px 16px 0; }
+    nav { padding: 0 8px; }
+    .nav-btn { padding: 14px 12px; font-size: 10px; }
+    main { padding: 20px 16px; }
+    .prize-banner { padding: 16px; gap: 16px; }
+    .prize-stat .val { font-size: 28px; }
+    .player-row { grid-template-columns: 50px 1fr 50px; }
+    .player-row .year-chip, .player-row .salary-cell { display: none; }
+  }
 </style>
 </head>
 <body>
 
-<div id="toast"></div>
-
-<!-- SETUP -->
-<div id="setup">
-  <div style="max-width:460px;width:100%;background:#fdf8f0;border:1px solid #d8cdb8;border-radius:14px;padding:40px 36px;">
-    <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:8px;">Welcome to Price Ledger</div>
-    <p style="color:#7a6a50;font-size:15px;margin-bottom:28px;line-height:1.65;">
-      To scan receipts with AI, enter your Anthropic API key. It's stored only on this device and sent only to Anthropic when scanning.
-    </p>
-    <label style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#9a8a6a;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;">Anthropic API Key</label>
-    <input id="key-input" type="password" placeholder="sk-ant-api03-..."
-      style="width:100%;padding:11px 14px;border:1px solid #c8b88a;border-radius:8px;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#2a2015;margin-bottom:6px;outline:none;"/>
-    <div id="key-err" style="color:#8a3a2b;font-family:'IBM Plex Mono',monospace;font-size:12px;min-height:18px;margin-bottom:10px;"></div>
-    <p style="font-size:12px;color:#9a8a6a;margin-bottom:22px;line-height:1.5;">
-      Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> &rarr; API Keys.
-    </p>
-    <button class="btn-primary" id="save-key-btn" style="width:100%;">Save &amp; Start &rarr;</button>
+<header>
+  <div class="league-badge">12-Team · Head-to-Head · Dynasty · Yahoo</div>
+  <h1>40s and <span>Blunts</span></h1>
+  <div class="header-meta">
+    <span class="meta-pill">Season <strong>2026</strong></span>
+    <span class="meta-pill">Daily Format</span>
+    <span class="meta-pill">R · HR · RBI · SB · OPS · W · K · ERA · WHIP · SV+H</span>
+    <span class="last-updated" id="lastUpdated">Loading...</span>
   </div>
-</div>
+</header>
 
-<!-- APP LAYOUT -->
-<div id="layout" style="display:flex;">
-  <aside class="sidebar">
-    <div>
-      <div style="display:flex;align-items:center;gap:10px;color:#e8d8b8;margin-bottom:28px;">
-        <span style="font-size:22px;flex-shrink:0;">&#120031;</span>
-        <div class="logo-label">
-          <div style="font-family:'Playfair Display',serif;font-size:12px;font-weight:700;letter-spacing:1.5px;">PRICE</div>
-          <div style="font-family:'Playfair Display',serif;font-size:12px;font-weight:700;letter-spacing:1.5px;">LEDGER</div>
-        </div>
-      </div>
-      <nav class="sidebar-nav">
-        <button class="nav-btn active" id="nav-dashboard">&#9638; Dashboard</button>
-        <button class="nav-btn" id="nav-scan">&#9633; Scan Receipt</button>
-      </nav>
-    </div>
-    <div class="sidebar-bottom">
-      <button id="export-btn" style="background:#3a3025;border:1px solid #5a5040;color:#c8b88a;padding:8px 12px;border-radius:6px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:11px;width:100%;margin-bottom:8px;">&darr; Export CSV</button>
-      <button id="change-key-btn" style="background:none;border:1px solid #3a3025;color:#7a6a50;padding:7px 12px;border-radius:6px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;width:100%;margin-bottom:8px;">Change API Key</button>
-      <div id="record-count" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5a5040;text-align:center;"></div>
-    </div>
-  </aside>
+<nav>
+  <button class="nav-btn active" onclick="switchView('payroll', this)">Payroll</button>
+  <button class="nav-btn" onclick="switchView('roster', this)">Rosters</button>
+  <button class="nav-btn" onclick="switchView('rules', this)">Rules</button>
+</nav>
 
-  <main>
-    <!-- Dashboard -->
-    <div id="page-dashboard" class="page active main-pad">
-      <h1 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:6px;">Your Price History</h1>
-      <p style="color:#7a6a50;font-size:15px;margin-bottom:28px;">Track how the things you buy change in price over time.</p>
-      <div id="dashboard-content"></div>
-    </div>
+<main>
 
-    <!-- Scan -->
-    <div id="page-scan" class="page main-pad">
-      <h1 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:6px;">Scan a Receipt</h1>
-      <p style="color:#7a6a50;font-size:15px;margin-bottom:28px;">Upload a photo of your receipt — AI will extract all items and prices.</p>
-      <div class="upload-zone" id="upload-zone">
-        <div id="upload-idle">
-          <div style="font-size:48px;margin-bottom:10px;">&#128247;</div>
-          <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:6px;">Drop receipt image here</div>
-          <div style="color:#9a8a6a;font-size:14px;">or tap to browse &middot; JPG, PNG, HEIC</div>
-        </div>
-        <div id="upload-scanning" style="display:none;">
-          <div class="spinner"></div>
-          <div style="color:#7a6a50;">Reading receipt&hellip;</div>
-        </div>
-      </div>
-      <input id="file-input" type="file" accept="image/*" capture="environment" style="display:none;"/>
+  <!-- PAYROLL VIEW -->
+  <div class="view active" id="view-payroll">
+    <div class="loading" id="payroll-loading">
+      <div class="spinner"></div>
+      LOADING LEDGER
     </div>
-
-    <!-- Confirm -->
-    <div id="page-confirm" class="page main-pad">
-      <h1 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:6px;">Confirm Items</h1>
-      <p style="color:#7a6a50;font-size:15px;margin-bottom:20px;">Edit anything that looks wrong, then save.</p>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
-        <label style="font-size:14px;color:#5a4a30;">Receipt date:</label>
-        <input type="date" id="scan-date" style="font-family:'IBM Plex Mono',monospace;font-size:14px;border:1px solid #c8b88a;border-radius:6px;padding:6px 10px;background:#fdf8f0;color:#2a2015;outline:none;"/>
-      </div>
-      <div class="card" style="padding:0;overflow-x:auto;margin-bottom:20px;">
+    <div id="payroll-content" style="display:none">
+      <div class="prize-banner" id="prize-banner"></div>
+      <div class="section-title">TEAM PAYROLL STANDINGS</div>
+      <div class="table-wrap">
         <table>
-          <thead><tr><th>Item</th><th>Price ($)</th><th>Store</th><th></th></tr></thead>
-          <tbody id="confirm-tbody"></tbody>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Team</th>
+              <th>Payroll</th>
+              <th>vs Cap</th>
+              <th>Luxury Tax</th>
+              <th>Status</th>
+              <th>Roster</th>
+            </tr>
+          </thead>
+          <tbody id="payroll-tbody"></tbody>
         </table>
       </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button class="btn-primary" id="confirm-save-btn">Save items &rarr;</button>
-        <button class="btn-ghost" id="rescan-btn">Rescan</button>
+    </div>
+  </div>
+
+  <!-- ROSTER VIEW -->
+  <div class="view" id="view-roster">
+    <div class="loading" id="roster-loading">
+      <div class="spinner"></div>
+      LOADING ROSTERS
+    </div>
+    <div id="roster-content" style="display:none">
+      <div id="team-grid-view">
+        <div class="section-title">SELECT A TEAM</div>
+        <div class="team-grid" id="team-grid"></div>
+      </div>
+      <div id="roster-detail-view" class="roster-detail">
+        <div class="roster-header">
+          <button class="back-btn" onclick="showTeamGrid()">← All Teams</button>
+          <div class="roster-team-name" id="detail-team-name"></div>
+        </div>
+        <div id="detail-slots"></div>
       </div>
     </div>
+  </div>
 
-    <!-- Item detail -->
-    <div id="page-item" class="page main-pad">
-      <button class="btn-ghost" id="back-btn" style="margin-bottom:20px;">&larr; Back</button>
-      <div id="item-content"></div>
+  <!-- RULES VIEW -->
+  <div class="view" id="view-rules">
+    <div class="rules-grid">
+
+      <div class="rules-card">
+        <div class="rules-card-title">League Format</div>
+        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">Head-to-Head Categories</span></div>
+        <div class="rule-row"><span class="rule-key">Teams</span><span class="rule-val">12</span></div>
+        <div class="rule-row"><span class="rule-key">Lineup</span><span class="rule-val">Daily</span></div>
+        <div class="rule-row"><span class="rule-key">Platform</span><span class="rule-val">Yahoo Fantasy</span></div>
+        <div class="rule-row"><span class="rule-key">Trade Deadline</span><span class="rule-val">August 31</span></div>
+        <div class="rule-row"><span class="rule-key">Entry Fee</span><span class="rule-val">$20 / team</span></div>
+        <div class="rule-row"><span class="rule-key">Prize</span><span class="rule-val">Winner Take All</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Scoring Categories</div>
+        <div class="rule-row"><span class="rule-key">Hitting (5)</span><span class="rule-val">R · HR · RBI · SB · OPS</span></div>
+        <div class="rule-row"><span class="rule-key">Pitching (5)</span><span class="rule-val">W · K · ERA · WHIP · SV+H</span></div>
+        <div class="rule-row"><span class="rule-key">Matchup Week</span><span class="rule-val">Mon – Sun</span></div>
+        <div class="rule-row"><span class="rule-key">Tie</span><span class="rule-val">0.5 each category</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Roster Structure</div>
+        <div class="rule-row"><span class="rule-key">Total Spots</span><span class="rule-val">30</span></div>
+        <div class="rule-row"><span class="rule-key">Active</span><span class="rule-val">C · 1B · 2B · 3B · SS · OF×3 · UTIL · SP×2 · RP×2 · P-FLEX×3</span></div>
+        <div class="rule-row"><span class="rule-key">Bench</span><span class="rule-val">4 (any position)</span></div>
+        <div class="rule-row"><span class="rule-key">IL</span><span class="rule-val">5</span></div>
+        <div class="rule-row"><span class="rule-key">NA (Prospects)</span><span class="rule-val">5</span></div>
+        <div class="rule-row"><span class="rule-key">NA Eligibility</span><span class="rule-val">&lt;50 PA / &lt;30 IP / &lt;45 days</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Salary Cap System</div>
+        <div class="rule-row"><span class="rule-key">Cap</span><span class="rule-val">$500M</span></div>
+        <div class="rule-row"><span class="rule-key">Escalation</span><span class="rule-val">+12% per year held</span></div>
+        <div class="rule-row"><span class="rule-key">Luxury Tax</span><span class="rule-val">$1.50 per $10M over</span></div>
+        <div class="rule-row"><span class="rule-key">Tax → Prize Pool</span><span class="rule-val">Yes, automatic</span></div>
+        <div class="rule-row"><span class="rule-key">Trade Reset</span><span class="rule-val">Year 1 at current DYN Z tier</span></div>
+        <table class="salary-tier-table">
+          <tr><td>Elite (DYN Z ≥ 3.0)</td><td>$40M</td></tr>
+          <tr><td>Star (DYN Z 2.0–2.9)</td><td>$30M</td></tr>
+          <tr><td>Solid (DYN Z 1.0–1.9)</td><td>$20M</td></tr>
+          <tr><td>Depth (DYN Z 0.0–0.9)</td><td>$10M</td></tr>
+          <tr><td>Minimum (DYN Z &lt; 0)</td><td>$3M</td></tr>
+        </table>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Annual Rookie Draft</div>
+        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">2-Round Snake · WhatsApp</span></div>
+        <div class="rule-row"><span class="rule-key">Window</span><span class="rule-val">Super Bowl → March Madness</span></div>
+        <div class="rule-row"><span class="rule-key">Pick Clock</span><span class="rule-val">8 hours</span></div>
+        <div class="rule-row"><span class="rule-key">Opt-In</span><span class="rule-val">Drop 1 player = R1 pick</span></div>
+        <div class="rule-row"><span class="rule-key"></span><span class="rule-val">Drop 2nd player = R2 pick</span></div>
+        <div class="rule-row"><span class="rule-key">Order</span><span class="rule-val">Two-tier weighted lottery</span></div>
+        <div class="rule-row"><span class="rule-key">Tier A (1st–6th)</span><span class="rule-val">Picks 7–12 · Best odds → pick 12</span></div>
+        <div class="rule-row"><span class="rule-key">Tier B (7th–12th)</span><span class="rule-val">Picks 1–6 · Best odds → pick 1</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Salary Escalation Table</div>
+        <table class="escalation-table">
+          <tr><td>Year 1</td><td>Base salary</td></tr>
+          <tr><td>Year 2</td><td>Base × 1.12</td></tr>
+          <tr><td>Year 3</td><td>Base × 1.25</td></tr>
+          <tr><td>Year 4</td><td>Base × 1.40</td></tr>
+          <tr><td>Year 5</td><td>Base × 1.57</td></tr>
+          <tr><td>Year 6</td><td>Base × 1.76</td></tr>
+          <tr><td>Year 7</td><td>Base × 1.97</td></tr>
+          <tr><td>Year 8</td><td>Base × 2.21</td></tr>
+          <tr><td>Year 9</td><td>Base × 2.48</td></tr>
+          <tr><td>Year 10</td><td>Base × 2.77</td></tr>
+        </table>
+      </div>
+
     </div>
-  </main>
-</div>
+  </div>
+
+</main>
 
 <script>
-(function() {
-  var ENTRIES_KEY = 'pl_entries_v2';
-  var APIKEY_KEY  = 'pl_apikey_v1';
-  var COLOURS = ['#c0622f','#4a7c59','#2b5f8a','#8b4a9c','#b8860b','#4a6741','#8a3a2b','#2a6b7c'];
+// ── CONFIG ────────────────────────────────────────────────────────
+const SHEET_ID  = '1FtMDNhzSpCgS2IdOFs4SHO7-IHoG6uAsK-UGA2NCSAs';
+const BASE_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
+const CAP       = 500;
+const TAX_RATE  = 1.5 / 10;
+const ENTRY_FEE = 20;
+const N_TEAMS   = 12;
 
-  var entries = [];
-  var pendingScan = [];
-  var selectedItem = '';
-  var toastTimer;
+// ── STATE ─────────────────────────────────────────────────────────
+let PLAYERS = [];
+let TEAMS   = {};
 
-  // ── helpers ──
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-  function escAttr(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-  }
-  function uid() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2);
-  }
-  function today() {
-    return new Date().toISOString().slice(0,10);
-  }
+// ── FETCH CSV ─────────────────────────────────────────────────────
+async function fetchCSV(sheet) {
+  const res = await fetch(BASE_URL + encodeURIComponent(sheet));
+  const text = await res.text();
+  return parseCSV(text);
+}
 
-  // ── storage ──
-  function loadData() {
-    try { entries = JSON.parse(localStorage.getItem(ENTRIES_KEY) || '[]'); } catch(e) { entries = []; }
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = parseCSVLine(lines[0]);
+  return lines.slice(1).map(line => {
+    const vals = parseCSVLine(line);
+    const obj = {};
+    headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
+    return obj;
+  });
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; continue; }
+    if (c === ',' && !inQ) { result.push(cur); cur = ''; continue; }
+    cur += c;
   }
-  function saveData() {
-    localStorage.setItem(ENTRIES_KEY, JSON.stringify(entries));
-    var el = document.getElementById('record-count');
-    if (el) el.textContent = entries.length + ' records';
-  }
-  function getApiKey() { return localStorage.getItem(APIKEY_KEY) || ''; }
+  result.push(cur);
+  return result;
+}
 
-  // ── toast ──
-  function showToast(msg, type) {
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.background = type === 'err' ? '#8a3a2b' : '#4a7c59';
-    t.style.display = 'block';
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 3200);
-  }
+// ── LOAD DATA ─────────────────────────────────────────────────────
+async function loadData() {
+  const rows = await fetchCSV('PLAYERS');
+  PLAYERS = rows.filter(r => r.player_name);
 
-  // ── navigation ──
-  function showPage(name) {
-    var pages = document.querySelectorAll('.page');
-    for (var i=0;i<pages.length;i++) { pages[i].style.display='none'; pages[i].classList.remove('active','fadein'); }
-    var navBtns = document.querySelectorAll('.nav-btn');
-    for (var i=0;i<navBtns.length;i++) navBtns[i].classList.remove('active');
-
-    var page = document.getElementById('page-'+name);
-    if (page) {
-      page.style.display = 'block';
-      page.classList.add('active');
-      // trigger animation
-      requestAnimationFrame(function(){ page.classList.add('fadein'); });
-    }
-    var nav = document.getElementById('nav-'+name);
-    if (nav) nav.classList.add('active');
-
-    if (name === 'dashboard') renderDashboard();
+  // Build team summaries
+  TEAMS = {};
+  for (const p of PLAYERS) {
+    const t = p.fantasy_team_name;
+    if (!t) continue;
+    if (!TEAMS[t]) TEAMS[t] = { name: t, id: p.fantasy_team_id, players: [], payroll: 0 };
+    const sal = parseFloat(p.current_salary) || parseFloat(p.base_salary) || 3;
+    TEAMS[t].players.push({ ...p, sal });
+    TEAMS[t].payroll += sal;
   }
 
-  // ── data helpers ──
-  function allItems() {
-    var seen = {};
-    var items = [];
-    for (var i=0;i<entries.length;i++) {
-      if (!seen[entries[i].item]) { seen[entries[i].item]=true; items.push(entries[i].item); }
-    }
-    return items.sort();
-  }
+  document.getElementById('lastUpdated').textContent =
+    'Updated ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
 
-  function itemHistory(item) {
-    return entries.filter(function(e){ return e.item===item; })
-      .sort(function(a,b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
-  }
+// ── PAYROLL VIEW ──────────────────────────────────────────────────
+async function renderPayroll() {
+  await loadData();
 
-  function latestPrice(item) {
-    var h = itemHistory(item);
-    return h.length ? h[h.length-1].price : null;
-  }
-
-  function priceChange(item) {
-    var h = itemHistory(item);
-    if (h.length < 2) return null;
-    return ((h[h.length-1].price - h[0].price) / h[0].price) * 100;
-  }
-
-  // ── SVG sparkline ──
-  function sparkline(data, colour) {
-    if (data.length < 2) return '';
-    var W=240, H=48, PAD=4;
-    var prices = data.map(function(d){ return d.price; });
-    var min = Math.min.apply(null,prices), max = Math.max.apply(null,prices);
-    var range = max-min || 1;
-    var pts = data.map(function(d,i){
-      var x = PAD + (i/(data.length-1))*(W-PAD*2);
-      var y = H-PAD - ((d.price-min)/range)*(H-PAD*2);
-      return x.toFixed(1)+','+y.toFixed(1);
-    }).join(' ');
-    return '<svg viewBox="0 0 '+W+' '+H+'" style="display:block;width:100%;height:48px;">'
-      +'<polyline points="'+pts+'" fill="none" stroke="'+colour+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>'
-      +'</svg>';
-  }
-
-  // ── full chart ──
-  function fullChart(data, colour) {
-    if (data.length < 2) return '<p style="color:#9a8a6a;font-size:14px;padding:8px 0;">Not enough data for a chart yet.</p>';
-    var W=600, H=200, PL=58, PR=16, PT=12, PB=36;
-    var prices = data.map(function(d){ return d.price; });
-    var minP = Math.min.apply(null,prices), maxP = Math.max.apply(null,prices);
-    var range = maxP-minP || 1;
-    var cw = W-PL-PR, ch = H-PT-PB;
-
-    function px(i){ return PL + (i/(data.length-1))*cw; }
-    function py(p){ return PT+ch - ((p-minP)/range)*ch; }
-
-    var grid='', ticks=4;
-    for (var ti=0;ti<=ticks;ti++) {
-      var v = minP+(range/ticks)*ti, y = py(v);
-      grid += '<line x1="'+PL+'" y1="'+y.toFixed(1)+'" x2="'+(W-PR)+'" y2="'+y.toFixed(1)+'" stroke="#e8e0d0" stroke-width="1"/>';
-      grid += '<text x="'+(PL-5)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#9a8a6a">$'+v.toFixed(2)+'</text>';
-    }
-
-    var xlabels='', step=Math.max(1,Math.ceil(data.length/6));
-    for (var xi=0;xi<data.length;xi+=step) {
-      var lx = px(xi);
-      xlabels += '<text x="'+lx.toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#9a8a6a">'+data[xi].date.slice(5)+'</text>';
-    }
-
-    var pts = data.map(function(d,i){ return px(i).toFixed(1)+','+py(d.price).toFixed(1); }).join(' ');
-    var dots = '';
-    for (var di=0;di<data.length;di++) {
-      dots += '<circle cx="'+px(di).toFixed(1)+'" cy="'+py(data[di].price).toFixed(1)+'" r="4" fill="'+colour+'" stroke="#fdf8f0" stroke-width="2"/>';
-    }
-
-    return '<div style="overflow-x:auto;"><svg viewBox="0 0 '+W+' '+H+'" style="width:100%;min-width:280px;height:auto;display:block;">'
-      +grid+xlabels
-      +'<polyline points="'+pts+'" fill="none" stroke="'+colour+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
-      +dots+'</svg></div>';
-  }
-
-  // ── dashboard ──
-  function renderDashboard() {
-    var items = allItems();
-    var el = document.getElementById('dashboard-content');
-    if (!el) return;
-    if (items.length === 0) {
-      el.innerHTML = '<div style="text-align:center;padding:60px 20px;max-width:400px;margin:0 auto;">'
-        +'<div style="font-size:52px;margin-bottom:14px;">&#128200;</div>'
-        +'<div style="font-family:\'Playfair Display\',serif;font-size:22px;margin-bottom:8px;">No data yet</div>'
-        +'<p style="color:#7a6a50;margin-bottom:24px;">Scan your first receipt to start tracking prices.</p>'
-        +'<button class="btn-primary" id="empty-scan-btn">Scan a Receipt &rarr;</button></div>';
-      var btn = document.getElementById('empty-scan-btn');
-      if (btn) btn.addEventListener('click', function(){ showPage('scan'); });
-      return;
-    }
-    var html = '<div class="card-grid">';
-    for (var i=0;i<items.length;i++) {
-      var item = items[i];
-      var h = itemHistory(item);
-      var pct = priceChange(item);
-      var latest = latestPrice(item);
-      var col = COLOURS[i % COLOURS.length];
-      var badge = pct !== null
-        ? '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;font-weight:600;color:'+(pct>0?'#8a3a2b':'#4a7c59')+';background:'+(pct>0?'#f5ebe7':'#e8f0ec')+';padding:2px 7px;border-radius:12px;white-space:nowrap;">'+(pct>0?'+':'')+pct.toFixed(1)+'%</span>'
-        : '';
-      html += '<div class="item-card fadein" style="border-left-color:'+col+';" data-item="'+escAttr(item)+'">'
-        +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">'
-        +'<div style="font-family:\'Playfair Display\',serif;font-size:15px;font-weight:700;flex:1;padding-right:8px;line-height:1.3;">'+esc(item)+'</div>'
-        +badge+'</div>'
-        +'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:22px;margin-bottom:4px;">$'+latest.toFixed(2)+'</div>'
-        +'<div style="font-size:11px;color:#9a8a6a;">'+h.length+' record'+(h.length!==1?'s':'')+' &middot; last '+h[h.length-1].date+'</div>'
-        +(h.length>1?'<div style="margin-top:10px;">'+sparkline(h,col)+'</div>':'')
-        +'</div>';
-    }
-    html += '</div>';
-    el.innerHTML = html;
-
-    // attach click handlers
-    var cards = el.querySelectorAll('.item-card');
-    for (var ci=0;ci<cards.length;ci++) {
-      (function(card){
-        card.addEventListener('click', function(){
-          openItem(card.getAttribute('data-item'));
-        });
-      })(cards[ci]);
-    }
-  }
-
-  // ── item detail ──
-  function openItem(item) {
-    selectedItem = item;
-    var items = allItems();
-    var h = itemHistory(item);
-    var pct = priceChange(item);
-    var col = COLOURS[items.indexOf(item) % COLOURS.length];
-
-    var statsHtml = '<div class="stat-grid">';
-    statsHtml += statBox('Latest price','$'+h[h.length-1].price.toFixed(2));
-    statsHtml += statBox('First recorded','$'+h[0].price.toFixed(2));
-    if (pct!==null) statsHtml += statBox('Total change',(pct>0?'+':'')+pct.toFixed(1)+'%', pct>0?'#8a3a2b':'#4a7c59');
-    statsHtml += statBox('Data points',''+h.length);
-    statsHtml += '</div>';
-
-    var rows = '';
-    var rev = h.slice().reverse();
-    for (var i=0;i<rev.length;i++) {
-      var row = rev[i];
-      rows += '<tr>'
-        +'<td style="font-family:\'IBM Plex Mono\',monospace;">'+row.date+'</td>'
-        +'<td style="font-family:\'IBM Plex Mono\',monospace;font-weight:600;">$'+row.price.toFixed(2)+'</td>'
-        +'<td style="color:#7a6a50;">'+esc(row.store)+'</td>'
-        +'<td><button data-id="'+escAttr(row.id)+'" class="del-entry-btn" style="background:none;border:none;color:#c07060;cursor:pointer;font-size:14px;">&times;</button></td>'
-        +'</tr>';
-    }
-
-    var el = document.getElementById('item-content');
-    el.innerHTML = '<h1 style="font-family:\'Playfair Display\',serif;font-size:28px;font-weight:700;margin-bottom:16px;">'+esc(item)+'</h1>'
-      +statsHtml
-      +(h.length>1?'<div class="card" style="margin-bottom:20px;"><div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#9a8a6a;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Price over time</div>'+fullChart(h,col)+'</div>':'')
-      +'<div class="card" style="padding:0;overflow-x:auto;">'
-      +'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#9a8a6a;text-transform:uppercase;letter-spacing:1px;padding:14px 18px;border-bottom:1px solid #d8cdb8;">All Records</div>'
-      +'<table><thead><tr><th>Date</th><th>Price</th><th>Store</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
-
-    // delete buttons
-    var delBtns = el.querySelectorAll('.del-entry-btn');
-    for (var bi=0;bi<delBtns.length;bi++) {
-      (function(btn){
-        btn.addEventListener('click', function(){
-          var id = btn.getAttribute('data-id');
-          entries = entries.filter(function(e){ return e.id!==id; });
-          saveData();
-          openItem(selectedItem);
-          showToast('Record removed');
-        });
-      })(delBtns[bi]);
-    }
-
-    showPage('item');
-  }
-
-  function statBox(label, val, color) {
-    return '<div class="stat-box">'
-      +'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#9a8a6a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">'+label+'</div>'
-      +'<div style="font-family:\'Playfair Display\',serif;font-size:20px;font-weight:700;color:'+(color||'#2a2015')+';">'+val+'</div>'
-      +'</div>';
-  }
-
-  // ── scanning ──
-  function handleFile(file) {
-    if (!file) return;
-    document.getElementById('upload-idle').style.display = 'none';
-    document.getElementById('upload-scanning').style.display = 'block';
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var b64 = e.target.result.split(',')[1];
-      callAPI(b64, file.type);
-    };
-    reader.onerror = function() {
-      showToast('Could not read file', 'err');
-      resetUpload();
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function resetUpload() {
-    document.getElementById('upload-idle').style.display = 'block';
-    document.getElementById('upload-scanning').style.display = 'none';
-    document.getElementById('file-input').value = '';
-  }
-
-  function callAPI(b64, mediaType) {
-    var apiKey = getApiKey();
-    var body = JSON.stringify({
-      model: 'claude-opus-4-5',
-      max_tokens: 1000,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
-          { type: 'text', text: 'Extract every line-item product and its price from this receipt.\nReturn ONLY a JSON array — no markdown, no explanation, no backticks.\nEach element must be: {"item":"Short product name","price":2.99,"store":"Store name or Unknown","date":"YYYY-MM-DD or null"}\nNormalise item names to be short and reusable (e.g. "Whole Milk 1gal", "Eggs 12ct").\nIf the receipt shows a date use it, otherwise use null for date.' }
-        ]
-      }]
-    });
-
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: body
-    })
-    .then(function(res) {
-      if (!res.ok) {
-        return res.json().then(function(d) {
-          throw new Error((d.error && d.error.message) ? d.error.message : 'API error '+res.status);
-        });
-      }
-      return res.json();
-    })
-    .then(function(data) {
-      var block = null;
-      if (data.content) {
-        for (var i=0;i<data.content.length;i++) {
-          if (data.content[i].type==='text') { block=data.content[i]; break; }
-        }
-      }
-      if (!block) throw new Error('No response from API');
-      var text = block.text.trim().replace(/^```[a-z]*\n?/,'').replace(/\n?```$/,'').trim();
-      var items = JSON.parse(text);
-      if (!Array.isArray(items) || items.length===0) throw new Error('No items found on receipt');
-      pendingScan = items.map(function(it) {
-        return { item: it.item||'Unknown', price: parseFloat(it.price)||0, store: it.store||'Unknown', date: it.date||today(), id: uid() };
-      });
-      resetUpload();
-      showConfirmPage();
-    })
-    .catch(function(err) {
-      showToast('Scan failed: '+err.message, 'err');
-      resetUpload();
-    });
-  }
-
-  function showConfirmPage() {
-    document.getElementById('scan-date').value = pendingScan[0] && pendingScan[0].date ? pendingScan[0].date : today();
-    renderConfirmTable();
-    showPage('confirm');
-  }
-
-  function renderConfirmTable() {
-    var tbody = document.getElementById('confirm-tbody');
-    tbody.innerHTML = '';
-    for (var i=0;i<pendingScan.length;i++) {
-      (function(idx, row) {
-        var tr = document.createElement('tr');
-        tr.innerHTML = '<td><input class="editable" type="text" value="'+escAttr(row.item)+'"/></td>'
-          +'<td><input class="editable" type="number" step="0.01" min="0" value="'+row.price.toFixed(2)+'" style="width:80px;font-family:\'IBM Plex Mono\',monospace;"/></td>'
-          +'<td><input class="editable" type="text" value="'+escAttr(row.store)+'"/></td>'
-          +'<td><button style="background:none;border:none;color:#c07060;cursor:pointer;font-size:16px;">&times;</button></td>';
-        var inputs = tr.querySelectorAll('input');
-        inputs[0].addEventListener('input', function(){ pendingScan[idx].item = this.value; });
-        inputs[1].addEventListener('input', function(){ pendingScan[idx].price = parseFloat(this.value)||0; });
-        inputs[2].addEventListener('input', function(){ pendingScan[idx].store = this.value; });
-        tr.querySelector('button').addEventListener('click', function(){
-          pendingScan.splice(idx, 1);
-          renderConfirmTable();
-        });
-        tbody.appendChild(tr);
-      })(i, pendingScan[i]);
-    }
-    var saveBtn = document.getElementById('confirm-save-btn');
-    saveBtn.textContent = 'Save '+pendingScan.length+' items \u2192';
-  }
-
-  function confirmScan() {
-    if (pendingScan.length===0) return;
-    var date = document.getElementById('scan-date').value || today();
-    for (var i=0;i<pendingScan.length;i++) { pendingScan[i].date = date; }
-    entries = entries.concat(pendingScan);
-    saveData();
-    pendingScan = [];
-    showToast('Items saved!');
-    showPage('dashboard');
-  }
-
-  // ── export ──
-  function exportCSV() {
-    if (entries.length===0) { showToast('No data to export yet', 'err'); return; }
-    var rows = ['Date,Item,Price,Store'];
-    for (var i=0;i<entries.length;i++) {
-      var e = entries[i];
-      rows.push(e.date+',"'+e.item.replace(/"/g,'""')+'",'+e.price+',"'+e.store.replace(/"/g,'""')+'"');
-    }
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));
-    a.download = 'price-ledger.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-
-  // ── boot ──
-  document.addEventListener('DOMContentLoaded', function() {
-    loadData();
-
-    if (!getApiKey()) {
-      document.getElementById('setup').style.display = 'flex';
-      document.getElementById('layout').style.display = 'none';
-      document.getElementById('key-input').addEventListener('keydown', function(e){ if(e.key==='Enter') doSaveKey(); });
-      document.getElementById('save-key-btn').addEventListener('click', doSaveKey);
-    } else {
-      startApp();
-    }
-
-    function doSaveKey() {
-      var k = document.getElementById('key-input').value.trim();
-      var errEl = document.getElementById('key-err');
-      if (!k) { errEl.textContent='Please enter a key.'; return; }
-      if (!k.startsWith('sk-ant-')) { errEl.textContent='Key should start with sk-ant-'; return; }
-      localStorage.setItem(APIKEY_KEY, k);
-      document.getElementById('setup').style.display = 'none';
-      document.getElementById('layout').style.display = 'flex';
-      startApp();
-    }
-
-    function startApp() {
-      saveData();
-      renderDashboard();
-
-      // nav
-      document.getElementById('nav-dashboard').addEventListener('click', function(){ showPage('dashboard'); });
-      document.getElementById('nav-scan').addEventListener('click', function(){ showPage('scan'); });
-
-      // upload zone
-      var zone = document.getElementById('upload-zone');
-      zone.addEventListener('click', function(){ document.getElementById('file-input').click(); });
-      zone.addEventListener('dragover', function(e){ e.preventDefault(); });
-      zone.addEventListener('drop', function(e){ e.preventDefault(); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
-      document.getElementById('file-input').addEventListener('change', function(){ if(this.files[0]) handleFile(this.files[0]); });
-
-      // confirm page
-      document.getElementById('confirm-save-btn').addEventListener('click', confirmScan);
-      document.getElementById('rescan-btn').addEventListener('click', function(){ showPage('scan'); });
-
-      // item back
-      document.getElementById('back-btn').addEventListener('click', function(){ showPage('dashboard'); });
-
-      // sidebar
-      document.getElementById('export-btn').addEventListener('click', exportCSV);
-      document.getElementById('change-key-btn').addEventListener('click', function(){
-        localStorage.removeItem(APIKEY_KEY);
-        document.getElementById('layout').style.display = 'none';
-        document.getElementById('setup').style.display = 'flex';
-        document.getElementById('key-input').value = '';
-        document.getElementById('key-err').textContent = '';
-      });
-    }
+  const teamList = Object.values(TEAMS).sort((a, b) => b.payroll - a.payroll);
+  let totalTax = 0;
+  teamList.forEach(t => {
+    const over = Math.max(0, t.payroll - CAP);
+    t.tax = Math.round(over * TAX_RATE * 2) / 2;
+    totalTax += t.tax;
   });
 
-})();
+  const prizePool = N_TEAMS * ENTRY_FEE + totalTax;
+
+  document.getElementById('prize-banner').innerHTML = `
+    <div class="prize-stat">
+      <div class="val">$${prizePool.toFixed(0)}</div>
+      <div class="lbl">Prize Pool</div>
+    </div>
+    <div class="prize-stat">
+      <div class="val">$${totalTax.toFixed(2)}</div>
+      <div class="lbl">Luxury Tax Collected</div>
+    </div>
+    <div class="prize-stat">
+      <div class="val">${teamList.filter(t => t.payroll > CAP).length}</div>
+      <div class="lbl">Over-Cap Teams</div>
+    </div>
+    <div class="prize-stat">
+      <div class="val">$${CAP}M</div>
+      <div class="lbl">Cap Threshold</div>
+    </div>
+  `;
+
+  const tbody = document.getElementById('payroll-tbody');
+  tbody.innerHTML = teamList.map((t, i) => {
+    const over = Math.max(0, t.payroll - CAP);
+    const isOver = t.payroll > CAP;
+    return `<tr>
+      <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
+      <td><strong>${t.name}</strong></td>
+      <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
+      <td class="mono ${isOver ? 'red' : 'green'}">${isOver ? '+' : ''}$${(t.payroll - CAP).toFixed(1)}M</td>
+      <td class="mono ${t.tax > 0 ? 'red' : 'muted'}">$${t.tax.toFixed(2)}</td>
+      <td><span class="tax-badge ${isOver ? 'over' : 'clean'}">${isOver ? 'OVER CAP' : 'CLEAN'}</span></td>
+      <td class="mono muted">${t.players.length}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('payroll-loading').style.display = 'none';
+  document.getElementById('payroll-content').style.display = 'block';
+}
+
+// ── ROSTER VIEW ───────────────────────────────────────────────────
+async function renderRoster() {
+  if (PLAYERS.length === 0) await loadData();
+
+  const teamList = Object.values(TEAMS).sort((a, b) => a.name.localeCompare(b.name));
+
+  document.getElementById('team-grid').innerHTML = teamList.map(t => {
+    const active = t.players.filter(p => p.roster_slot === 'Active').length;
+    const na = t.players.filter(p => p.roster_slot === 'NA').length;
+    return `<div class="team-card" onclick="showRoster('${t.name.replace(/'/g, "\\'")}')">
+      <div class="team-card-name">${t.name}</div>
+      <div class="team-card-meta">
+        <span>${t.players.length} players</span>
+        <span>${active} active</span>
+        <span>${na} NA</span>
+        <span class="gold">$${t.payroll.toFixed(0)}M</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('roster-loading').style.display = 'none';
+  document.getElementById('roster-content').style.display = 'block';
+}
+
+function showRoster(teamName) {
+  const t = TEAMS[teamName];
+  if (!t) return;
+
+  document.getElementById('detail-team-name').textContent = teamName;
+  document.getElementById('team-grid-view').style.display = 'none';
+  document.getElementById('roster-detail-view').classList.add('active');
+
+  const slots = {
+    'Active': t.players.filter(p => p.roster_slot === 'Active'),
+    'BN': t.players.filter(p => p.roster_slot === 'BN'),
+    'IL': t.players.filter(p => p.roster_slot === 'IL'),
+    'NA': t.players.filter(p => p.roster_slot === 'NA'),
+  };
+
+  const slotLabels = { Active: 'ACTIVE ROSTER', BN: 'BENCH', IL: 'INJURED LIST', NA: 'PROSPECTS (NA)' };
+
+  document.getElementById('detail-slots').innerHTML = Object.entries(slots)
+    .filter(([, players]) => players.length > 0)
+    .map(([slot, players]) => `
+      <div class="slot-group">
+        <div class="slot-group-title">${slotLabels[slot]} · ${players.length}</div>
+        ${players.map(p => `
+          <div class="player-row">
+            <span class="pos-pill ${p.position?.split('/')[0] || ''}">${p.position || '—'}</span>
+            <span>${p.player_name}</span>
+            <span class="mono muted" style="font-size:11px">${p.mlb_team || '—'}</span>
+            <span class="year-chip">Yr ${p.year_held || 1}</span>
+            <span class="mono salary-cell" style="font-size:11px;color:var(--gold)">$${(parseFloat(p.current_salary) || parseFloat(p.base_salary) || 3).toFixed(1)}M</span>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+}
+
+function showTeamGrid() {
+  document.getElementById('team-grid-view').style.display = 'block';
+  document.getElementById('roster-detail-view').classList.remove('active');
+}
+
+// ── NAV ───────────────────────────────────────────────────────────
+let payrollLoaded = false;
+let rosterLoaded  = false;
+
+function switchView(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  btn.classList.add('active');
+
+  if (id === 'payroll' && !payrollLoaded) { payrollLoaded = true; renderPayroll(); }
+  if (id === 'roster'  && !rosterLoaded)  { rosterLoaded  = true; renderRoster();  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+renderPayroll();
 </script>
 </body>
 </html>
