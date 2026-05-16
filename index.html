@@ -31,7 +31,6 @@
     overflow-x: hidden;
   }
 
-  /* ── BACKGROUND ── */
   body::before {
     content: '';
     position: fixed;
@@ -43,7 +42,6 @@
     z-index: 0;
   }
 
-  /* ── HEADER ── */
   header {
     position: relative;
     z-index: 10;
@@ -97,9 +95,9 @@
     color: var(--muted);
   }
 
-  /* ── NAV ── */
   nav {
-    position: relative;
+    position: sticky;
+    top: 0;
     z-index: 10;
     display: flex;
     gap: 0;
@@ -107,8 +105,6 @@
     background: rgba(13,27,42,0.8);
     border-bottom: 1px solid var(--border);
     backdrop-filter: blur(10px);
-    position: sticky;
-    top: 0;
   }
 
   .nav-btn {
@@ -128,7 +124,6 @@
   .nav-btn:hover { color: var(--text); }
   .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
 
-  /* ── MAIN ── */
   main {
     position: relative;
     z-index: 1;
@@ -140,7 +135,6 @@
   .view { display: none; }
   .view.active { display: block; }
 
-  /* ── LOADING ── */
   .loading {
     display: flex;
     flex-direction: column;
@@ -164,7 +158,6 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── PRIZE POOL BANNER ── */
   .prize-banner {
     background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
     border: 1px solid var(--border);
@@ -195,7 +188,6 @@
     text-transform: uppercase;
   }
 
-  /* ── PAYROLL TABLE ── */
   .section-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 22px;
@@ -218,9 +210,7 @@
     font-size: 13px;
   }
 
-  thead tr {
-    background: rgba(27,58,107,0.6);
-  }
+  thead tr { background: rgba(27,58,107,0.6); }
 
   th {
     font-family: 'DM Mono', monospace;
@@ -272,10 +262,9 @@
     font-size: 11px;
   }
 
-  .tax-badge.over { background: rgba(224,90,90,0.15); color: var(--red); }
+  .tax-badge.over  { background: rgba(224,90,90,0.15);  color: var(--red);   }
   .tax-badge.clean { background: rgba(76,175,130,0.15); color: var(--green); }
 
-  /* ── ROSTER VIEW ── */
   .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -296,11 +285,6 @@
     border-color: var(--gold);
     background: rgba(30,45,61,0.9);
     transform: translateY(-2px);
-  }
-
-  .team-card.selected {
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.08);
   }
 
   .team-card-name {
@@ -385,9 +369,9 @@
   }
 
   .pos-pill.SP { background: rgba(100,80,200,0.3); color: #A090FF; }
-  .pos-pill.RP { background: rgba(200,80,80,0.3); color: #FF9090; }
-  .pos-pill.C  { background: rgba(27,58,107,0.5); color: #6090FF; }
-  .pos-pill.OF { background: rgba(80,160,80,0.3); color: #80D080; }
+  .pos-pill.RP { background: rgba(200,80,80,0.3);  color: #FF9090; }
+  .pos-pill.C  { background: rgba(27,58,107,0.5);  color: #6090FF; }
+  .pos-pill.OF { background: rgba(80,160,80,0.3);  color: #80D080; }
 
   .year-chip {
     font-family: 'DM Mono', monospace;
@@ -396,7 +380,7 @@
     text-align: center;
   }
 
-  /* ── RULES VIEW ── */
+  /* ── RULES ── */
   .rules-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -436,14 +420,13 @@
   .salary-tier-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
   .salary-tier-table td { padding: 6px 8px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
   .salary-tier-table td:first-child { color: var(--dim); }
-  .salary-tier-table td:last-child { font-family: 'DM Mono', monospace; color: var(--gold); text-align: right; }
+  .salary-tier-table td:last-child  { font-family: 'DM Mono', monospace; color: var(--gold); text-align: right; }
 
   .escalation-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
   .escalation-table td { padding: 5px 8px; font-size: 11px; font-family: 'DM Mono', monospace; border-bottom: 1px solid rgba(255,255,255,0.04); }
   .escalation-table td:first-child { color: var(--dim); }
-  .escalation-table td:last-child { color: var(--gold); text-align: right; }
+  .escalation-table td:last-child  { color: var(--gold); text-align: right; }
 
-  /* ── MOBILE ── */
   @media (max-width: 640px) {
     header { padding: 20px 16px 0; }
     nav { padding: 0 8px; }
@@ -528,81 +511,12 @@
 
   <!-- RULES VIEW -->
   <div class="view" id="view-rules">
-    <div class="rules-grid">
-
-      <div class="rules-card">
-        <div class="rules-card-title">League Format</div>
-        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">Head-to-Head Categories</span></div>
-        <div class="rule-row"><span class="rule-key">Teams</span><span class="rule-val">12</span></div>
-        <div class="rule-row"><span class="rule-key">Lineup</span><span class="rule-val">Daily</span></div>
-        <div class="rule-row"><span class="rule-key">Platform</span><span class="rule-val">Yahoo Fantasy</span></div>
-        <div class="rule-row"><span class="rule-key">Trade Deadline</span><span class="rule-val">August 31</span></div>
-        <div class="rule-row"><span class="rule-key">Entry Fee</span><span class="rule-val">$20 / team</span></div>
-        <div class="rule-row"><span class="rule-key">Prize</span><span class="rule-val">Winner Take All</span></div>
-      </div>
-
-      <div class="rules-card">
-        <div class="rules-card-title">Scoring Categories</div>
-        <div class="rule-row"><span class="rule-key">Hitting (5)</span><span class="rule-val">R · HR · RBI · SB · OPS</span></div>
-        <div class="rule-row"><span class="rule-key">Pitching (5)</span><span class="rule-val">W · K · ERA · WHIP · SV+H</span></div>
-        <div class="rule-row"><span class="rule-key">Matchup Week</span><span class="rule-val">Mon – Sun</span></div>
-        <div class="rule-row"><span class="rule-key">Tie</span><span class="rule-val">0.5 each category</span></div>
-      </div>
-
-      <div class="rules-card">
-        <div class="rules-card-title">Roster Structure</div>
-        <div class="rule-row"><span class="rule-key">Total Spots</span><span class="rule-val">30</span></div>
-        <div class="rule-row"><span class="rule-key">Active</span><span class="rule-val">C · 1B · 2B · 3B · SS · OF×3 · UTIL · SP×2 · RP×2 · P-FLEX×3</span></div>
-        <div class="rule-row"><span class="rule-key">Bench</span><span class="rule-val">4 (any position)</span></div>
-        <div class="rule-row"><span class="rule-key">IL</span><span class="rule-val">5</span></div>
-        <div class="rule-row"><span class="rule-key">NA (Prospects)</span><span class="rule-val">5</span></div>
-        <div class="rule-row"><span class="rule-key">NA Eligibility</span><span class="rule-val">&lt;50 PA / &lt;30 IP / &lt;45 days</span></div>
-      </div>
-
-      <div class="rules-card">
-        <div class="rules-card-title">Salary Cap System</div>
-        <div class="rule-row"><span class="rule-key">Cap</span><span class="rule-val">$500M</span></div>
-        <div class="rule-row"><span class="rule-key">Escalation</span><span class="rule-val">+12% per year held</span></div>
-        <div class="rule-row"><span class="rule-key">Luxury Tax</span><span class="rule-val">$1.50 per $10M over</span></div>
-        <div class="rule-row"><span class="rule-key">Tax → Prize Pool</span><span class="rule-val">Yes, automatic</span></div>
-        <div class="rule-row"><span class="rule-key">Trade Reset</span><span class="rule-val">Year 1 at current DYN Z tier</span></div>
-        <table class="salary-tier-table">
-          <tr><td>Elite (DYN Z ≥ 3.0)</td><td>$40M</td></tr>
-          <tr><td>Star (DYN Z 2.0–2.9)</td><td>$30M</td></tr>
-          <tr><td>Solid (DYN Z 1.0–1.9)</td><td>$20M</td></tr>
-          <tr><td>Depth (DYN Z 0.0–0.9)</td><td>$10M</td></tr>
-          <tr><td>Minimum (DYN Z &lt; 0)</td><td>$3M</td></tr>
-        </table>
-      </div>
-
-      <div class="rules-card">
-        <div class="rules-card-title">Annual Rookie Draft</div>
-        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">2-Round Snake · WhatsApp</span></div>
-        <div class="rule-row"><span class="rule-key">Window</span><span class="rule-val">Super Bowl → March Madness</span></div>
-        <div class="rule-row"><span class="rule-key">Pick Clock</span><span class="rule-val">8 hours</span></div>
-        <div class="rule-row"><span class="rule-key">Opt-In</span><span class="rule-val">Drop 1 player = R1 pick</span></div>
-        <div class="rule-row"><span class="rule-key"></span><span class="rule-val">Drop 2nd player = R2 pick</span></div>
-        <div class="rule-row"><span class="rule-key">Order</span><span class="rule-val">Two-tier weighted lottery</span></div>
-        <div class="rule-row"><span class="rule-key">Tier A (1st–6th)</span><span class="rule-val">Picks 7–12 · Best odds → pick 12</span></div>
-        <div class="rule-row"><span class="rule-key">Tier B (7th–12th)</span><span class="rule-val">Picks 1–6 · Best odds → pick 1</span></div>
-      </div>
-
-      <div class="rules-card">
-        <div class="rules-card-title">Salary Escalation Table</div>
-        <table class="escalation-table">
-          <tr><td>Year 1</td><td>Base salary</td></tr>
-          <tr><td>Year 2</td><td>Base × 1.12</td></tr>
-          <tr><td>Year 3</td><td>Base × 1.25</td></tr>
-          <tr><td>Year 4</td><td>Base × 1.40</td></tr>
-          <tr><td>Year 5</td><td>Base × 1.57</td></tr>
-          <tr><td>Year 6</td><td>Base × 1.76</td></tr>
-          <tr><td>Year 7</td><td>Base × 1.97</td></tr>
-          <tr><td>Year 8</td><td>Base × 2.21</td></tr>
-          <tr><td>Year 9</td><td>Base × 2.48</td></tr>
-          <tr><td>Year 10</td><td>Base × 2.77</td></tr>
-        </table>
-      </div>
-
+    <div class="loading" id="rules-loading">
+      <div class="spinner"></div>
+      LOADING RULES
+    </div>
+    <div id="rules-content" style="display:none">
+      <div class="rules-grid" id="rules-grid"></div>
     </div>
   </div>
 
@@ -610,31 +524,33 @@
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────
-const SHEET_ID  = '1FtMDNhzSpCgS2IdOFs4SHO7-IHoG6uAsK-UGA2NCSAs';
-const BASE_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
-
-
-
-
+const SHEET_ID = '1FtMDNhzSpCgS2IdOFs4SHO7-IHoG6uAsK-UGA2NCSAs';
+const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
 
 // ── STATE ─────────────────────────────────────────────────────────
 let PLAYERS  = [];
-let SETTINGS = { cap_threshold: 500, tax_rate_per_10m: 0.25, base_entry_fee: 20, num_teams: 12 };
-let TEAMS   = {};
+let SETTINGS = { cap_threshold: 500, tax_rate_per_10m: 0.25, base_entry_fee: 20, num_teams: 12,
+                 escalation_rate: 0.12, min_salary: 3, salary_elite: 40, salary_star: 30,
+                 salary_solid: 20, salary_depth: 10, salary_minimum: 3,
+                 tier_elite_min: 3, tier_star_min: 2, tier_solid_min: 1, tier_depth_min: 0,
+                 na_pa_threshold: 50, na_ip_threshold: 30, na_service_threshold: 45,
+                 rookie_draft_rounds: 2, rookie_draft_clock_hrs: 8,
+                 trade_deadline: 'August 31', current_season: 2026 };
+let TEAMS    = {};
 
 // ── FETCH CSV ─────────────────────────────────────────────────────
 async function fetchCSV(sheet) {
-  const res = await fetch(BASE_URL + encodeURIComponent(sheet));
+  const res  = await fetch(BASE_URL + encodeURIComponent(sheet));
   const text = await res.text();
   return parseCSV(text);
 }
 
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
+  const lines   = text.trim().split('\n');
   const headers = parseCSVLine(lines[0]);
   return lines.slice(1).map(line => {
     const vals = parseCSVLine(line);
-    const obj = {};
+    const obj  = {};
     headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
     return obj;
   });
@@ -655,16 +571,20 @@ function parseCSVLine(line) {
 
 // ── LOAD DATA ─────────────────────────────────────────────────────
 async function loadData() {
-  // Load SETTINGS from Sheet
+  // Load SETTINGS
   try {
     const settingsRows = await fetchCSV('SETTINGS');
     settingsRows.forEach(r => {
       const key = (r.Key || r.key || '').trim();
-      const val = parseFloat((r.Value || r.value || '').trim());
-      if (key && !isNaN(val)) SETTINGS[key] = val;
+      const raw = (r.Value || r.value || '').trim();
+      if (!key) return;
+      // Try numeric first; fall back to string (e.g. trade_deadline)
+      const num = parseFloat(raw);
+      SETTINGS[key] = isNaN(num) ? raw : num;
     });
   } catch(e) { console.warn('Could not load SETTINGS, using defaults', e); }
 
+  // Load PLAYERS
   const rows = await fetchCSV('PLAYERS');
   PLAYERS = rows.filter(r => r.player_name);
 
@@ -685,54 +605,61 @@ async function loadData() {
 
 // ── PAYROLL VIEW ──────────────────────────────────────────────────
 async function renderPayroll() {
-  await loadData();
+  try {
+    await loadData();
 
-  const teamList = Object.values(TEAMS).sort((a, b) => b.payroll - a.payroll);
-  let totalTax = 0;
-  teamList.forEach(t => {
-    const over = Math.max(0, t.payroll - SETTINGS.cap_threshold);
-    t.tax = Math.round(over * (SETTINGS.tax_rate_per_10m / 10) * 2) / 2;
-    totalTax += t.tax;
-  });
+    const teamList = Object.values(TEAMS).sort((a, b) => b.payroll - a.payroll);
+    let totalTax = 0;
+    teamList.forEach(t => {
+      const over = Math.max(0, t.payroll - SETTINGS.cap_threshold);
+      t.tax = Math.round(over * (SETTINGS.tax_rate_per_10m / 10) * 2) / 2;
+      totalTax += t.tax;
+    });
 
-  const prizePool = SETTINGS.num_teams * SETTINGS.base_entry_fee + totalTax;
+    const prizePool = SETTINGS.num_teams * SETTINGS.base_entry_fee + totalTax;
 
-  document.getElementById('prize-banner').innerHTML = `
-    <div class="prize-stat">
-      <div class="val">$${prizePool.toFixed(0)}</div>
-      <div class="lbl">Prize Pool</div>
-    </div>
-    <div class="prize-stat">
-      <div class="val">$${totalTax.toFixed(2)}</div>
-      <div class="lbl">Luxury Tax Collected</div>
-    </div>
-    <div class="prize-stat">
-      <div class="val">${teamList.filter(t => t.payroll > SETTINGS.cap_threshold).length}</div>
-      <div class="lbl">Over-Cap Teams</div>
-    </div>
-    <div class="prize-stat">
-      <div class="val">$${SETTINGS.cap_threshold}M</div>
-      <div class="lbl">Cap Threshold</div>
-    </div>
-  `;
+    document.getElementById('prize-banner').innerHTML = `
+      <div class="prize-stat">
+        <div class="val">$${prizePool.toFixed(0)}</div>
+        <div class="lbl">Prize Pool</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">$${totalTax.toFixed(2)}</div>
+        <div class="lbl">Luxury Tax Collected</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">${teamList.filter(t => t.payroll > SETTINGS.cap_threshold).length}</div>
+        <div class="lbl">Over-Cap Teams</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">$${SETTINGS.cap_threshold}M</div>
+        <div class="lbl">Cap Threshold</div>
+      </div>`;
 
-  const tbody = document.getElementById('payroll-tbody');
-  tbody.innerHTML = teamList.map((t, i) => {
-    const over = Math.max(0, t.payroll - SETTINGS.cap_threshold);
-    const isOver = t.payroll > SETTINGS.cap_threshold;
-    return `<tr>
-      <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
-      <td><strong>${t.name}</strong></td>
-      <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
-      <td class="mono ${isOver ? 'red' : 'green'}">${isOver ? '+' : ''}$${(t.payroll - SETTINGS.cap_threshold).toFixed(1)}M</td>
-      <td class="mono ${t.tax > 0 ? 'red' : 'muted'}">$${t.tax.toFixed(2)}</td>
-      <td><span class="tax-badge ${isOver ? 'over' : 'clean'}">${isOver ? 'OVER CAP' : 'CLEAN'}</span></td>
-      <td class="mono muted">${t.players.length}</td>
-    </tr>`;
-  }).join('');
+    const tbody = document.getElementById('payroll-tbody');
+    tbody.innerHTML = teamList.map((t, i) => {
+      const over   = t.payroll - SETTINGS.cap_threshold;
+      const isOver = over > 0;
+      return `<tr>
+        <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
+        <td><strong>${t.name}</strong></td>
+        <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
+        <td class="mono ${isOver ? 'red' : 'green'}">${isOver ? '+' : ''}$${over.toFixed(1)}M</td>
+        <td class="mono ${t.tax > 0 ? 'red' : 'muted'}">$${t.tax.toFixed(2)}</td>
+        <td><span class="tax-badge ${isOver ? 'over' : 'clean'}">${isOver ? 'OVER CAP' : 'CLEAN'}</span></td>
+        <td class="mono muted">${t.players.length}</td>
+      </tr>`;
+    }).join('');
 
-  document.getElementById('payroll-loading').style.display = 'none';
-  document.getElementById('payroll-content').style.display = 'block';
+    document.getElementById('payroll-loading').style.display = 'none';
+    document.getElementById('payroll-content').style.display = 'block';
+  } catch(e) {
+    console.error('Payroll render failed:', e);
+    document.getElementById('payroll-loading').innerHTML =
+      `<div style="color:var(--red);font-family:'DM Mono',monospace;font-size:12px;text-align:center">
+        ⚠ Error loading ledger<br><span style="color:var(--dim);font-size:10px">${e.message}</span>
+      </div>`;
+  }
 }
 
 // ── ROSTER VIEW ───────────────────────────────────────────────────
@@ -743,7 +670,7 @@ async function renderRoster() {
 
   document.getElementById('team-grid').innerHTML = teamList.map(t => {
     const active = t.players.filter(p => p.roster_slot === 'Active').length;
-    const na = t.players.filter(p => p.roster_slot === 'NA').length;
+    const na     = t.players.filter(p => p.roster_slot === 'NA').length;
     return `<div class="team-card" onclick="showRoster('${t.name.replace(/'/g, "\\'")}')">
       <div class="team-card-name">${t.name}</div>
       <div class="team-card-meta">
@@ -769,9 +696,9 @@ function showRoster(teamName) {
 
   const slots = {
     'Active': t.players.filter(p => p.roster_slot === 'Active'),
-    'BN': t.players.filter(p => p.roster_slot === 'BN'),
-    'IL': t.players.filter(p => p.roster_slot === 'IL'),
-    'NA': t.players.filter(p => p.roster_slot === 'NA'),
+    'BN':     t.players.filter(p => p.roster_slot === 'BN'),
+    'IL':     t.players.filter(p => p.roster_slot === 'IL'),
+    'NA':     t.players.filter(p => p.roster_slot === 'NA'),
   };
 
   const slotLabels = { Active: 'ACTIVE ROSTER', BN: 'BENCH', IL: 'INJURED LIST', NA: 'PROSPECTS (NA)' };
@@ -788,10 +715,8 @@ function showRoster(teamName) {
             <span class="mono muted" style="font-size:11px">${p.mlb_team || '—'}</span>
             <span class="year-chip">Yr ${p.year_held || 1}</span>
             <span class="mono salary-cell" style="font-size:11px;color:var(--gold)">$${(parseFloat(p.current_salary) || parseFloat(p.base_salary) || 3).toFixed(1)}M</span>
-          </div>
-        `).join('')}
-      </div>
-    `).join('');
+          </div>`).join('')}
+      </div>`).join('');
 }
 
 function showTeamGrid() {
@@ -799,9 +724,101 @@ function showTeamGrid() {
   document.getElementById('roster-detail-view').classList.remove('active');
 }
 
+// ── RULES VIEW ────────────────────────────────────────────────────
+async function renderRules() {
+  try {
+    if (PLAYERS.length === 0) await loadData();
+    const S = SETTINGS;
+
+    // Build escalation table dynamically from escalation_rate
+    const rate = S.escalation_rate || 0.12;
+    let escalRows = '';
+    let mult = 1;
+    for (let y = 1; y <= 10; y++) {
+      escalRows += `<tr><td>Year ${y}</td><td>${y === 1 ? 'Base salary' : 'Base × ' + mult.toFixed(2)}</td></tr>`;
+      mult = Math.round(mult * (1 + rate) * 100) / 100;
+    }
+
+    document.getElementById('rules-grid').innerHTML = `
+      <div class="rules-card">
+        <div class="rules-card-title">League Format</div>
+        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">Head-to-Head Categories</span></div>
+        <div class="rule-row"><span class="rule-key">Teams</span><span class="rule-val">${S.num_teams || 12}</span></div>
+        <div class="rule-row"><span class="rule-key">Lineup</span><span class="rule-val">Daily</span></div>
+        <div class="rule-row"><span class="rule-key">Platform</span><span class="rule-val">Yahoo Fantasy</span></div>
+        <div class="rule-row"><span class="rule-key">Trade Deadline</span><span class="rule-val">${S.trade_deadline || 'August 31'}</span></div>
+        <div class="rule-row"><span class="rule-key">Entry Fee</span><span class="rule-val">$${S.base_entry_fee || 20} / team</span></div>
+        <div class="rule-row"><span class="rule-key">Prize</span><span class="rule-val">Winner Take All</span></div>
+        <div class="rule-row"><span class="rule-key">Season</span><span class="rule-val">${S.current_season || 2026}</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Scoring Categories</div>
+        <div class="rule-row"><span class="rule-key">Hitting (5)</span><span class="rule-val">R · HR · RBI · SB · OPS</span></div>
+        <div class="rule-row"><span class="rule-key">Pitching (5)</span><span class="rule-val">W · K · ERA · WHIP · SV+H</span></div>
+        <div class="rule-row"><span class="rule-key">Matchup Week</span><span class="rule-val">Mon – Sun</span></div>
+        <div class="rule-row"><span class="rule-key">Tie</span><span class="rule-val">0.5 each category</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Roster Structure</div>
+        <div class="rule-row"><span class="rule-key">Total Spots</span><span class="rule-val">30</span></div>
+        <div class="rule-row"><span class="rule-key">Active</span><span class="rule-val">C · 1B · 2B · 3B · SS · OF×3 · UTIL · SP×2 · RP×2 · P-FLEX×3</span></div>
+        <div class="rule-row"><span class="rule-key">Bench</span><span class="rule-val">4 (any position)</span></div>
+        <div class="rule-row"><span class="rule-key">IL</span><span class="rule-val">5</span></div>
+        <div class="rule-row"><span class="rule-key">NA (Prospects)</span><span class="rule-val">5</span></div>
+        <div class="rule-row"><span class="rule-key">NA Eligibility</span><span class="rule-val">&lt;${S.na_pa_threshold || 50} PA / &lt;${S.na_ip_threshold || 30} IP / &lt;${S.na_service_threshold || 45} days</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Salary Cap System</div>
+        <div class="rule-row"><span class="rule-key">Cap</span><span class="rule-val">$${S.cap_threshold || 500}M</span></div>
+        <div class="rule-row"><span class="rule-key">Escalation</span><span class="rule-val">+${Math.round((S.escalation_rate || 0.12) * 100)}% per year held</span></div>
+        <div class="rule-row"><span class="rule-key">Luxury Tax</span><span class="rule-val">$${S.tax_rate_per_10m || 0.25} per $10M over</span></div>
+        <div class="rule-row"><span class="rule-key">Tax → Prize Pool</span><span class="rule-val">Yes, automatic</span></div>
+        <div class="rule-row"><span class="rule-key">Trade Reset</span><span class="rule-val">Year 1 at current DYN Z tier</span></div>
+        <div class="rule-row"><span class="rule-key">Floor</span><span class="rule-val">$${S.min_salary || 3}M minimum</span></div>
+        <table class="salary-tier-table">
+          <tr><td>Elite (DYN Z ≥ ${S.tier_elite_min || 3}.0)</td><td>$${S.salary_elite || 40}M</td></tr>
+          <tr><td>Star (DYN Z ${S.tier_star_min || 2}.0–${(S.tier_elite_min || 3) - 0.1})</td><td>$${S.salary_star || 30}M</td></tr>
+          <tr><td>Solid (DYN Z ${S.tier_solid_min || 1}.0–${(S.tier_star_min || 2) - 0.1})</td><td>$${S.salary_solid || 20}M</td></tr>
+          <tr><td>Depth (DYN Z ${S.tier_depth_min || 0}.0–${(S.tier_solid_min || 1) - 0.1})</td><td>$${S.salary_depth || 10}M</td></tr>
+          <tr><td>Minimum (DYN Z &lt; ${S.tier_depth_min || 0}.0)</td><td>$${S.salary_minimum || 3}M</td></tr>
+        </table>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Annual Rookie Draft</div>
+        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">${S.rookie_draft_rounds || 2}-Round Snake · WhatsApp</span></div>
+        <div class="rule-row"><span class="rule-key">Window</span><span class="rule-val">Super Bowl → March Madness</span></div>
+        <div class="rule-row"><span class="rule-key">Pick Clock</span><span class="rule-val">${S.rookie_draft_clock_hrs || 8} hours</span></div>
+        <div class="rule-row"><span class="rule-key">Opt-In</span><span class="rule-val">Drop 1 player = R1 pick</span></div>
+        <div class="rule-row"><span class="rule-key"></span><span class="rule-val">Drop 2nd player = R2 pick</span></div>
+        <div class="rule-row"><span class="rule-key">Order</span><span class="rule-val">Two-tier weighted lottery</span></div>
+        <div class="rule-row"><span class="rule-key">Tier A (1st–6th)</span><span class="rule-val">Picks 7–12 · Best odds → pick 12</span></div>
+        <div class="rule-row"><span class="rule-key">Tier B (7th–12th)</span><span class="rule-val">Picks 1–6 · Best odds → pick 1</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Salary Escalation Table</div>
+        <table class="escalation-table">${escalRows}</table>
+      </div>`;
+
+    document.getElementById('rules-loading').style.display = 'none';
+    document.getElementById('rules-content').style.display = 'block';
+  } catch(e) {
+    console.error('Rules render failed:', e);
+    document.getElementById('rules-loading').innerHTML =
+      `<div style="color:var(--red);font-family:'DM Mono',monospace;font-size:12px;text-align:center">
+        ⚠ Error loading rules<br><span style="color:var(--dim);font-size:10px">${e.message}</span>
+      </div>`;
+  }
+}
+
 // ── NAV ───────────────────────────────────────────────────────────
 let payrollLoaded = false;
 let rosterLoaded  = false;
+let rulesLoaded   = false;
 
 function switchView(id, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -811,6 +828,7 @@ function switchView(id, btn) {
 
   if (id === 'payroll' && !payrollLoaded) { payrollLoaded = true; renderPayroll(); }
   if (id === 'roster'  && !rosterLoaded)  { rosterLoaded  = true; renderRoster();  }
+  if (id === 'rules'   && !rulesLoaded)   { rulesLoaded   = true; renderRules();   }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
@@ -818,3 +836,5 @@ renderPayroll();
 </script>
 </body>
 </html>
+HEREDOC
+echo "File written: $(wc -l < /tmp/dynasty-league-index.html) lines"
