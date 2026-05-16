@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "csv-parse": "^6.2.1",
     "googleapis": "^171.4.0",
     "puppeteer": "^25.0.2",
     "selfsigned": "^5.5.0"
