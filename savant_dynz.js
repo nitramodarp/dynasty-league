@@ -34,49 +34,39 @@ async function scrapeSavant(url, isPitcher) {
   const page = await browser.newPage();
   
   try {
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 });
     
-    // Wait for any table or data element to appear
-    await page.waitForSelector('table, [role="grid"], [role="table"]', { timeout: 15000 });
+    // Wait much longer for JS to render
+    await page.waitForTimeout(5000);
     
+    // Try to find any visible text that looks like player data
     const data = await page.evaluate(() => {
       const rows = [];
       
-      // Try multiple table selectors
+      // Look for any element containing player data
+      const allText = document.body.innerText;
+      console.log(`DEBUG: Page body text length: ${allText.length}`);
+      
+      // Try to find table
       let table = document.querySelector('table');
-      if (!table) table = document.querySelector('[role="grid"]');
-      if (!table) table = document.querySelector('[role="table"]');
+      console.log(`DEBUG: Table found: ${!!table}`);
       
+      // If no table, try data attributes
       if (!table) {
-        console.error('No table found');
-        return rows;
-      }
-      
-      const headerRow = table.querySelector('thead tr, [role="row"]:first-child');
-      if (!headerRow) {
-        console.error('No header row found');
-        return rows;
-      }
-      
-      const headers = Array.from(headerRow.querySelectorAll('th, [role="columnheader"]')).map(th => th.textContent.trim());
-      const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name'));
-      const xwobaIdx = headers.findIndex(h => h.toLowerCase().includes('xwoba'));
-      
-      if (nameIdx < 0 || xwobaIdx < 0) {
-        console.error(`Headers not found. Found: ${headers.join(', ')}`);
-        return rows;
-      }
-      
-      const bodyRows = table.querySelectorAll('tbody tr, [role="row"]:not(:first-child)');
-      bodyRows.forEach(tr => {
-        const cells = Array.from(tr.querySelectorAll('td, [role="gridcell"]')).map(td => td.textContent.trim());
-        if (cells[nameIdx] && cells[xwobaIdx]) {
-          rows.push({
-            name: cells[nameIdx],
-            xwoba: parseFloat(cells[xwobaIdx]) || 0,
-          });
+        const divs = document.querySelectorAll('div[role="row"]');
+        console.log(`DEBUG: Found ${divs.length} divs with role=row`);
+        if (divs.length > 0) {
+          const firstDiv = divs[0];
+          console.log(`DEBUG: First div HTML:`, firstDiv.innerHTML.substring(0, 200));
         }
+      }
+      
+      // Fallback: look for any text matching xwoba pattern
+      const pageText = document.body.innerText.split('\n');
+      pageText.forEach((line, idx) => {
+        if (idx < 20) console.log(`Line ${idx}: ${line.substring(0, 80)}`);
       });
+      
       return rows;
     });
     
