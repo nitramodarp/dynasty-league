@@ -34,22 +34,42 @@ async function scrapeSavant(url, isPitcher) {
   const page = await browser.newPage();
   
   try {
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
-    await page.waitForSelector('table', { timeout: 10000 });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+    
+    // Wait for any table or data element to appear
+    await page.waitForSelector('table, [role="grid"], [role="table"]', { timeout: 15000 });
     
     const data = await page.evaluate(() => {
       const rows = [];
-      const table = document.querySelector('table');
-      if (!table) return rows;
       
-      const headerRow = table.querySelector('thead tr');
-      const headers = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent.trim());
+      // Try multiple table selectors
+      let table = document.querySelector('table');
+      if (!table) table = document.querySelector('[role="grid"]');
+      if (!table) table = document.querySelector('[role="table"]');
+      
+      if (!table) {
+        console.error('No table found');
+        return rows;
+      }
+      
+      const headerRow = table.querySelector('thead tr, [role="row"]:first-child');
+      if (!headerRow) {
+        console.error('No header row found');
+        return rows;
+      }
+      
+      const headers = Array.from(headerRow.querySelectorAll('th, [role="columnheader"]')).map(th => th.textContent.trim());
       const nameIdx = headers.findIndex(h => h.toLowerCase().includes('name'));
       const xwobaIdx = headers.findIndex(h => h.toLowerCase().includes('xwoba'));
       
-      const bodyRows = table.querySelectorAll('tbody tr');
+      if (nameIdx < 0 || xwobaIdx < 0) {
+        console.error(`Headers not found. Found: ${headers.join(', ')}`);
+        return rows;
+      }
+      
+      const bodyRows = table.querySelectorAll('tbody tr, [role="row"]:not(:first-child)');
       bodyRows.forEach(tr => {
-        const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
+        const cells = Array.from(tr.querySelectorAll('td, [role="gridcell"]')).map(td => td.textContent.trim());
         if (cells[nameIdx] && cells[xwobaIdx]) {
           rows.push({
             name: cells[nameIdx],
@@ -85,22 +105,8 @@ async function updateSheet(sheets, range, values) {
 
 async function main() {
   const keyJsonStr = process.env.GOOGLE_KEY_JSON;
-  console.log(`GOOGLE_KEY_JSON present: ${!!keyJsonStr}`);
-  console.log(`GOOGLE_KEY_JSON length: ${keyJsonStr ? keyJsonStr.length : 0}`);
-  
-  if (!keyJsonStr) {
-    throw new Error('GOOGLE_KEY_JSON environment variable not set');
-  }
-  
-  let keyJson;
-  try {
-    keyJson = JSON.parse(keyJsonStr);
-  } catch (e) {
-    throw new Error(`Failed to parse GOOGLE_KEY_JSON: ${e.message}`);
-  }
-  
-  console.log(`Service account email: ${keyJson.client_email}`);
-  
+  if (!keyJsonStr) throw new Error('GOOGLE_KEY_JSON not set');
+  const keyJson = JSON.parse(keyJsonStr);
   const auth = new google.auth.GoogleAuth({ credentials: keyJson, scopes: SCOPES });
   const sheets = google.sheets({ version: 'v4', auth });
 
@@ -114,7 +120,6 @@ async function main() {
   const taxDay = new Date(settingsMap.tax_day || '2026-09-01');
   const today = new Date();
   const isTaxDayPassed = today >= taxDay;
-  console.log(`Tax Day: ${taxDay.toISOString().split('T')[0]}, passed: ${isTaxDayPassed}`);
 
   const playersRows = await getSheet(sheets, 'PLAYERS!A1:Q500');
   const headers = playersRows[0];
@@ -139,7 +144,6 @@ async function main() {
   pitchersSavant.forEach(s => { savantMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: true }; });
   console.log(`Savant map size: ${Object.keys(savantMap).length}`);
 
-  console.log('\nComputing DYN Z and salaries...');
   const results = [];
   let matched = 0, unmatched = 0;
 
@@ -173,24 +177,18 @@ async function main() {
       unmatched++;
     }
     
-    results.push([
-      dynZ !== null ? dynZ : '',
-      salaryTier,
-      baseSalary,
-      currentSalary,
-    ]);
+    results.push([dynZ !== null ? dynZ : '', salaryTier, baseSalary, currentSalary]);
   }
 
-  console.log(`  Matched: ${matched}/${players.length}`);
-  console.log(`  Unmatched: ${unmatched}`);
+  console.log(`Matched: ${matched}/${players.length}, Unmatched: ${unmatched}`);
 
-  console.log('\nWriting to PLAYERS sheet...');
+  console.log('Writing to PLAYERS sheet...');
   await updateSheet(sheets, 'PLAYERS!H2', results.map(r => [r[0]]));
   await updateSheet(sheets, 'PLAYERS!I2', results.map(r => [r[1]]));
   await updateSheet(sheets, 'PLAYERS!J2', results.map(r => [r[2]]));
   await updateSheet(sheets, 'PLAYERS!M2', results.map(r => [r[3]]));
 
-  console.log(`\nDone. Updated ${results.length} players.`);
+  console.log(`Done. Updated ${results.length} players.`);
 }
 
 main().catch(err => {
