@@ -22,5 +22,5 @@ jobs:
         run: node auto_sync.js
       - name: Compute DYN Z from Savant
         env:
-          KEY_PATH: service_account.json
+          GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
         run: node savant_dynz.js
