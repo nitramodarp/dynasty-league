@@ -20,3 +20,7 @@ jobs:
           YAHOO_REFRESH_TOKEN: ${{ secrets.YAHOO_REFRESH_TOKEN }}
           GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
         run: node auto_sync.js
+      - name: Compute DYN Z from Savant
+        env:
+          KEY_PATH: service_account.json
+        run: node savant_dynz.js
