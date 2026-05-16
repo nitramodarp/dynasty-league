@@ -84,7 +84,23 @@ async function updateSheet(sheets, range, values) {
 }
 
 async function main() {
-  const keyJson = JSON.parse(process.env.GOOGLE_KEY_JSON || '{}');
+  const keyJsonStr = process.env.GOOGLE_KEY_JSON;
+  console.log(`GOOGLE_KEY_JSON present: ${!!keyJsonStr}`);
+  console.log(`GOOGLE_KEY_JSON length: ${keyJsonStr ? keyJsonStr.length : 0}`);
+  
+  if (!keyJsonStr) {
+    throw new Error('GOOGLE_KEY_JSON environment variable not set');
+  }
+  
+  let keyJson;
+  try {
+    keyJson = JSON.parse(keyJsonStr);
+  } catch (e) {
+    throw new Error(`Failed to parse GOOGLE_KEY_JSON: ${e.message}`);
+  }
+  
+  console.log(`Service account email: ${keyJson.client_email}`);
+  
   const auth = new google.auth.GoogleAuth({ credentials: keyJson, scopes: SCOPES });
   const sheets = google.sheets({ version: 'v4', auth });
 
