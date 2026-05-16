@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "googleapis": "^171.4.0",
+    "selfsigned": "^5.5.0"
+  }
+}
