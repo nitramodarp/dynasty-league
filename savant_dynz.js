@@ -1,12 +1,13 @@
 const { google } = require('googleapis');
-const puppeteer = require('puppeteer');
+const fs = require('fs');
+const csv = require('csv-parse/sync');
 
 const SHEET_ID = '1FtMDNhzSpCgS2IdOFs4SHO7-IHoG6uAsK-UGA2NCSAs';
 const SCOPES    = ['https://www.googleapis.com/auth/spreadsheets'];
 
-const SAVANT_URLS = {
-  hitters: 'https://baseballsavant.mlb.com/leaderboard/custom?year=2026&type=batter&filter=&min=q&selections=pa%2Ck_percent%2Cbb_percent%2Cwoba%2Cxwoba%2Csweet_spot_percent%2Cbarrel_batted_rate%2Chard_hit_percent%2Cavg_best_speed%2Cavg_hyper_speed%2Cwhiff_percent%2Cswing_percent&chart=false&x=pa&y=pa&r=no&chartType=beeswarm&sort=xwoba&sortDir=desc',
-  pitchers: 'https://baseballsavant.mlb.com/leaderboard/custom?year=2026&type=pitcher&filter=&min=q&selections=pa%2Ck_percent%2Cbb_percent%2Cwoba%2Cxwoba%2Csweet_spot_percent%2Cbarrel_batted_rate%2Chard_hit_percent%2Cavg_best_speed%2Cavg_hyper_speed%2Cwhiff_percent%2Cswing_percent&chart=false&x=pa&y=pa&r=no&chartType=beeswarm&sort=xwoba&sortDir=asc',
+const CSV_FILES = {
+  hitters: './data/hitters.csv',
+  pitchers: './data/pitchers.csv',
 };
 
 const HITTER_MULT  = {21:1.18,22:1.13,23:1.08,24:1.05,25:1.02,26:1.01,27:1.00,28:0.98,29:0.95,30:0.90,31:0.84,32:0.77,33:0.69,34:0.60,35:0.50};
@@ -28,55 +29,27 @@ function getAgeMult(age, isPitcher) {
   else           { if(a<=21)return 1.18; if(a>=36)return 0.38; if(a===35)return 0.50; return HITTER_MULT[a]||1.00; }
 }
 
-async function scrapeSavant(url, isPitcher) {
-  console.log(`Scraping ${isPitcher?'pitchers':'hitters'} from Savant...`);
-  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
-  const page = await browser.newPage();
-  
-  try {
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 });
-    
-    // Wait much longer for JS to render
-    await page.waitForTimeout(5000);
-    
-    // Try to find any visible text that looks like player data
-    const data = await page.evaluate(() => {
-      const rows = [];
-      
-      // Look for any element containing player data
-      const allText = document.body.innerText;
-      console.log(`DEBUG: Page body text length: ${allText.length}`);
-      
-      // Try to find table
-      let table = document.querySelector('table');
-      console.log(`DEBUG: Table found: ${!!table}`);
-      
-      // If no table, try data attributes
-      if (!table) {
-        const divs = document.querySelectorAll('div[role="row"]');
-        console.log(`DEBUG: Found ${divs.length} divs with role=row`);
-        if (divs.length > 0) {
-          const firstDiv = divs[0];
-          console.log(`DEBUG: First div HTML:`, firstDiv.innerHTML.substring(0, 200));
-        }
-      }
-      
-      // Fallback: look for any text matching xwoba pattern
-      const pageText = document.body.innerText.split('\n');
-      pageText.forEach((line, idx) => {
-        if (idx < 20) console.log(`Line ${idx}: ${line.substring(0, 80)}`);
-      });
-      
-      return rows;
-    });
-    
-    await browser.close();
-    console.log(`  Scraped ${data.length} players`);
-    return data;
-  } catch (err) {
-    await browser.close();
-    throw new Error(`Savant scrape failed: ${err.message}`);
+function loadCSV(filePath, isPitcher) {
+  console.log(`Loading ${isPitcher?'pitchers':'hitters'} from ${filePath}...`);
+  if (!fs.existsSync(filePath)) {
+    console.log(`  File not found: ${filePath}`);
+    return [];
   }
+  
+  const content = fs.readFileSync(filePath, 'utf8');
+  const records = csv.parse(content, { columns: true, skip_empty_lines: true });
+  console.log(`  Loaded ${records.length} records`);
+  
+  const rows = [];
+  for (const rec of records) {
+    const name = rec.Player || rec.player || rec.Name || rec.name || '';
+    const xwoba = parseFloat(rec.xwoba || rec.xWOBA || rec.XWOBA || 0);
+    if (name && xwoba) {
+      rows.push({ name, xwoba });
+    }
+  }
+  console.log(`  Parsed ${rows.length} players with xwoba`);
+  return rows;
 }
 
 async function getSheet(sheets, range) {
@@ -100,7 +73,7 @@ async function main() {
   const auth = new google.auth.GoogleAuth({ credentials: keyJson, scopes: SCOPES });
   const sheets = google.sheets({ version: 'v4', auth });
 
-  console.log('\n=== Savant DYN Z Computation ===\n');
+  console.log('\n=== DYN Z Computation from CSV ===\n');
 
   const settingsRows = await getSheet(sheets, 'SETTINGS!A:B');
   const settingsMap = {};
@@ -126,27 +99,27 @@ async function main() {
   }));
   console.log(`Fetched ${players.length} roster players`);
 
-  const hittersSavant = await scrapeSavant(SAVANT_URLS.hitters, false);
-  const pitchersSavant = await scrapeSavant(SAVANT_URLS.pitchers, true);
-  const savantMap = {};
+  const hittersCsv = loadCSV(CSV_FILES.hitters, false);
+  const pitchersCsv = loadCSV(CSV_FILES.pitchers, true);
+  const dataMap = {};
   
-  hittersSavant.forEach(s => { savantMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: false }; });
-  pitchersSavant.forEach(s => { savantMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: true }; });
-  console.log(`Savant map size: ${Object.keys(savantMap).length}`);
+  hittersCsv.forEach(s => { dataMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: false }; });
+  pitchersCsv.forEach(s => { dataMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: true }; });
+  console.log(`Data map size: ${Object.keys(dataMap).length}`);
 
   const results = [];
   let matched = 0, unmatched = 0;
 
   for (const player of players) {
     const cleanedName = cleanName(player.name);
-    const savantData = savantMap[cleanedName];
+    const playerData = dataMap[cleanedName];
     
     let dynZ = null, salaryTier = 'Minimum', baseSalary = 3, currentSalary = 3;
     
-    if (savantData) {
-      const isPitcher = savantData.isPitcher;
+    if (playerData) {
+      const isPitcher = playerData.isPitcher;
       const ageMult = getAgeMult(player.age, isPitcher);
-      const rawZ = (savantData.xwoba - 0.320) / 0.030;
+      const rawZ = (playerData.xwoba - 0.320) / 0.030;
       dynZ = parseFloat((rawZ * ageMult).toFixed(3));
       
       if (dynZ >= 3.0) { salaryTier = 'Elite'; baseSalary = 40; }
