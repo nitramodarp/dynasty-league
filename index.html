@@ -265,6 +265,16 @@
   .tax-badge.over  { background: rgba(224,90,90,0.15);  color: var(--red);   }
   .tax-badge.clean { background: rgba(76,175,130,0.15); color: var(--green); }
 
+  .clinch-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: rgba(76,175,130,0.15);
+    color: var(--green);
+  }
+
   .team-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -380,6 +390,20 @@
     text-align: center;
   }
 
+  /* ── STANDINGS ── */
+  .standings-banner {
+    background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 24px;
+  }
+
+  .gb-dash { color: var(--gold); font-weight: 600; }
+
   /* ── RULES ── */
   .rules-grid {
     display: grid;
@@ -436,6 +460,7 @@
     .prize-stat .val { font-size: 28px; }
     .player-row { grid-template-columns: 50px 1fr 50px; }
     .player-row .year-chip, .player-row .salary-cell { display: none; }
+    .standings-hide-mobile { display: none; }
   }
 </style>
 </head>
@@ -454,6 +479,7 @@
 
 <nav>
   <button class="nav-btn active" onclick="switchView('payroll', this)">Payroll</button>
+  <button class="nav-btn" onclick="switchView('standings', this)">Standings</button>
   <button class="nav-btn" onclick="switchView('roster', this)">Rosters</button>
   <button class="nav-btn" onclick="switchView('rules', this)">Rules</button>
 </nav>
@@ -483,6 +509,37 @@
             </tr>
           </thead>
           <tbody id="payroll-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- STANDINGS VIEW -->
+  <div class="view" id="view-standings">
+    <div class="loading" id="standings-loading">
+      <div class="spinner"></div>
+      LOADING STANDINGS
+    </div>
+    <div id="standings-content" style="display:none">
+      <div class="standings-banner" id="standings-banner"></div>
+      <div class="section-title">LEAGUE STANDINGS</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Team</th>
+              <th>W</th>
+              <th>L</th>
+              <th>T</th>
+              <th>PCT</th>
+              <th class="standings-hide-mobile">Last Week</th>
+              <th>GB</th>
+              <th class="standings-hide-mobile">Lux Tax</th>
+              <th class="standings-hide-mobile">Prize Contrib</th>
+            </tr>
+          </thead>
+          <tbody id="standings-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -571,24 +628,20 @@ function parseCSVLine(line) {
 
 // ── LOAD DATA ─────────────────────────────────────────────────────
 async function loadData() {
-  // Load SETTINGS
   try {
     const settingsRows = await fetchCSV('SETTINGS');
     settingsRows.forEach(r => {
       const key = (r.Key || r.key || '').trim();
       const raw = (r.Value || r.value || '').trim();
       if (!key) return;
-      // Try numeric first; fall back to string (e.g. trade_deadline)
       const num = parseFloat(raw);
       SETTINGS[key] = isNaN(num) ? raw : num;
     });
   } catch(e) { console.warn('Could not load SETTINGS, using defaults', e); }
 
-  // Load PLAYERS
   const rows = await fetchCSV('PLAYERS');
   PLAYERS = rows.filter(r => r.player_name);
 
-  // Build team summaries
   TEAMS = {};
   for (const p of PLAYERS) {
     const t = p.fantasy_team_name;
@@ -662,6 +715,73 @@ async function renderPayroll() {
   }
 }
 
+// ── STANDINGS VIEW ────────────────────────────────────────────────
+async function renderStandings() {
+  try {
+    const rows = await fetchCSV('STANDINGS');
+    const standings = rows.filter(r => r.team_name && r.wins !== undefined);
+
+    // Banner stats
+    const leader = standings[0];
+    const myTeam = standings.find(r => r.team_name === 'Chief Noc-A-Homa');
+    const clinched = standings.filter(r => r.playoff_clinched === 'Y').length;
+    const totalPrize = standings[0]?.total_prize_pool || '';
+
+    document.getElementById('standings-banner').innerHTML = `
+      <div class="prize-stat">
+        <div class="val" style="font-size:28px">${leader ? leader.team_name : '—'}</div>
+        <div class="lbl">League Leader</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">${leader ? leader.wins + '-' + leader.losses : '—'}</div>
+        <div class="lbl">First Place Record</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">${myTeam ? '#' + myTeam.rank : '—'}</div>
+        <div class="lbl">Chief Noc-A-Homa</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">${totalPrize || '$' + (12 * 20)}</div>
+        <div class="lbl">Prize Pool</div>
+      </div>`;
+
+    const tbody = document.getElementById('standings-tbody');
+    tbody.innerHTML = standings.map(r => {
+      const rank    = parseInt(r.rank) || 0;
+      const isTop   = rank <= 3;
+      const isMe    = r.team_name === 'Chief Noc-A-Homa';
+      const gb      = r.games_back === '-' || r.games_back === '' ? '<span class="gb-dash">—</span>' : r.games_back;
+      const lwt     = r.last_week_wlt || '<span class="muted">—</span>';
+      const tax     = r.luxury_tax_owed || '$0';
+      const contrib = r.prize_pool_contrib || '$20';
+      const clinch  = r.playoff_clinched === 'Y'
+        ? '<span class="clinch-badge">✓ CLINCHED</span>' : '';
+
+      return `<tr style="${isMe ? 'background:rgba(201,168,76,0.06);' : ''}">
+        <td><span class="rank-badge ${isTop ? 'top' : ''}">${rank}</span></td>
+        <td><strong ${isMe ? 'style="color:var(--gold)"' : ''}>${r.team_name}</strong>${clinch ? ' ' + clinch : ''}</td>
+        <td class="mono green">${r.wins}</td>
+        <td class="mono red">${r.losses}</td>
+        <td class="mono muted">${r.ties || 0}</td>
+        <td class="mono">${parseFloat(r.win_pct).toFixed(3)}</td>
+        <td class="mono muted standings-hide-mobile">${lwt}</td>
+        <td class="mono">${gb}</td>
+        <td class="mono standings-hide-mobile ${parseFloat(r.luxury_tax_owed) > 0 ? 'red' : 'muted'}">${tax}</td>
+        <td class="mono standings-hide-mobile gold">${contrib}</td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('standings-loading').style.display = 'none';
+    document.getElementById('standings-content').style.display = 'block';
+  } catch(e) {
+    console.error('Standings render failed:', e);
+    document.getElementById('standings-loading').innerHTML =
+      `<div style="color:var(--red);font-family:'DM Mono',monospace;font-size:12px;text-align:center">
+        ⚠ Error loading standings<br><span style="color:var(--dim);font-size:10px">${e.message}</span>
+      </div>`;
+  }
+}
+
 // ── ROSTER VIEW ───────────────────────────────────────────────────
 async function renderRoster() {
   if (PLAYERS.length === 0) await loadData();
@@ -730,7 +850,6 @@ async function renderRules() {
     if (PLAYERS.length === 0) await loadData();
     const S = SETTINGS;
 
-    // Build escalation table dynamically from escalation_rate
     const rate = S.escalation_rate || 0.12;
     let escalRows = '';
     let mult = 1;
@@ -816,9 +935,10 @@ async function renderRules() {
 }
 
 // ── NAV ───────────────────────────────────────────────────────────
-let payrollLoaded = false;
-let rosterLoaded  = false;
-let rulesLoaded   = false;
+let payrollLoaded   = false;
+let standingsLoaded = false;
+let rosterLoaded    = false;
+let rulesLoaded     = false;
 
 function switchView(id, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -826,9 +946,10 @@ function switchView(id, btn) {
   document.getElementById('view-' + id).classList.add('active');
   btn.classList.add('active');
 
-  if (id === 'payroll' && !payrollLoaded) { payrollLoaded = true; renderPayroll(); }
-  if (id === 'roster'  && !rosterLoaded)  { rosterLoaded  = true; renderRoster();  }
-  if (id === 'rules'   && !rulesLoaded)   { rulesLoaded   = true; renderRules();   }
+  if (id === 'payroll'   && !payrollLoaded)   { payrollLoaded   = true; renderPayroll();   }
+  if (id === 'standings' && !standingsLoaded) { standingsLoaded = true; renderStandings(); }
+  if (id === 'roster'    && !rosterLoaded)    { rosterLoaded    = true; renderRoster();    }
+  if (id === 'rules'     && !rulesLoaded)     { rulesLoaded     = true; renderRules();     }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
@@ -836,5 +957,3 @@ renderPayroll();
 </script>
 </body>
 </html>
-HEREDOC
-echo "File written: $(wc -l < /tmp/dynasty-league-index.html) lines"
