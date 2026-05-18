@@ -65,7 +65,12 @@ function parseCSVManual(content) {
     fields.push(current.replace(/"/g,'').trim());
     
     if (fields[playerIdx] && fields[xwobaIdx]) {
-      const name = fields[playerIdx];
+      let name = fields[playerIdx];
+      // Savant format is "Last, First" — flip to "First Last"
+      if (name.includes(',')) {
+        const parts = name.split(',');
+        name = parts[1].trim() + ' ' + parts[0].trim();
+      }
       const xwoba = parseFloat(fields[xwobaIdx]);
       if (!isNaN(xwoba) && name) {
         rows.push({ name, xwoba });
