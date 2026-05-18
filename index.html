@@ -772,11 +772,11 @@ async function renderRules() {
 
       <div class="rules-card">
         <div class="rules-card-title">Salary Cap System</div>
-        <div class="rule-row"><span class="rule-key">Cap</span><span class="rule-val">$${S.cap_threshold || 500}M</span></div>
-        <div class="rule-row"><span class="rule-key">Escalation</span><span class="rule-val">+${Math.round((S.escalation_rate || 0.12) * 100)}% per year held</span></div>
+        <div class="rule-row"><span class="rule-key">Cap (escalates +12% annually)</span><span class="rule-val">$${S.cap_threshold || 500}M</span></div>
+        <div class="rule-row"><span class="rule-key">Player Salary Escalation</span><span class="rule-val">+${Math.round((S.escalation_rate || 0.12) * 100)}% per year held</span></div>
         <div class="rule-row"><span class="rule-key">Luxury Tax</span><span class="rule-val">$${S.tax_rate_per_10m || 0.25} per $10M over</span></div>
         <div class="rule-row"><span class="rule-key">Tax → Prize Pool</span><span class="rule-val">Yes, automatic</span></div>
-        <div class="rule-row"><span class="rule-key">Trade Reset</span><span class="rule-val">Year 1 at current DYN Z tier</span></div>
+        <div class="rule-row"><span class="rule-key">Trade Reset</span><span class="rule-val">Year 1 at CURRENT Dynasty Value</span></div>
         <div class="rule-row"><span class="rule-key">Floor</span><span class="rule-val">$${S.min_salary || 3}M minimum</span></div>
         <table class="salary-tier-table">
           <tr><td>Elite (DYN Z ≥ ${S.tier_elite_min || 3}.0)</td><td>$${S.salary_elite || 40}M</td></tr>
