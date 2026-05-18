@@ -166,7 +166,9 @@ async function main() {
 
     if (playerData) {
       const ageMult = getAgeMult(player.age, playerData.isPitcher);
-      const rawZ = (playerData.xwoba - 0.320) / 0.030;
+      const rawZ = playerData.isPitcher
+        ? (0.320 - playerData.xwoba) / 0.030   // pitchers: lower xwOBA = better
+        : (playerData.xwoba - 0.320) / 0.030;  // hitters: higher xwOBA = better
       dynZ = parseFloat((rawZ * ageMult).toFixed(3));
 
       if (dynZ >= 3.0) { salaryTier = 'Elite'; baseSalary = 40; }
