@@ -28,7 +28,7 @@ jobs:
         run: npm install
 
       - name: Write Google service account key
-        run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}' > service-account.json
+        run: echo '${{ secrets.GOOGLE_KEY_JSON }}' > service-account.json
 
       - name: Run sync_standings.js
         env:
