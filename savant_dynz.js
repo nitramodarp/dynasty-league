@@ -28,56 +28,24 @@ function getAgeMult(age, isPitcher) {
   else           { if(a<=21)return 1.18; if(a>=36)return 0.38; if(a===35)return 0.50; return HITTER_MULT[a]||1.00; }
 }
 
-function parseCSVManual(content) {
-  const lines = content.split('\n').filter(l => l.trim());
-  if (lines.length < 1) return [];
-  
-  // Parse header
-  const headerLine = lines[0];
-  const headers = headerLine.split(',').map(h => h.replace(/"/g,'').trim());
-  const playerIdx = headers.findIndex(h => h.toLowerCase().includes('player'));
-  const xwobaIdx = headers.findIndex(h => h.toLowerCase().includes('xwoba') || h.toLowerCase().includes('xwoba'));
-  
-  if (playerIdx < 0 || xwobaIdx < 0) {
-    console.log(`Headers: ${headers}`);
-    return [];
-  }
-  
-  const rows = [];
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
-    
-    // Simple CSV parse: split by comma, handle quoted fields
-    const fields = [];
-    let current = '';
-    let inQuotes = false;
-    for (let j = 0; j < line.length; j++) {
-      const c = line[j];
-      if (c === '"') inQuotes = !inQuotes;
-      else if (c === ',' && !inQuotes) {
-        fields.push(current.replace(/"/g,'').trim());
-        current = '';
-      } else {
-        current += c;
-      }
-    }
-    fields.push(current.replace(/"/g,'').trim());
-    
-    if (fields[playerIdx] && fields[xwobaIdx]) {
-      let name = fields[playerIdx];
-      // Savant format is "Last, First" — flip to "First Last"
-      if (name.includes(',')) {
-        const parts = name.split(',');
-        name = parts[1].trim() + ' ' + parts[0].trim();
-      }
-      const xwoba = parseFloat(fields[xwobaIdx]);
-      if (!isNaN(xwoba) && name) {
-        rows.push({ name, xwoba });
-      }
+// Parse a CSV line respecting quoted fields
+function parseLine(line) {
+  const fields = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      inQuotes = !inQuotes;
+    } else if (c === ',' && !inQuotes) {
+      fields.push(current.trim());
+      current = '';
+    } else {
+      current += c;
     }
   }
-  return rows;
+  fields.push(current.trim());
+  return fields;
 }
 
 function loadCSV(filePath, isPitcher) {
@@ -86,9 +54,45 @@ function loadCSV(filePath, isPitcher) {
     console.log(`  File not found: ${filePath}`);
     return [];
   }
-  
-  const content = fs.readFileSync(filePath, 'utf8');
-  const rows = parseCSVManual(content);
+
+  // Strip BOM if present
+  let content = fs.readFileSync(filePath, 'utf8');
+  content = content.replace(/^\uFEFF/, '');
+
+  const lines = content.split('\n').filter(l => l.trim());
+  if (lines.length < 2) return [];
+
+  const headers = parseLine(lines[0]);
+  console.log(`  Headers: ${headers.slice(0,5).join(' | ')}`);
+
+  // Savant name column is "last_name, first_name" — it'll appear as one field after parsing
+  const nameIdx = headers.findIndex(h => h.includes('last_name') || h.includes('name'));
+  const xwobaIdx = headers.findIndex(h => h === 'xwoba');
+  console.log(`  nameIdx=${nameIdx}, xwobaIdx=${xwobaIdx}`);
+
+  if (nameIdx < 0 || xwobaIdx < 0) {
+    console.log(`  Could not find required columns`);
+    return [];
+  }
+
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const fields = parseLine(lines[i]);
+    if (!fields[nameIdx] || !fields[xwobaIdx]) continue;
+
+    // Savant: "Last, First" → flip to "First Last"
+    let name = fields[nameIdx];
+    if (name.includes(',')) {
+      const parts = name.split(',');
+      name = parts[1].trim() + ' ' + parts[0].trim();
+    }
+
+    const xwoba = parseFloat(fields[xwobaIdx]);
+    if (!isNaN(xwoba) && xwoba > 0 && name) {
+      rows.push({ name, xwoba });
+    }
+  }
+
   console.log(`  Parsed ${rows.length} players with xwoba`);
   return rows;
 }
@@ -129,13 +133,11 @@ async function main() {
   const headers = playersRows[0];
   const nameIdx = headers.indexOf('player_name');
   const ageIdx = headers.indexOf('age');
-  const posIdx = headers.indexOf('position');
   const yearHeldIdx = headers.indexOf('year_held');
-  
+
   const players = playersRows.slice(1).map(row => ({
     name: row[nameIdx] || '',
     age: parseFloat(row[ageIdx]) || 27,
-    position: row[posIdx] || '',
     year_held: parseFloat(row[yearHeldIdx]) || 0,
   }));
   console.log(`Fetched ${players.length} roster players`);
@@ -143,10 +145,15 @@ async function main() {
   const hittersCsv = loadCSV(CSV_FILES.hitters, false);
   const pitchersCsv = loadCSV(CSV_FILES.pitchers, true);
   const dataMap = {};
-  
+
   hittersCsv.forEach(s => { dataMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: false }; });
   pitchersCsv.forEach(s => { dataMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: true }; });
   console.log(`Data map size: ${Object.keys(dataMap).length}`);
+
+  // Debug: show first 3 names from each CSV
+  console.log('Sample hitter names:', hittersCsv.slice(0,3).map(h => h.name));
+  console.log('Sample pitcher names:', pitchersCsv.slice(0,3).map(p => p.name));
+  console.log('Sample roster names:', players.slice(0,3).map(p => p.name));
 
   const results = [];
   let matched = 0, unmatched = 0;
@@ -154,33 +161,31 @@ async function main() {
   for (const player of players) {
     const cleanedName = cleanName(player.name);
     const playerData = dataMap[cleanedName];
-    
+
     let dynZ = null, salaryTier = 'Minimum', baseSalary = 3, currentSalary = 3;
-    
+
     if (playerData) {
-      const isPitcher = playerData.isPitcher;
-      const ageMult = getAgeMult(player.age, isPitcher);
+      const ageMult = getAgeMult(player.age, playerData.isPitcher);
       const rawZ = (playerData.xwoba - 0.320) / 0.030;
       dynZ = parseFloat((rawZ * ageMult).toFixed(3));
-      
+
       if (dynZ >= 3.0) { salaryTier = 'Elite'; baseSalary = 40; }
       else if (dynZ >= 2.0) { salaryTier = 'Star'; baseSalary = 30; }
       else if (dynZ >= 1.0) { salaryTier = 'Solid'; baseSalary = 20; }
       else if (dynZ >= 0.0) { salaryTier = 'Depth'; baseSalary = 10; }
       else { salaryTier = 'Minimum'; baseSalary = 3; }
-      
+
       if (isTaxDayPassed && player.year_held > 0) {
         const escalationRate = parseFloat(settingsMap.escalation_rate) || 0.12;
         currentSalary = parseFloat((baseSalary * Math.pow(1 + escalationRate, player.year_held)).toFixed(1));
       } else {
         currentSalary = baseSalary;
       }
-      
       matched++;
     } else {
       unmatched++;
     }
-    
+
     results.push([dynZ !== null ? dynZ : '', salaryTier, baseSalary, currentSalary]);
   }
 
