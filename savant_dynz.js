@@ -12,16 +12,6 @@ const CSV_FILES = {
 const HITTER_MULT  = {21:1.18,22:1.13,23:1.08,24:1.05,25:1.02,26:1.01,27:1.00,28:0.98,29:0.95,30:0.90,31:0.84,32:0.77,33:0.69,34:0.60,35:0.50};
 const PITCHER_MULT = {21:1.15,22:1.10,23:1.06,24:1.03,25:1.01,26:1.00,27:0.97,28:0.93,29:0.88,30:0.82,31:0.75,32:0.67,33:0.58,34:0.49,35:0.38};
 
-function cleanName(n) {
-  if (!n) return '';
-  return n.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/\s+jr\.?$/,'').replace(/\s+sr\.?$/,'')
-    .replace(/\s+ii+$/,'').replace(/\s+iii+$/,'')
-    .replace(/['']/g,'').replace(/\./g,'')
-    .replace(/[()]/g,'').replace(/\s+/g,' ').trim();
-}
-
 function getAgeMult(age, isPitcher) {
   const a = Math.round(age);
   if (isPitcher) { if(a<=21)return 1.15; if(a>=35)return 0.38; return PITCHER_MULT[a]||1.00; }
@@ -63,37 +53,31 @@ function loadCSV(filePath, isPitcher) {
   if (lines.length < 2) return [];
 
   const headers = parseLine(lines[0]);
+
+  // Match on player_id — exact, immune to name spelling/accents/suffixes
+  const idIdx    = headers.findIndex(h => h.trim() === 'player_id');
+  const xwobaIdx = headers.findIndex(h => h.trim() === 'xwoba');
+  // Keep name only for logging/debugging
+  const nameIdx  = headers.findIndex(h => h.includes('last_name') || h.includes('name'));
   console.log(`  Headers: ${headers.slice(0,5).join(' | ')}`);
+  console.log(`  idIdx=${idIdx}, xwobaIdx=${xwobaIdx}, nameIdx=${nameIdx}`);
 
-  // Savant name column is "last_name, first_name" — it'll appear as one field after parsing
-  const nameIdx = headers.findIndex(h => h.includes('last_name') || h.includes('name'));
-  const xwobaIdx = headers.findIndex(h => h === 'xwoba');
-  console.log(`  nameIdx=${nameIdx}, xwobaIdx=${xwobaIdx}`);
-
-  if (nameIdx < 0 || xwobaIdx < 0) {
-    console.log(`  Could not find required columns`);
+  if (idIdx < 0 || xwobaIdx < 0) {
+    console.log(`  Could not find required columns (need player_id and xwoba)`);
     return [];
   }
 
   const rows = [];
   for (let i = 1; i < lines.length; i++) {
     const fields = parseLine(lines[i]);
-    if (!fields[nameIdx] || !fields[xwobaIdx]) continue;
-
-    // Savant: "Last, First" → flip to "First Last"
-    let name = fields[nameIdx];
-    if (name.includes(',')) {
-      const parts = name.split(',');
-      name = parts[1].trim() + ' ' + parts[0].trim();
-    }
-
+    const id    = (fields[idIdx]    || '').trim();
     const xwoba = parseFloat(fields[xwobaIdx]);
-    if (!isNaN(xwoba) && xwoba > 0 && name) {
-      rows.push({ name, xwoba });
-    }
+    if (!id || isNaN(xwoba) || xwoba <= 0) continue;
+    const name = nameIdx >= 0 ? (fields[nameIdx] || '') : '';
+    rows.push({ id, xwoba, name });
   }
 
-  console.log(`  Parsed ${rows.length} players with xwoba`);
+  console.log(`  Parsed ${rows.length} players with player_id + xwoba`);
   return rows;
 }
 
@@ -118,7 +102,7 @@ async function main() {
   const auth = new google.auth.GoogleAuth({ credentials: keyJson, scopes: SCOPES });
   const sheets = google.sheets({ version: 'v4', auth });
 
-  console.log('\n=== DYN Z Computation from CSV ===\n');
+  console.log('\n=== DYN Z Computation from CSV (player_id match) ===\n');
 
   const settingsRows = await getSheet(sheets, 'SETTINGS!A:B');
   const settingsMap = {};
@@ -131,36 +115,53 @@ async function main() {
 
   const playersRows = await getSheet(sheets, 'PLAYERS!A1:Q500');
   const headers = playersRows[0];
-  const nameIdx = headers.indexOf('player_name');
-  const ageIdx = headers.indexOf('age');
+  const idIdx       = headers.indexOf('player_id');
+  const nameIdx     = headers.indexOf('player_name');
+  const ageIdx      = headers.indexOf('age');
   const yearHeldIdx = headers.indexOf('year_held');
 
   const players = playersRows.slice(1).map(row => ({
-    name: row[nameIdx] || '',
-    age: parseFloat(row[ageIdx]) || 27,
+    id:        (row[idIdx] || '').toString().trim(),
+    name:      row[nameIdx] || '',
+    age:       parseFloat(row[ageIdx]) || 27,
     year_held: parseFloat(row[yearHeldIdx]) || 0,
   }));
   console.log(`Fetched ${players.length} roster players`);
 
-  const hittersCsv = loadCSV(CSV_FILES.hitters, false);
+  const hittersCsv  = loadCSV(CSV_FILES.hitters, false);
   const pitchersCsv = loadCSV(CSV_FILES.pitchers, true);
+
+  // Build ID-keyed map. If a player_id appears in both files (two-way),
+  // the entry is stored under a side-specific suffix as well, so the
+  // roster designation can pick the right one.
   const dataMap = {};
+  hittersCsv.forEach(s  => { dataMap[s.id]            = { xwoba: s.xwoba, isPitcher: false }; });
+  pitchersCsv.forEach(s => {
+    // Don't let a pitcher entry clobber a hitter entry for the same id.
+    if (!dataMap[s.id]) dataMap[s.id] = { xwoba: s.xwoba, isPitcher: true };
+  });
+  // Side-specific keys for two-way handling (e.g. Ohtani):
+  const hitterById  = {}; hittersCsv.forEach(s  => { hitterById[s.id]  = s.xwoba; });
+  const pitcherById = {}; pitchersCsv.forEach(s => { pitcherById[s.id] = s.xwoba; });
 
-  hittersCsv.forEach(s => { dataMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: false }; });
-  pitchersCsv.forEach(s => { dataMap[cleanName(s.name)] = { xwoba: s.xwoba, isPitcher: true }; });
   console.log(`Data map size: ${Object.keys(dataMap).length}`);
-
-  // Debug: show first 3 names from each CSV
-  console.log('Sample hitter names:', hittersCsv.slice(0,3).map(h => h.name));
-  console.log('Sample pitcher names:', pitchersCsv.slice(0,3).map(p => p.name));
-  console.log('Sample roster names:', players.slice(0,3).map(p => p.name));
+  console.log('Sample roster:', players.slice(0,3).map(p => `${p.name}(${p.id})`));
 
   const results = [];
   let matched = 0, unmatched = 0;
+  const unmatchedNames = [];
 
   for (const player of players) {
-    const cleanedName = cleanName(player.name);
-    const playerData = dataMap[cleanedName];
+    let playerData = null;
+
+    // Two-way routing by roster designation, keyed on id
+    if (/\(pitcher\)/i.test(player.name)) {
+      if (pitcherById[player.id] !== undefined) playerData = { xwoba: pitcherById[player.id], isPitcher: true };
+    } else if (/\(batter\)/i.test(player.name) || /\(hitter\)/i.test(player.name)) {
+      if (hitterById[player.id] !== undefined) playerData = { xwoba: hitterById[player.id], isPitcher: false };
+    } else if (player.id && dataMap[player.id]) {
+      playerData = dataMap[player.id];
+    }
 
     let dynZ = null, salaryTier = 'Minimum', baseSalary = 3, currentSalary = 3;
 
@@ -186,12 +187,14 @@ async function main() {
       matched++;
     } else {
       unmatched++;
+      if (unmatchedNames.length < 40) unmatchedNames.push(`${player.name}(${player.id || 'no-id'})`);
     }
 
     results.push([dynZ !== null ? dynZ : '', salaryTier, baseSalary, currentSalary]);
   }
 
   console.log(`Matched: ${matched}/${players.length}, Unmatched: ${unmatched}`);
+  console.log('Unmatched (first 40):', unmatchedNames);
 
   console.log('Writing to PLAYERS sheet...');
   await updateSheet(sheets, 'PLAYERS!H2', results.map(r => [r[0]]));
