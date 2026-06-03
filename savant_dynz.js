@@ -95,12 +95,20 @@ function loadCSV(filePath, isPitcher) {
   const nameIdx   = headers.findIndex(h => h.includes('last_name') || h === 'name' || h.includes('name'));
   const xwobaIdx  = headers.findIndex(h => h.trim() === 'xwoba');
   const sampleIdx = headers.findIndex(h => h.trim() === 'pa' || h.trim() === 'bf');
+  // Savant "Player Age" column — match common header variants
+  const ageIdx    = headers.findIndex(h => {
+    const t = h.trim().toLowerCase();
+    return t === 'player_age' || t === 'age' || t === 'player age';
+  });
   console.log(`  Headers: ${headers.slice(0,6).join(' | ')}`);
-  console.log(`  nameIdx=${nameIdx}, xwobaIdx=${xwobaIdx}, sampleIdx=${sampleIdx}`);
+  console.log(`  nameIdx=${nameIdx}, xwobaIdx=${xwobaIdx}, sampleIdx=${sampleIdx}, ageIdx=${ageIdx}`);
 
   if (nameIdx < 0 || xwobaIdx < 0) {
     console.log(`  Could not find required columns`);
     return [];
+  }
+  if (ageIdx < 0) {
+    console.log(`  ⚠ No age column found — age-based scoring will fall back to 27`);
   }
 
   const rows = [];
@@ -110,6 +118,7 @@ function loadCSV(filePath, isPitcher) {
     const rawName = fields[nameIdx] || '';
     const xwoba   = parseFloat(fields[xwobaIdx]);
     const sample  = sampleIdx >= 0 ? parseFloat(fields[sampleIdx]) : 0;
+    const age     = ageIdx >= 0 ? parseFloat(fields[ageIdx]) : NaN;
 
     if (!rawName || isNaN(xwoba) || xwoba <= 0) { skipped++; continue; }
 
@@ -119,7 +128,7 @@ function loadCSV(filePath, isPitcher) {
       name = parts[1].trim() + ' ' + parts[0].trim();
     }
 
-    rows.push({ name, xwoba, sample: isNaN(sample) ? 0 : sample });
+    rows.push({ name, xwoba, sample: isNaN(sample) ? 0 : sample, age: isNaN(age) ? null : age });
   }
 
   // Compute mean sample size across this file -> dynamic k
@@ -189,10 +198,10 @@ async function main() {
   const kHitter  = hitters.k  || 1;
   const kPitcher = pitchers.k || 1;
 
-  // Build name-keyed maps, carrying xwoba + sample so we can regress at match time.
+  // Build name-keyed maps, carrying xwoba + sample + age so we can regress and age-weight at match time.
   const hitterMap = {}, pitcherMap = {}, dataMap = {};
-  hittersCsv.forEach(s  => { const key = cleanName(s.name); hitterMap[key]  = { xwoba: s.xwoba, sample: s.sample }; dataMap[key] = { xwoba: s.xwoba, sample: s.sample, isPitcher: false }; });
-  pitchersCsv.forEach(s => { const key = cleanName(s.name); pitcherMap[key] = { xwoba: s.xwoba, sample: s.sample }; if (!dataMap[key]) dataMap[key] = { xwoba: s.xwoba, sample: s.sample, isPitcher: true }; });
+  hittersCsv.forEach(s  => { const key = cleanName(s.name); hitterMap[key]  = { xwoba: s.xwoba, sample: s.sample, age: s.age }; dataMap[key] = { xwoba: s.xwoba, sample: s.sample, age: s.age, isPitcher: false }; });
+  pitchersCsv.forEach(s => { const key = cleanName(s.name); pitcherMap[key] = { xwoba: s.xwoba, sample: s.sample, age: s.age }; if (!dataMap[key]) dataMap[key] = { xwoba: s.xwoba, sample: s.sample, age: s.age, isPitcher: true }; });
 
   console.log(`Hitter map: ${Object.keys(hitterMap).length}, Pitcher map: ${Object.keys(pitcherMap).length}, Combined: ${Object.keys(dataMap).length}`);
 
@@ -220,7 +229,12 @@ async function main() {
       const k = playerData.isPitcher ? kPitcher : kHitter;
       const regXwoba = regressXwoba(playerData.xwoba, playerData.sample, k);
 
-      const ageMult = getAgeMult(player.age, playerData.isPitcher);
+      // Age priority: CSV age (from Savant) -> sheet age column -> default 27
+      const effAge = (playerData.age != null && !isNaN(playerData.age))
+        ? playerData.age
+        : (player.age || 27);
+
+      const ageMult = getAgeMult(effAge, playerData.isPitcher);
       const rawZ = playerData.isPitcher
         ? (Z_ANCHOR - regXwoba) / Z_SCALE   // pitchers: lower xwOBA = better
         : (regXwoba - Z_ANCHOR) / Z_SCALE;  // hitters: higher xwOBA = better
@@ -231,7 +245,7 @@ async function main() {
       let z = rawZ > 0 ? rawZ * ageMult : rawZ;
 
       // Youth floor: dynasty benefit-of-the-doubt bump for young players.
-      if (Math.round(player.age) <= YOUTH_FLOOR_AGE) {
+      if (Math.round(effAge) <= YOUTH_FLOOR_AGE) {
         z += YOUTH_FLOOR_BONUS;
       }
 
