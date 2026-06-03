@@ -29,6 +29,9 @@ async function getLeagueKey(token) {
 }
 
 async function getAllRosters(leagueKey, token) {
+const SAVANT_ID_OVERRIDES = {
+  'Shohei Ohtani (Batter)': '660271',
+};
   const data = await yahooGet(`/league/${leagueKey}/teams/roster`, token);
   const teams = data.fantasy_content.league[1].teams;
   const rows = [];
@@ -44,13 +47,14 @@ async function getAllRosters(leagueKey, token) {
       const selPos = player[1]?.selected_position?.[1]?.position || '';
       const playerId = info[1]?.player_id || '';
       const playerName = info[2]?.name?.full || '';
+      const finalId = SAVANT_ID_OVERRIDES[playerName] || playerId;
       const mlbTeam = info[7]?.editorial_team_abbr || '';
       const position = info[11]?.display_position || '';
       let rosterSlot = 'Active';
       if (selPos === 'IL') rosterSlot = 'IL';
       if (selPos === 'NA') rosterSlot = 'NA';
       if (selPos === 'BN') rosterSlot = 'BN';
-      rows.push([playerId, playerName, mlbTeam, position, teamId, teamName, rosterSlot]);
+      rows.push([finalId, playerName, mlbTeam, position, teamId, teamName, rosterSlot]);
     }
   }
   console.log(`✓ ${rows.length} players fetched`);
