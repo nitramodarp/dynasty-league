@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>War Room — Trade Analyzer</title>
+<title>War Room — 40s and Blunts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -18,15 +18,23 @@
     radial-gradient(ellipse 80% 50% at 20% 20%,rgba(27,58,107,0.4) 0%,transparent 60%),
     radial-gradient(ellipse 60% 40% at 80% 80%,rgba(201,168,76,0.08) 0%,transparent 50%);
     pointer-events:none;z-index:0;}
-  header{position:relative;z-index:10;padding:28px 32px 20px;border-bottom:1px solid var(--border);}
+  header{position:relative;z-index:10;padding:28px 32px 0;border-bottom:1px solid var(--border);}
   .badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;opacity:0.8;}
   h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,56px);letter-spacing:4px;line-height:1;}
   h1 span{color:var(--gold);}
-  .sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:1px;}
+  .sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:1px;padding-bottom:18px;}
+  nav{position:sticky;top:0;z-index:10;display:flex;padding:0 32px;background:rgba(13,27,42,0.85);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);}
+  .nav-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);background:none;border:none;border-bottom:2px solid transparent;padding:16px 22px;cursor:pointer;transition:all .2s;}
+  .nav-btn:hover{color:var(--text);}
+  .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
   main{position:relative;z-index:1;padding:28px 32px;max-width:1200px;margin:0 auto;}
+  .view{display:none;} .view.active{display:block;}
   .loading{display:flex;flex-direction:column;align-items:center;padding:60px;gap:16px;color:var(--dim);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;}
   .spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* ── TRADE ANALYZER ── */
   .sides{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
   @media(max-width:760px){.sides{grid-template-columns:1fr;}}
   .side{background:rgba(30,45,61,0.55);border:1px solid var(--border);border-radius:12px;padding:20px;}
@@ -55,7 +63,6 @@
   .analyze-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
   .verdict{background:linear-gradient(135deg,rgba(27,58,107,0.6),rgba(201,168,76,0.08));border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;display:none;}
   .verdict.show{display:block;animation:fade .3s ease;}
-  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
   .verdict-head{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:6px;}
   .verdict-sub{font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);margin-bottom:18px;}
   .compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -68,17 +75,42 @@
   .net-pos{color:var(--green);} .net-neg{color:var(--red);}
   .warn{background:rgba(224,90,90,0.1);border:1px solid rgba(224,90,90,0.3);border-radius:8px;padding:12px 16px;margin-top:16px;font-size:12px;color:#FFB0B0;font-family:'DM Mono',monospace;line-height:1.6;}
   .note{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:16px;letter-spacing:0.5px;line-height:1.6;}
+
+  /* ── WEAKNESS DASHBOARD ── */
+  .dash-team-pick{margin-bottom:24px;max-width:340px;}
+  .dash-team-pick label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:28px;}
+  .cat-card{background:rgba(30,45,61,0.55);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;}
+  .cat-card .catname{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;}
+  .cat-card .catval{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;margin-top:4px;}
+  .cat-card .catrank{font-family:'DM Mono',monospace;font-size:11px;margin-top:2px;}
+  .rk-strong{color:var(--green);} .rk-mid{color:var(--dim);} .rk-weak{color:var(--red);}
+  .cat-card .bar{position:absolute;bottom:0;left:0;height:3px;}
+  .bar-strong{background:var(--green);} .bar-mid{background:var(--muted);} .bar-weak{background:var(--red);}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold);margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .target-block{background:rgba(30,45,61,0.5);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+  .target-head{font-family:'DM Mono',monospace;font-size:13px;color:var(--red);letter-spacing:1px;margin-bottom:10px;}
+  .target-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;align-items:center;}
+  .target-rank{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);}
+  .target-team{font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);}
+  .you-row{background:rgba(201,168,76,0.07);border-radius:4px;}
 </style>
 </head>
 <body>
 <header>
   <div class="badge">40s and Blunts · Private</div>
   <h1>War <span>Room</span></h1>
-  <div class="sub">Trade Analyzer · DYN Z + Cap Impact</div>
+  <div class="sub">Trade Analyzer · Weakness Dashboard</div>
 </header>
+<nav>
+  <button class="nav-btn active" onclick="switchView('trade',this)">Trade Analyzer</button>
+  <button class="nav-btn" onclick="switchView('dash',this)">Weakness Dashboard</button>
+</nav>
 <main>
-  <div class="loading" id="loading"><div class="spinner"></div>LOADING ROSTERS</div>
-  <div id="app" style="display:none">
+  <div class="loading" id="loading"><div class="spinner"></div>LOADING DATA</div>
+
+  <!-- TRADE ANALYZER -->
+  <div class="view active" id="view-trade" style="display:none">
     <div class="sides">
       <div class="side">
         <div class="side-title">Team A Sends</div>
@@ -99,14 +131,29 @@
     <div class="verdict" id="verdict"></div>
     <div class="note" id="note"></div>
   </div>
+
+  <!-- WEAKNESS DASHBOARD -->
+  <div class="view" id="view-dash" style="display:none">
+    <div class="dash-team-pick">
+      <label>Analyze team</label>
+      <select id="dashTeam" onchange="renderDash()"><option value="">Select team…</option></select>
+    </div>
+    <div id="dashBody"></div>
+  </div>
 </main>
 <script>
 const SHEET_ID='1FtMDNhzSpCgS2IdOFs4SHO7-IHoG6uAsK-UGA2NCSAs';
 const BASE=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
-const CAP=370, TAX_RATE=1.5; // $/$10M over; pulled-from-settings fallback
 
 let PLAYERS=[], TEAMS={}, SETTINGS={cap_threshold:370,tax_rate_per_10m:1.5};
-const picks={A:[],B:[]}; // selected player names per side
+let TEAMSTATS=[]; // rows from TEAM_STATS tab
+const picks={A:[],B:[]};
+
+// For each category: higher-is-better? ERA & WHIP are lower-is-better.
+const CATS=[
+  {key:'R',hi:true},{key:'HR',hi:true},{key:'RBI',hi:true},{key:'SB',hi:true},{key:'OPS',hi:true},
+  {key:'K',hi:true},{key:'ERA',hi:false},{key:'WHIP',hi:false},{key:'QS',hi:true},{key:'SV+H',hi:true}
+];
 
 function parseCSV(t){const L=t.trim().split('\n');const H=pl(L[0]);return L.slice(1).map(l=>{const v=pl(l);const o={};H.forEach((h,i)=>o[h.trim()]=(v[i]||'').trim());return o;});}
 function pl(line){const r=[];let c='',q=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;continue;}if(ch===','&&!q){r.push(c);c='';continue;}c+=ch;}r.push(c);return r;}
@@ -115,6 +162,7 @@ async function fetchCSV(s){const r=await fetch(BASE+encodeURIComponent(s));retur
 async function load(){
   try{
     try{const sr=await fetchCSV('SETTINGS');sr.forEach(r=>{const k=(r.Key||r.key||'').trim();const v=(r.Value||r.value||'').trim();if(k){const n=parseFloat(v);SETTINGS[k]=isNaN(n)?v:n;}});}catch(e){}
+
     const rows=await fetchCSV('PLAYERS');
     PLAYERS=rows.filter(r=>r.player_name);
     TEAMS={};
@@ -122,25 +170,40 @@ async function load(){
       const t=p.fantasy_team_name; if(!t)continue;
       if(!TEAMS[t])TEAMS[t]={name:t,players:[],payroll:0};
       const sal=parseFloat(p.current_salary)||parseFloat(p.base_salary)||3;
-      const dynz=parseFloat(p.dyn_z); // may be NaN/blank
-      const obj={name:p.player_name,sal,dynz:isNaN(dynz)?null:dynz,tier:p.salary_tier||'Minimum',slot:p.roster_slot||'',pos:p.position||''};
-      TEAMS[t].players.push(obj); TEAMS[t].payroll+=sal;
+      const dynz=parseFloat(p.dyn_z);
+      TEAMS[t].players.push({name:p.player_name,sal,dynz:isNaN(dynz)?null:dynz,tier:p.salary_tier||'Minimum',slot:p.roster_slot||'',pos:p.position||''});
+      TEAMS[t].payroll+=sal;
     }
+
+    try{ TEAMSTATS=await fetchCSV('TEAM_STATS'); }catch(e){ TEAMSTATS=[]; }
+
     const names=Object.keys(TEAMS).sort();
-    for(const sel of ['teamA','teamB']){
-      const el=document.getElementById(sel);
+    ['teamA','teamB','dashTeam'].forEach(id=>{
+      const el=document.getElementById(id);
       names.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;el.appendChild(o);});
-    }
+    });
+    // default dashboard to Chief Noc-A-Homa if present
+    if(names.includes('Chief Noc-A-Homa'))document.getElementById('dashTeam').value='Chief Noc-A-Homa';
+
     document.getElementById('loading').style.display='none';
-    document.getElementById('app').style.display='block';
+    document.getElementById('view-trade').style.display='block';
     document.getElementById('note').innerHTML=
       `Cap $${SETTINGS.cap_threshold||370}M · tax $${SETTINGS.tax_rate_per_10m||1.5}/$10M over · `+
-      `Players-only (picks not included). DYN Z reflects current performance + age; it undervalues prospects with little MLB data — adjust mentally for those.`;
+      `Players-only (picks not included). DYN Z reflects current performance + age; it undervalues prospects — adjust mentally.`;
   }catch(e){
     document.getElementById('loading').innerHTML=`<div style="color:var(--red);font-family:'DM Mono'">⚠ Load error: ${e.message}</div>`;
   }
 }
 
+function switchView(id,btn){
+  document.querySelectorAll('.view').forEach(v=>{v.classList.remove('active');v.style.display='none';});
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const v=document.getElementById('view-'+id);v.classList.add('active');v.style.display='block';
+  btn.classList.add('active');
+  if(id==='dash')renderDash();
+}
+
+/* ─── TRADE ANALYZER ─── */
 function renderPicks(side){
   picks[side]=[];
   document.getElementById('picks'+side).innerHTML='';
@@ -150,7 +213,6 @@ function renderPicks(side){
   if(team)addPick(side);
   refreshBtn();
 }
-
 function addPick(side){
   const team=document.getElementById('team'+side).value; if(!team)return;
   const wrap=document.getElementById('picks'+side);
@@ -162,100 +224,126 @@ function addPick(side){
     o.textContent=`${p.name} (${p.dynz!=null?p.dynz.toFixed(2):'—'} · ${p.tier})`;
     sel.appendChild(o);
   });
-  sel.onchange=()=>{updateChosen(side);};
+  sel.onchange=()=>updateChosen(side);
   const rm=document.createElement('button');rm.className='rm-btn';rm.textContent='×';
   rm.onclick=()=>{row.remove();updateChosen(side);};
   row.appendChild(sel);row.appendChild(rm);wrap.appendChild(row);
 }
-
 function updateChosen(side){
   const team=document.getElementById('team'+side).value;
   const sels=document.querySelectorAll('#picks'+side+' select');
   picks[side]=[];
   sels.forEach(s=>{if(s.value)picks[side].push(s.value);});
-  const box=document.getElementById('chosen'+side);
-  box.innerHTML='';
+  const box=document.getElementById('chosen'+side);box.innerHTML='';
   picks[side].forEach(name=>{
     const p=TEAMS[team].players.find(x=>x.name===name); if(!p)return;
     const isProspect=p.slot==='NA'||p.dynz==null;
     const div=document.createElement('div');div.className='chosen-player';
-    div.innerHTML=`<span class="cp-name">${p.name}</span>`+
-      `<span class="tier-pill tier-${p.tier}">${p.tier}</span>`+
-      `<span class="cp-z">${p.dynz!=null?p.dynz.toFixed(2):'—'}</span>`+
-      `<span class="cp-sal">$${p.sal}M</span>`+
-      (isProspect?`<span class="prospect-tag">PROSPECT</span>`:'');
+    div.innerHTML=`<span class="cp-name">${p.name}</span><span class="tier-pill tier-${p.tier}">${p.tier}</span><span class="cp-z">${p.dynz!=null?p.dynz.toFixed(2):'—'}</span><span class="cp-sal">$${p.sal}M</span>`+(isProspect?`<span class="prospect-tag">PROSPECT</span>`:'');
     box.appendChild(div);
   });
   refreshBtn();
 }
-
 function refreshBtn(){
-  const ok=document.getElementById('teamA').value&&document.getElementById('teamB').value&&
-    (picks.A.length>0||picks.B.length>0)&&
-    document.getElementById('teamA').value!==document.getElementById('teamB').value;
+  const ok=document.getElementById('teamA').value&&document.getElementById('teamB').value&&(picks.A.length>0||picks.B.length>0)&&document.getElementById('teamA').value!==document.getElementById('teamB').value;
   document.getElementById('analyzeBtn').disabled=!ok;
 }
-
 function sideTotals(side){
   const team=document.getElementById('team'+side).value;
   let z=0,sal=0,prospects=0;
-  picks[side].forEach(name=>{
-    const p=TEAMS[team].players.find(x=>x.name===name); if(!p)return;
-    z+=(p.dynz||0); sal+=p.sal;
-    if(p.slot==='NA'||p.dynz==null)prospects++;
-  });
-  return {team,z,sal,prospects,count:picks[side].length};
+  picks[side].forEach(name=>{const p=TEAMS[team].players.find(x=>x.name===name);if(!p)return;z+=(p.dynz||0);sal+=p.sal;if(p.slot==='NA'||p.dynz==null)prospects++;});
+  return {team,z,sal,prospects};
 }
-
-function capLine(payroll){
-  const cap=SETTINGS.cap_threshold||370;
-  const over=payroll-cap;
-  const tax=over>0?(over/10)*(SETTINGS.tax_rate_per_10m||1.5):0;
-  return {over,tax};
-}
-
+function capLine(payroll){const cap=SETTINGS.cap_threshold||370;const over=payroll-cap;const tax=over>0?(over/10)*(SETTINGS.tax_rate_per_10m||1.5):0;return{over,tax};}
 function analyze(){
-  const A=sideTotals('A'), B=sideTotals('B');
-  // A gives its players to B and receives B's players (trade reset: salary = current tier base, already Year1 now)
-  const newPayrollA=TEAMS[A.team].payroll - A.sal + B.sal;
-  const newPayrollB=TEAMS[B.team].payroll - B.sal + A.sal;
-  const capA=capLine(newPayrollA), capB=capLine(newPayrollB);
-
-  // Fairness by net DYN Z each side receives
-  const aGets=B.z, bGets=A.z;
-  const diff=aGets-bGets;
-  const absDiff=Math.abs(diff);
-  let head,sub,winner;
-  if(absDiff<0.5){head='Even Trade';sub='Within ~0.5 DYN Z — essentially a wash.';}
-  else{winner=diff>0?A.team:B.team;head=`${winner} wins`;sub=`Receives +${absDiff.toFixed(2)} more DYN Z value.`;}
-
+  const A=sideTotals('A'),B=sideTotals('B');
+  const newA=TEAMS[A.team].payroll-A.sal+B.sal, newB=TEAMS[B.team].payroll-B.sal+A.sal;
+  const capA=capLine(newA),capB=capLine(newB);
+  const diff=B.z-A.z, absD=Math.abs(diff);
+  let head,sub;
+  if(absD<0.5){head='Even Trade';sub='Within ~0.5 DYN Z — essentially a wash.';}
+  else{head=`${diff>0?A.team:B.team} wins`;sub=`Receives +${absD.toFixed(2)} more DYN Z value.`;}
+  const tot=A.prospects+B.prospects;
   const v=document.getElementById('verdict');
-  const totalProspects=A.prospects+B.prospects;
-  v.innerHTML=
-    `<div class="verdict-head">${head}</div>`+
-    `<div class="verdict-sub">${sub}</div>`+
-    `<div class="compare">`+
-      colHTML(A.team,B.z,A.z,TEAMS[A.team].payroll,newPayrollA,capA)+
-      colHTML(B.team,A.z,B.z,TEAMS[B.team].payroll,newPayrollB,capB)+
-    `</div>`+
-    (totalProspects>0?`<div class="warn">⚠ ${totalProspects} prospect${totalProspects>1?'s':''} in this deal. DYN Z scores prospects near zero because they lack MLB data — their real dynasty value is higher than shown. Adjust your read accordingly.</div>`:'');
-  v.classList.add('show');
-  v.scrollIntoView({behavior:'smooth',block:'nearest'});
+  v.innerHTML=`<div class="verdict-head">${head}</div><div class="verdict-sub">${sub}</div><div class="compare">`+
+    colHTML(A.team,B.z,A.z,TEAMS[A.team].payroll,newA,capA)+colHTML(B.team,A.z,B.z,TEAMS[B.team].payroll,newB,capB)+`</div>`+
+    (tot>0?`<div class="warn">⚠ ${tot} prospect${tot>1?'s':''} in this deal. DYN Z scores prospects near zero — real dynasty value is higher than shown. Adjust your read.</div>`:'');
+  v.classList.add('show');v.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-
-function colHTML(team,gets,gives,oldPay,newPay,cap){
-  const net=gets-gives;
-  const netCls=net>0?'net-pos':net<0?'net-neg':'';
-  return `<div class="compare-col">`+
-    `<div class="compare-team">${team}</div>`+
+function colHTML(team,gets,gives,oldP,newP,cap){
+  const net=gets-gives,cls=net>0?'net-pos':net<0?'net-neg':'';
+  return `<div class="compare-col"><div class="compare-team">${team}</div>`+
     `<div class="stat-line"><span class="stat-key">DYN Z received</span><span class="stat-val">${gets.toFixed(2)}</span></div>`+
     `<div class="stat-line"><span class="stat-key">DYN Z sent</span><span class="stat-val">${gives.toFixed(2)}</span></div>`+
-    `<div class="stat-line"><span class="stat-key">Net value</span><span class="stat-val ${netCls}">${net>=0?'+':''}${net.toFixed(2)}</span></div>`+
-    `<div class="stat-line"><span class="stat-key">Payroll before</span><span class="stat-val">$${oldPay.toFixed(0)}M</span></div>`+
-    `<div class="stat-line"><span class="stat-key">Payroll after</span><span class="stat-val">$${newPay.toFixed(0)}M</span></div>`+
+    `<div class="stat-line"><span class="stat-key">Net value</span><span class="stat-val ${cls}">${net>=0?'+':''}${net.toFixed(2)}</span></div>`+
+    `<div class="stat-line"><span class="stat-key">Payroll before</span><span class="stat-val">$${oldP.toFixed(0)}M</span></div>`+
+    `<div class="stat-line"><span class="stat-key">Payroll after</span><span class="stat-val">$${newP.toFixed(0)}M</span></div>`+
     `<div class="stat-line"><span class="stat-key">vs cap</span><span class="stat-val ${cap.over>0?'net-neg':'net-pos'}">${cap.over>0?'+':''}$${cap.over.toFixed(0)}M</span></div>`+
-    `<div class="stat-line"><span class="stat-key">Luxury tax</span><span class="stat-val ${cap.tax>0?'net-neg':''}">$${cap.tax.toFixed(2)}</span></div>`+
-  `</div>`;
+    `<div class="stat-line"><span class="stat-key">Luxury tax</span><span class="stat-val ${cap.tax>0?'net-neg':''}">$${cap.tax.toFixed(2)}</span></div></div>`;
+}
+
+/* ─── WEAKNESS DASHBOARD ─── */
+function renderDash(){
+  const team=document.getElementById('dashTeam').value;
+  const body=document.getElementById('dashBody');
+  if(!team){body.innerHTML='';return;}
+  if(!TEAMSTATS.length){body.innerHTML=`<div class="note">No TEAM_STATS data found. Run the Sync Team Stats workflow first.</div>`;return;}
+
+  const N=TEAMSTATS.length;
+  // Compute this team's rank in each category
+  const cards=CATS.map(c=>{
+    const vals=TEAMSTATS.map(r=>({team:r.team_name,v:parseFloat(r[c.key])})).filter(x=>!isNaN(x.v));
+    // sort best-first
+    vals.sort((a,b)=>c.hi?b.v-a.v:a.v-b.v);
+    const idx=vals.findIndex(x=>x.team===team);
+    const rank=idx+1;
+    const myVal=vals[idx]?vals[idx].v:null;
+    const cls=rank<=4?'strong':rank<=8?'mid':'weak';
+    const pct=((N-idx)/N)*100;
+    return {cat:c.key,hi:c.hi,rank,myVal,cls,pct,vals};
+  });
+
+  // Strength/weakness cards
+  let cardHTML='<div class="cat-grid">';
+  cards.forEach(c=>{
+    const valDisp=c.myVal!=null?(Number.isInteger(c.myVal)?c.myVal:c.myVal.toFixed(c.cat==='OPS'?3:2)):'—';
+    cardHTML+=`<div class="cat-card">
+      <div class="catname">${c.cat}</div>
+      <div class="catval">${valDisp}</div>
+      <div class="catrank rk-${c.cls}">#${c.rank} of ${N}</div>
+      <div class="bar bar-${c.cls}" style="width:${c.pct}%"></div>
+    </div>`;
+  });
+  cardHTML+='</div>';
+
+  // Weak categories (rank >= 9, i.e. bottom third) -> target lists
+  const weak=cards.filter(c=>c.rank>=9).sort((a,b)=>b.rank-a.rank);
+  let targetHTML='';
+  if(weak.length){
+    targetHTML+='<div class="section-title">Trade Targets — Your Weak Categories</div>';
+    weak.forEach(c=>{
+      targetHTML+=`<div class="target-block"><div class="target-head">${c.cat} — you rank #${c.rank} of ${N}</div>`;
+      // top 5 teams in this category, highlight you
+      c.vals.slice(0,5).forEach((x,i)=>{
+        const isYou=x.team===team;
+        const vd=Number.isInteger(x.v)?x.v:x.v.toFixed(c.cat==='OPS'?3:2);
+        targetHTML+=`<div class="target-row ${isYou?'you-row':''}"><span class="target-rank">#${i+1}</span><span class="target-team">${x.team}${isYou?' (you)':''}</span><span class="stat-val">${vd}</span></div>`;
+      });
+      targetHTML+=`</div>`;
+    });
+  }else{
+    targetHTML='<div class="note" style="margin-top:24px">No bottom-third weaknesses — this team is balanced or strong across the board.</div>';
+  }
+
+  // Strengths callout
+  const strong=cards.filter(c=>c.rank<=3).map(c=>c.cat);
+  const weakNames=cards.filter(c=>c.rank>=9).map(c=>c.cat);
+  let summary=`<div class="note" style="margin-bottom:20px">`;
+  if(strong.length)summary+=`<span class="rk-strong">Strengths:</span> ${strong.join(', ')}. `;
+  if(weakNames.length)summary+=`<span class="rk-weak">Weaknesses:</span> ${weakNames.join(', ')}.`;
+  summary+=`</div>`;
+
+  body.innerHTML=`<div class="section-title">${team} — Category Ranks</div>`+summary+cardHTML+targetHTML;
 }
 
 load();
