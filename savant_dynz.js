@@ -18,6 +18,12 @@ const Z_SCALE           = 0.030;   // z-score spread
 // Late season (large samples)  -> large k -> heavy regression.
 // k = REGRESSION_RATIO * mean_sample, computed per file.
 const REGRESSION_RATIO  = 0.4;
+// Youth floor: young players get a dynasty "benefit of the doubt" bump,
+// reflecting option value that current xwOBA can't see. Also, the age
+// multiplier is applied ONLY to positive raw scores so that youth never
+// AMPLIFIES a below-average performance into a worse score.
+const YOUTH_FLOOR_BONUS = 0.5;   // flat dynZ bump for young players
+const YOUTH_FLOOR_AGE   = 23;    // applies to age <= this
 
 const HITTER_MULT  = {21:1.18,22:1.13,23:1.08,24:1.05,25:1.02,26:1.01,27:1.00,28:0.98,29:0.95,30:0.90,31:0.84,32:0.77,33:0.69,34:0.60,35:0.50};
 const PITCHER_MULT = {21:1.15,22:1.10,23:1.06,24:1.03,25:1.01,26:1.00,27:0.97,28:0.93,29:0.88,30:0.82,31:0.75,32:0.67,33:0.58,34:0.49,35:0.38};
@@ -218,7 +224,18 @@ async function main() {
       const rawZ = playerData.isPitcher
         ? (Z_ANCHOR - regXwoba) / Z_SCALE   // pitchers: lower xwOBA = better
         : (regXwoba - Z_ANCHOR) / Z_SCALE;  // hitters: higher xwOBA = better
-      dynZ = parseFloat((rawZ * ageMult).toFixed(3));
+
+      // Age multiplier applies ONLY to positive raw scores. Multiplying a
+      // negative rawZ by a youth bonus (>1) would amplify the penalty, which
+      // is backwards for a dynasty model. Below-average players keep raw rawZ.
+      let z = rawZ > 0 ? rawZ * ageMult : rawZ;
+
+      // Youth floor: dynasty benefit-of-the-doubt bump for young players.
+      if (Math.round(player.age) <= YOUTH_FLOOR_AGE) {
+        z += YOUTH_FLOOR_BONUS;
+      }
+
+      dynZ = parseFloat(z.toFixed(3));
 
       if (dynZ >= 3.0) { salaryTier = 'Elite'; baseSalary = 40; }
       else if (dynZ >= 2.0) { salaryTier = 'Star'; baseSalary = 30; }
