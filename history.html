@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>League History — 40s and Blunts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A6B; --gold:#C9A84C; --cream:#F5F0E8; --dark:#0D1B2A;
+    --mid:#1E2D3D; --muted:#4A6080; --text:#E8E0D0; --dim:#8A9BB0;
+    --green:#4CAF82; --red:#E05A5A; --border:rgba(201,168,76,0.2);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:
+    radial-gradient(ellipse 80% 50% at 20% 20%,rgba(27,58,107,0.4) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(201,168,76,0.08) 0%,transparent 50%);
+    pointer-events:none;z-index:0;}
+  header{position:relative;z-index:10;padding:32px 40px 0;border-bottom:1px solid var(--border);}
+  .league-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;opacity:0.8;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:4px;line-height:1;color:var(--text);}
+  h1 span{color:var(--gold);}
+  .header-meta{display:flex;align-items:center;gap:24px;margin-top:12px;padding-bottom:20px;flex-wrap:wrap;}
+  .meta-pill{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:1px;}
+  .meta-pill strong{color:var(--gold);}
+  nav{position:sticky;top:0;z-index:10;display:flex;gap:0;padding:0 40px;background:rgba(13,27,42,0.8);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);}
+  .nav-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);background:none;border:none;border-bottom:2px solid transparent;padding:16px 24px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;}
+  .nav-btn:hover{color:var(--text);}
+  .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+  main{position:relative;z-index:1;padding:40px;max-width:1100px;margin:0 auto;}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+
+  /* Dynasty leaderboard */
+  .crown-banner{background:linear-gradient(135deg,rgba(27,58,107,0.6),rgba(201,168,76,0.1));border:1px solid var(--border);border-radius:12px;padding:24px 32px;margin-bottom:36px;}
+  .crown-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:18px;opacity:0.85;}
+  .crown-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .crown-row:last-child{border-bottom:none;}
+  .crown-rank{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gold);width:30px;}
+  .crown-team{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;flex:1;}
+  .crown-trophies{font-size:15px;letter-spacing:2px;}
+  .crown-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--dim);min-width:70px;text-align:right;}
+
+  /* Champions list */
+  .champ-list{border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+  .champ-row{display:grid;grid-template-columns:80px 1fr;align-items:center;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;}
+  .champ-row:hover{background:rgba(201,168,76,0.05);}
+  .champ-row:last-child{border-bottom:none;}
+  .champ-year{font-family:'DM Mono',monospace;font-size:14px;color:var(--gold);font-weight:500;}
+  .champ-name{font-size:15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .champ-icon{font-size:15px;}
+  .champ-aka{color:var(--dim);font-size:13px;font-style:italic;}
+  .champ-row.recent .champ-name{font-weight:500;}
+
+  /* Era divider */
+  .era-divider{padding:14px 20px;background:rgba(27,58,107,0.35);border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;}
+  .era-label{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;color:var(--muted);}
+  .era-sub{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);display:block;margin-top:2px;}
+
+  /* COVID row */
+  .champ-row.covid .champ-name{color:var(--dim);font-style:italic;}
+
+  /* Footnote */
+  .footnotes{margin-top:20px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);line-height:1.8;}
+  .footnotes .star{color:var(--gold);}
+  .legend{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:24px;font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);}
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .back-link{display:inline-block;margin-top:32px;font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:10px 18px;letter-spacing:1px;transition:all .2s;}
+  .back-link:hover{background:rgba(201,168,76,0.1);}
+
+  @media (max-width:640px){
+    header{padding:20px 16px 0;}
+    nav{padding:0 8px;}
+    .nav-btn{padding:14px 12px;font-size:10px;}
+    main{padding:20px 16px;}
+    .crown-banner{padding:18px;}
+    .champ-row{grid-template-columns:60px 1fr;padding:11px 14px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="league-badge">Est. 2001 · 25 Seasons · Dynasty</div>
+  <h1>League <span>History</span></h1>
+  <div class="header-meta">
+    <span class="meta-pill">Champions <strong>2001–2025</strong></span>
+    <span class="meta-pill">25 Years of 40s and Blunts</span>
+  </div>
+</header>
+
+<nav>
+  <a class="nav-btn" href="index.html">Payroll</a>
+  <a class="nav-btn" href="index.html">Standings</a>
+  <a class="nav-btn" href="index.html">Rosters</a>
+  <a class="nav-btn" href="index.html">Rules</a>
+  <a class="nav-btn active" href="history.html">History</a>
+</nav>
+
+<main>
+
+  <!-- DYNASTY LEADERBOARD -->
+  <div class="crown-banner">
+    <div class="crown-title">🏆 Dynasty Leaderboard · All-Time Titles</div>
+    <div class="crown-row">
+      <span class="crown-rank">1</span>
+      <span class="crown-team">L-A-Loosh</span>
+      <span class="crown-trophies">🏆🏆🏆🏆🏆🏆🏆🏆🏆</span>
+      <span class="crown-count">9 titles</span>
+    </div>
+    <div class="crown-row">
+      <span class="crown-rank">2</span>
+      <span class="crown-team">Bip Roberts</span>
+      <span class="crown-trophies">🏆🏆🏆</span>
+      <span class="crown-count">3 titles</span>
+    </div>
+    <div class="crown-row">
+      <span class="crown-rank">3</span>
+      <span class="crown-team">Section 34</span>
+      <span class="crown-trophies">🏆🏆</span>
+      <span class="crown-count">2 titles</span>
+    </div>
+  </div>
+
+  <div class="section-title">Champions by Season</div>
+
+  <div class="legend">
+    <span>🏆 Recent champion</span>
+    <span>🥈 Back-to-back title</span>
+  </div>
+
+  <div class="champ-list" id="champ-list"></div>
+
+  <div class="footnotes">
+    <span class="star">**2017**</span> — The year the leagues merged into the current 12-team 40s and Blunts.<br>
+    "aka" notes show the current franchise name for teams that have since rebranded.
+  </div>
+
+  <a class="back-link" href="index.html">← Back to League Home</a>
+
+</main>
+
+<script>
+// Championship history. icon: 'trophy' (recent), 'medal' (back-to-back), '' (none)
+// era: optional divider rendered BEFORE this row. note: optional footnote marker.
+const CHAMPS = [
+  { year:'2025', name:'Bip Roberts', icon:'trophy' },
+  { year:'2024', name:'Section 34', icon:'trophy' },
+  { year:'2023', name:'Bip Roberts', icon:'trophy' },
+  { year:'2022', name:'L-A-Loosh', icon:'trophy' },
+  { year:'2021', name:'Thurgood Jenkins', icon:'trophy' },
+  { year:'2020', name:'COVID won', covid:true },
+  { year:'2019', name:'Section 34' },
+  { year:'2018', name:'Chief Noc-A-Homa' },
+  { year:'2017', name:'What The Kruk', aka:'Bip Roberts', merge:true },
+  { year:'2016', name:"The Fight'n Lincolns", aka:'Chicago Way' },
+  { year:'2015', name:'L-A-Loosh', icon:'medal' },
+  { year:'2014', name:'L-A-Loosh' },
+  { year:'2013', name:'Growers' },
+  { year:'2012', name:'Dream of the 1890s', aka:'Chicago Way' },
+  { year:'2011', name:'L-A-Loosh', icon:'medal' },
+  { year:'2010', name:'Who Dat Ninja', aka:'L-A-Loosh' },
+  { year:'2009', name:'Growers' },
+  { year:'2008', name:'Bitch Slap Method', aka:'L-A-Loosh', icon:'medal' },
+  { year:'2007', name:'Bitch Slap Method', aka:'L-A-Loosh' },
+  { year:'2006', name:'ILAMA', aka:'Old Fashioned' },
+  { year:'2005', name:'L-A-Loosh' },
+  { year:'2004', name:'Vulgar Display Of Power', aka:'Grand Theft Votto' },
+  { year:'2003', name:'The Plug Uglies', aka:'L-A-Loosh' },
+  { era:'The Dark Age', eraSub:'2002 — lost to time' },
+  { year:'2001', name:'The Guy on The Couch' },
+];
+
+const list = document.getElementById('champ-list');
+list.innerHTML = CHAMPS.map(c => {
+  if (c.era) {
+    return `<div class="era-divider"><span class="era-label">${c.era}</span><span class="era-sub">${c.eraSub||''}</span></div>`;
+  }
+  let icon = '';
+  if (c.icon === 'trophy') icon = '<span class="champ-icon">🏆</span>';
+  else if (c.icon === 'medal') icon = '<span class="champ-icon">🥈</span>';
+
+  const aka = c.aka ? `<span class="champ-aka">(aka ${c.aka})</span>` : '';
+  const merge = c.merge ? '<span class="star" style="color:var(--gold)">**</span>' : '';
+  const rowCls = 'champ-row' + (c.icon==='trophy'?' recent':'') + (c.covid?' covid':'');
+  const yearDisp = c.merge ? `**${c.year}**` : c.year;
+
+  return `<div class="${rowCls}">
+    <span class="champ-year">${yearDisp}</span>
+    <span class="champ-name">${icon}${c.name}${aka}</span>
+  </div>`;
+}).join('');
+</script>
+</body>
+</html>
