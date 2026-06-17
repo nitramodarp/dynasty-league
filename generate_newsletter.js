@@ -184,31 +184,41 @@ THIS week's issue using ONLY the data provided. Match the structure, length, and
 joke density of the sample, and follow the VOICE SPEC exactly.
 
 === VOICE SPEC ===
-Register: mock-formal deadpan. Treat trivial fantasy-baseball events with the
-composed, slightly elevated diction of someone narrating municipal proceedings
-or an internal HR memo — then undercut it. Think Ian Frazier's straight-faced
-elevation of the mundane, with the Onion's deadpan institutional authority. Dry,
-literate, and unhurried; never hyped.
+Register: mock-formal deadpan. Narrate trivial fantasy-baseball events with the
+composed, slightly elevated diction of someone writing internal-memo minutes —
+then puncture it. Think Ian Frazier's straight-faced elevation of the mundane
+and the Onion's deadpan institutional authority. Dry, literate, confident. Being
+funny is the point; accuracy is the floor, not the goal.
 
-The core move: a measured setup, then deflation. The deflation is usually a
-short, anticlimactic kicker — often six words or fewer, dropped in its own
-sentence. Vary rhythm deliberately: mostly composed sentences, punctuated by
-clipped landings. The clipped landing is the primary comedic weapon; do not
-bury it inside a long clause. Examples of the cadence (do NOT reuse these):
-"The man came back." / "Eighth seems right." / "This is where we are."
+How the comedy works — VARY THE DEVICE. Rotate through several; never run the
+same move twice in a row (illustrations only, do NOT reuse these lines):
+  • Understatement / anticlimax — "second place has feelings too."
+  • Mock-bureaucratic procedure — "We have reviewed this and can confirm it is
+    accurate."
+  • The confident absurd verdict stated as settled fact — "Eighth seems right."
+  • The committed opinion that owns its own flaw — "A reasonable response. Wrong
+    response, probably, but reasonable."
+  • An occasional dry meta-aside about the newsletter itself.
 
-Reference well: contemporary and mundane — bureaucratic, corporate, suburban,
-administrative, procedural. The humor comes from applying that register to
-roster churn and category losses. NO classical, literary, or historical
-allusions, no Latin, no Founders, no philosophy. Elevated diction is fine;
-ornate multi-clause sentences showing off are not.
+The short clipped kicker is ONE tool, not the structure. MOST paragraphs should
+NOT end on a clipped deflation. If every section lands on the same little
+deadpan beat, the rhythm becomes a tic and the jokes die because the reader sees
+them coming. Surprise beats consistency. Take a genuine swing once or twice per
+issue and COMMIT to the bolder joke instead of hedging it.
 
-Stance: fond but unillusioned. The mockery is affectionate, never cruel, and
-carries no moral weight or grandstanding. State absurd verdicts plainly and with
-confidence. Let boring matchups be boring — brevity itself is a punchline.
+Trust your lines. Never explain or soften a joke with a follow-up clause (cut
+the "and mostly did" that defuses "a week that should have felt like progress").
+Land it and move on. Give the single best joke in a section room to breathe
+rather than burying it mid-paragraph; let a flat, factual sentence sit there
+unjoked when that's funnier than forcing one.
 
-Avoid: exclamation points, hype words, fantasy-bro slang, emoji, pun-stacking,
-and any sentence whose purpose is to sound profound.
+Reference well: contemporary and mundane — corporate, suburban, administrative,
+procedural. No classical, literary, historical, or philosophical allusions and
+no Latin. Elevated diction is welcome; ornate sentences built to impress are not.
+
+Stance: fond but unillusioned — affectionate, never cruel, no moral weight, no
+profundity for its own sake. No hype words, exclamation points, emoji, or
+fantasy-bro slang.
 
 === CONTEXT & VOICE GUIDE ===
 ${context}
