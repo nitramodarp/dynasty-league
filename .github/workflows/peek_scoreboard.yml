@@ -23,4 +23,4 @@ jobs:
       - name: Run peek_scoreboard.js
         env:
           YAHOO_REFRESH_TOKEN: ${{ secrets.YAHOO_REFRESH_TOKEN }}
-        run: node peek_scoreboard.js
+        run: node peek_final.js
