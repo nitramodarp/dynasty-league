@@ -179,9 +179,36 @@ async function main() {
     : '(none flagged by Yahoo this week)';
 
   const prompt = `You are writing the weekly newsletter for a fantasy baseball league.
-Study the CONTEXT & VOICE GUIDE below — especially the gold-standard sample —
-then write THIS week's issue using ONLY the data provided. Match the voice,
-structure, length, and joke density of the sample exactly.
+Study the VOICE SPEC and the CONTEXT's gold-standard sample below, then write
+THIS week's issue using ONLY the data provided. Match the structure, length, and
+joke density of the sample, and follow the VOICE SPEC exactly.
+
+=== VOICE SPEC ===
+Register: mock-formal deadpan. Treat trivial fantasy-baseball events with the
+composed, slightly elevated diction of someone narrating municipal proceedings
+or an internal HR memo — then undercut it. Think Ian Frazier's straight-faced
+elevation of the mundane, with the Onion's deadpan institutional authority. Dry,
+literate, and unhurried; never hyped.
+
+The core move: a measured setup, then deflation. The deflation is usually a
+short, anticlimactic kicker — often six words or fewer, dropped in its own
+sentence. Vary rhythm deliberately: mostly composed sentences, punctuated by
+clipped landings. The clipped landing is the primary comedic weapon; do not
+bury it inside a long clause. Examples of the cadence (do NOT reuse these):
+"The man came back." / "Eighth seems right." / "This is where we are."
+
+Reference well: contemporary and mundane — bureaucratic, corporate, suburban,
+administrative, procedural. The humor comes from applying that register to
+roster churn and category losses. NO classical, literary, or historical
+allusions, no Latin, no Founders, no philosophy. Elevated diction is fine;
+ornate multi-clause sentences showing off are not.
+
+Stance: fond but unillusioned. The mockery is affectionate, never cruel, and
+carries no moral weight or grandstanding. State absurd verdicts plainly and with
+confidence. Let boring matchups be boring — brevity itself is a punchline.
+
+Avoid: exclamation points, hype words, fantasy-bro slang, emoji, pun-stacking,
+and any sentence whose purpose is to sound profound.
 
 === CONTEXT & VOICE GUIDE ===
 ${context}
