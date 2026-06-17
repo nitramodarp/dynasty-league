@@ -105,21 +105,25 @@ function fmtGames(n) {
   return Number.isInteger(r) ? String(r) : r.toFixed(1);
 }
 
-function describePlayoffPicture(rows, recapWeek) {
+function describePlayoffPicture(rows, recapWeek, catsPerWeek) {
   const teams = rows.filter(r => r.rank != null).sort((a, b) => a.rank - b.rank);
   if (teams.length < PLAYOFF_SPOTS + 1) {
     return '(standings incomplete — playoff picture skipped this run)';
   }
+  // Standings are cumulative CATEGORY records, so each remaining week is worth
+  // up to catsPerWeek decisions (≈10), NOT one. Using weeks alone here made a
+  // mid-season lead look insurmountable and triggered false clinch/elimination.
   const weeksLeft = Math.max(0, REG_SEASON_WEEKS - recapWeek);
-  const eff   = r => r.w + 0.5 * r.t;     // effective wins (tie = half), matches win%
-  const ceil  = r => eff(r) + weeksLeft;  // best case: win out
-  const floor = r => eff(r);              // worst case: lose out
+  const remaining = weeksLeft * (catsPerWeek || 10);
+  const eff   = r => r.w + 0.5 * r.t;       // effective category wins (tie = half)
+  const ceil  = r => eff(r) + remaining;    // best case: win every remaining category
+  const floor = r => eff(r);                // worst case: lose every remaining category
   const seed6 = teams[PLAYOFF_SPOTS - 1];
   const seed7 = teams[PLAYOFF_SPOTS];
 
   const out = [];
   out.push(`Format: top ${PLAYOFF_SPOTS} of ${teams.length} make the playoffs (weeks 23–25, ends Sun Sep 20). Seeding strictly by overall standings — divisions do not affect seeding. Bracket reseeds each round.`);
-  out.push(`Through week ${recapWeek} of ${REG_SEASON_WEEKS}: ${weeksLeft} regular-season week${weeksLeft === 1 ? '' : 's'} remaining.`);
+  out.push(`Through week ${recapWeek} of ${REG_SEASON_WEEKS}: ${weeksLeft} regular-season week${weeksLeft === 1 ? '' : 's'} left (~${remaining} category decisions still to play). Records below are cumulative category wins.`);
   out.push('');
 
   teams.forEach((r, i) => {
@@ -162,7 +166,13 @@ async function main() {
 
   const standingsRows = await getStandings();
   const standings = standingsLines(standingsRows);
-  const playoffPicture = describePlayoffPicture(standingsRows, data.week);
+  // Categories per week = total categories decided in a matchup (won + lost + tied).
+  // Drives how much movement remains; falls back to 10 if matchup data is thin.
+  const m0 = data.matchups && data.matchups[0];
+  const catsPerWeek = m0
+    ? (m0.winnerCats.length + m0.loserCats.length + m0.tiedCats.length) || 10
+    : 10;
+  const playoffPicture = describePlayoffPicture(standingsRows, data.week, catsPerWeek);
 
   const motw = data.matchupOfTheWeek
     ? `${data.matchupOfTheWeek.winner} def. ${data.matchupOfTheWeek.loser}, ${data.matchupOfTheWeek.score}`
