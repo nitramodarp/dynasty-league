@@ -9,6 +9,9 @@ on:
     - cron: '0 15 * * 1'   # Monday 11 AM ET (15:00 UTC during EDT baseball season)
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   newsletter:
     runs-on: ubuntu-latest
