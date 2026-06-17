@@ -31,23 +31,30 @@ async function getStandings() {
   try {
     const res = await fetch(STANDINGS_CSV);
     const rows = parseCSV(await res.text());
-    // Expect columns like rank, team_name, wins, losses, ties (tolerant of naming)
+    // Tolerant of column naming. rank is trusted from the sheet (it carries
+    // Yahoo's real tiebreakers); w/l/t are used for the playoff math.
     return rows
       .filter(r => Object.values(r).some(v => v))
-      .map(r => {
-        const name = r.team_name || r.team || r.name || '';
-        const rank = r.rank || '';
-        const w = r.wins || r.W || r.w || '';
-        const l = r.losses || r.L || r.l || '';
-        const t = r.ties || r.T || r.t || '';
-        return `${rank}. ${name} (${w}-${l}-${t})`;
-      })
-      .filter(s => s.trim() !== '. ()')
-      .join('\n');
+      .map(r => ({
+        name: r.team_name || r.team || r.name || '',
+        rank: parseInt(r.rank || r.Rank || r.seed || '', 10) || null,
+        w: parseInt(r.wins || r.W || r.w || '0', 10) || 0,
+        l: parseInt(r.losses || r.L || r.l || '0', 10) || 0,
+        t: parseInt(r.ties || r.T || r.t || '0', 10) || 0,
+      }))
+      .filter(r => r.name);
   } catch (e) {
     console.log('  (standings fetch failed, power rankings will lean on matchup data):', e.message);
-    return '(standings unavailable this run)';
+    return [];
   }
+}
+
+function standingsLines(rows) {
+  if (!rows.length) return '(standings unavailable this run)';
+  return [...rows]
+    .sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99))
+    .map(r => `${r.rank ?? '?'}. ${r.name} (${r.w}-${r.l}-${r.t})`)
+    .join('\n');
 }
 
 function describeMatchup(m) {
@@ -81,6 +88,70 @@ function describeTransactions(txns) {
   }).join('\n');
 }
 
+// ── Playoff picture ──────────────────────────────────────────────────
+// Regular season = weeks 1–22; playoffs = weeks 23–25 (end Sun Sep 20).
+// Top 6 of 12 qualify, seeded strictly by overall standings (divisions do
+// NOT affect playoff seeding under this league's setting). Clinch/elimination
+// use a conservative worst-case bound — effective wins (W + ½T, matching
+// win%-style ranking), each remaining week worth at most one win. The tests
+// use strict comparisons so the section NEVER declares CLINCHED or ELIMINATED
+// unless it is mathematically certain regardless of tiebreakers. It will stay
+// silent rather than guess.
+const REG_SEASON_WEEKS = 22;
+const PLAYOFF_SPOTS = 6;
+
+function fmtGames(n) {
+  const r = Math.round(n * 10) / 10;
+  return Number.isInteger(r) ? String(r) : r.toFixed(1);
+}
+
+function describePlayoffPicture(rows, recapWeek) {
+  const teams = rows.filter(r => r.rank != null).sort((a, b) => a.rank - b.rank);
+  if (teams.length < PLAYOFF_SPOTS + 1) {
+    return '(standings incomplete — playoff picture skipped this run)';
+  }
+  const weeksLeft = Math.max(0, REG_SEASON_WEEKS - recapWeek);
+  const eff   = r => r.w + 0.5 * r.t;     // effective wins (tie = half), matches win%
+  const ceil  = r => eff(r) + weeksLeft;  // best case: win out
+  const floor = r => eff(r);              // worst case: lose out
+  const seed6 = teams[PLAYOFF_SPOTS - 1];
+  const seed7 = teams[PLAYOFF_SPOTS];
+
+  const out = [];
+  out.push(`Format: top ${PLAYOFF_SPOTS} of ${teams.length} make the playoffs (weeks 23–25, ends Sun Sep 20). Seeding strictly by overall standings — divisions do not affect seeding. Bracket reseeds each round.`);
+  out.push(`Through week ${recapWeek} of ${REG_SEASON_WEEKS}: ${weeksLeft} regular-season week${weeksLeft === 1 ? '' : 's'} remaining.`);
+  out.push('');
+
+  teams.forEach((r, i) => {
+    const seed = i + 1;
+    const above = seed <= PLAYOFF_SPOTS;
+    let tag;
+    if (weeksLeft === 0) {
+      tag = above ? 'IN — locked (regular season complete)' : 'OUT — missed the playoffs';
+    } else {
+      const threats = teams.filter(u => u !== r && ceil(u) >= floor(r)).length;
+      const clinched = threats <= PLAYOFF_SPOTS - 1;
+      const locks = teams.filter(u => u !== r && floor(u) > ceil(r)).length;
+      const eliminated = locks >= PLAYOFF_SPOTS;
+      if (clinched && above) {
+        tag = 'CLINCHED a playoff berth';
+      } else if (eliminated) {
+        tag = 'ELIMINATED from contention';
+      } else if (above) {
+        const cushion = eff(r) - eff(seed7);
+        tag = `IN — ${fmtGames(cushion)} clear of the cut line`;
+      } else {
+        const back = eff(seed6) - eff(r);
+        tag = back <= 0 ? 'OUT — tied at the cut line' : `OUT — ${fmtGames(back)} back of the 6th seed`;
+      }
+    }
+    if (seed === PLAYOFF_SPOTS + 1) out.push('——— playoff cut line ———');
+    out.push(`${seed}. ${r.name} (${r.w}-${r.l}-${r.t}) — ${tag}`);
+  });
+
+  return out.join('\n');
+}
+
 async function main() {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set');
@@ -89,7 +160,9 @@ async function main() {
   const data = JSON.parse(fs.readFileSync('./data/newsletter_data.json', 'utf8'));
   console.log(`✓ Generating week ${data.week}: ${data.matchups.length} matchups, ${data.transactions.length} txns`);
 
-  const standings = await getStandings();
+  const standingsRows = await getStandings();
+  const standings = standingsLines(standingsRows);
+  const playoffPicture = describePlayoffPicture(standingsRows, data.week);
 
   const motw = data.matchupOfTheWeek
     ? `${data.matchupOfTheWeek.winner} def. ${data.matchupOfTheWeek.loser}, ${data.matchupOfTheWeek.score}`
@@ -114,6 +187,9 @@ ${data.matchups.map((m, i) => `${i + 1}. ${describeMatchup(m)}`).join('\n')}
 CURRENT STANDINGS (for Power Rankings — reflect these, don't invent positions):
 ${standings}
 
+PLAYOFF PICTURE (top 6 make it; the data already states each team's exact status — use these facts, do not compute your own clinch/elimination):
+${playoffPicture}
+
 TRANSACTIONS THIS WEEK (for Questionable Activity — listed oldest-first with [Eastern timestamps]; respect this exact order):
 ${describeTransactions(data.transactions)}
 
@@ -127,7 +203,13 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
    breakdowns for specific, accurate detail. Let boring matchups be brief.
 4. **POWER RANKINGS** — 1 through 12, one dry line each, ordered by the current
    standings above.
-5. **QUESTIONABLE ACTIVITY** — wry notes on the week's real transactions above.
+5. **PLAYOFF PICTURE** — a short segment on the top-6 race using ONLY the playoff
+   data above. Name who's in, who's on the bubble, and the gap at the cut line.
+   State CLINCHED/ELIMINATED only where the data explicitly says so — never infer
+   it yourself. Early in the season (many weeks left), keep it brief and note
+   it's early; late in the season, let the stakes show. Don't restate all 12 in a
+   list — the Power Rankings already did that; write it as prose.
+6. **QUESTIONABLE ACTIVITY** — wry notes on the week's real transactions above.
    If there were none, say so dryly. Do not invent moves. The transactions are
    in chronological order — describe add/drop sequences in the order they
    actually happened (an add-then-drop is not a drop-then-re-add).
@@ -146,7 +228,7 @@ HARD RULES:
     headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
-      max_tokens: 2500,
+      max_tokens: 3000,
       messages: [{ role: 'user', content: prompt }],
     }),
   });
