@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletter Archive — 40s and Blunts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B3A6B; --gold:#C9A84C; --cream:#F5F0E8; --dark:#0D1B2A;
+    --mid:#1E2D3D; --muted:#4A6080; --text:#E8E0D0; --dim:#8A9BB0;
+    --green:#4CAF82; --red:#E05A5A; --border:rgba(201,168,76,0.2);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:
+    radial-gradient(ellipse 80% 50% at 20% 20%,rgba(27,58,107,0.4) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(201,168,76,0.08) 0%,transparent 50%);
+    pointer-events:none;z-index:0;}
+  header{position:relative;z-index:10;padding:32px 40px 0;border-bottom:1px solid var(--border);}
+  .badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;opacity:0.8;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,72px);letter-spacing:4px;line-height:1;}
+  h1 span{color:var(--gold);}
+  .header-meta{display:flex;align-items:center;gap:24px;margin-top:12px;padding-bottom:20px;flex-wrap:wrap;}
+  .meta-pill{font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:1px;}
+  .meta-pill strong{color:var(--gold);}
+  nav{position:sticky;top:0;z-index:10;display:flex;gap:0;padding:0 40px;background:rgba(13,27,42,0.8);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);}
+  .nav-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);background:none;border:none;border-bottom:2px solid transparent;padding:16px 24px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;}
+  .nav-btn:hover{color:var(--text);}
+  .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+  main{position:relative;z-index:1;padding:40px;max-width:1100px;margin:0 auto;}
+  .loading{text-align:center;padding:60px 20px;color:var(--dim);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .newsletter-list{display:grid;gap:12px;}
+  .nl-row{background:rgba(30,45,61,0.55);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;}
+  .nl-row:hover{background:rgba(30,45,61,0.75);border-color:var(--gold);}
+  .nl-info{display:flex;flex-direction:column;gap:6px;}
+  .nl-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--text);}
+  .nl-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;}
+  .nl-action{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);padding:6px 12px;border:1px solid var(--border);border-radius:5px;transition:all .15s;white-space:nowrap;}
+  .nl-action:hover{background:rgba(201,168,76,0.1);}
+  .content-box{margin-top:24px;background:linear-gradient(135deg,rgba(27,58,107,0.6),rgba(201,168,76,0.08));border:1px solid var(--border);border-radius:12px;padding:24px;}
+  .content-inner{background:rgba(13,27,42,0.8);border:1px solid var(--border);border-radius:8px;padding:16px;max-height:600px;overflow-y:auto;font-family:'DM Mono',monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+  .copy-btn{display:inline-block;margin-top:12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);padding:8px 16px;border:1px solid var(--border);border-radius:5px;cursor:pointer;transition:all .15s;background:none;letter-spacing:1px;}
+  .copy-btn:hover{background:rgba(201,168,76,0.1);}
+  .back-link{display:inline-block;margin-top:32px;font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:10px 18px;letter-spacing:1px;transition:all .2s;}
+  .back-link:hover{background:rgba(201,168,76,0.1);}
+  .empty{color:var(--dim);font-style:italic;padding:20px;}
+
+  @media (max-width:640px){
+    header{padding:20px 16px 0;}
+    nav{padding:0 8px;}
+    .nav-btn{padding:14px 12px;font-size:10px;}
+    main{padding:20px 16px;}
+    .nl-row{grid-template-columns:1fr;}
+    .nl-action{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">40s and Blunts · Weekly</div>
+  <h1>Rolling <span>Coverage</span></h1>
+  <div class="header-meta">
+    <span class="meta-pill">Weekly newsletters since <strong>2026</strong></span>
+  </div>
+</header>
+
+<nav>
+  <a class="nav-btn" href="index.html">Payroll</a>
+  <a class="nav-btn" href="index.html">Standings</a>
+  <a class="nav-btn" href="index.html">Rosters</a>
+  <a class="nav-btn" href="index.html">Rules</a>
+  <a class="nav-btn" href="history.html">History</a>
+  <a class="nav-btn active" href="newsletter.html">Newsletter</a>
+</nav>
+
+<main>
+
+  <div class="section-title">40s and Blunts Weekly Rolling Coverage</div>
+  
+  <div class="loading" id="loading">Loading newsletters...</div>
+  <div class="newsletter-list" id="list" style="display:none;"></div>
+  <div id="content" style="display:none;"></div>
+  
+  <a class="back-link" href="index.html" id="backLink" style="display:none;">← Back to League Home</a>
+
+</main>
+
+<script>
+const NEWSLETTERS_URL = 'https://raw.githubusercontent.com/nitramodarp/dynasty-league/main/data/newsletters/';
+
+async function loadNewsletters() {
+  try {
+    const list = document.getElementById('list');
+    const loading = document.getElementById('loading');
+    
+    // Try to find newsletter files by checking common week numbers (1-25)
+    const newsletters = [];
+    for (let w = 25; w >= 1; w--) {
+      try {
+        const url = `${NEWSLETTERS_URL}week_${w}.txt`;
+        const res = await fetch(url, { method: 'HEAD' });
+        if (res.ok) {
+          newsletters.push(w);
+        }
+      } catch (e) {
+        // File doesn't exist, skip
+      }
+    }
+    
+    if (newsletters.length === 0) {
+      loading.innerHTML = '<div style="color:var(--dim)">No newsletters published yet. They\'ll appear here every Monday.</div>';
+      return;
+    }
+    
+    loading.style.display = 'none';
+    list.style.display = 'grid';
+    list.innerHTML = newsletters.map(w => `
+      <div class="nl-row" onclick="loadNewsletter(${w})">
+        <div class="nl-info">
+          <span class="nl-title">Week ${w}</span>
+          <span class="nl-meta">40s and Blunts Weekly Rolling Coverage</span>
+        </div>
+        <span class="nl-action">View →</span>
+      </div>
+    `).join('');
+  } catch (e) {
+    document.getElementById('loading').innerHTML = `<div style="color:var(--red)">Error loading newsletters: ${e.message}</div>`;
+  }
+}
+
+async function loadNewsletter(week) {
+  try {
+    const res = await fetch(`${NEWSLETTERS_URL}week_${week}.txt`);
+    if (!res.ok) throw new Error(`Week ${week} not found`);
+    const content = await res.text();
+    
+    const list = document.getElementById('list');
+    const contentBox = document.getElementById('content');
+    const backLink = document.getElementById('backLink');
+    
+    list.style.display = 'none';
+    contentBox.style.display = 'block';
+    backLink.style.display = 'inline-block';
+    
+    contentBox.innerHTML = `
+      <div class="section-title">Week ${week}</div>
+      <div class="content-box">
+        <div class="content-inner">${content}</div>
+        <button class="copy-btn" onclick="copyToClipboard('${content.replace(/'/g, "\\'")}')">Copy to clipboard</button>
+      </div>
+    `;
+    
+    contentBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    alert(`Error loading newsletter: ${e.message}`);
+  }
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Copied to clipboard!');
+  }).catch(err => {
+    console.error('Copy failed:', err);
+    alert('Copy failed. Try selecting the text manually.');
+  });
+}
+
+function goBack() {
+  document.getElementById('list').style.display = 'grid';
+  document.getElementById('content').style.display = 'none';
+  document.getElementById('backLink').style.display = 'none';
+}
+
+document.getElementById('backLink').addEventListener('click', (e) => {
+  if (e.target.href.includes('index.html')) return;
+  e.preventDefault();
+  goBack();
+});
+
+loadNewsletters();
+</script>
+</body>
+</html>
