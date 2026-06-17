@@ -1,0 +1,26 @@
+# Throwaway diagnostic workflow — run once, read the log, then delete this file.
+
+name: Peek Scoreboard
+
+on:
+  workflow_dispatch:
+
+jobs:
+  peek:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run peek_scoreboard.js
+        env:
+          YAHOO_REFRESH_TOKEN: ${{ secrets.YAHOO_REFRESH_TOKEN }}
+        run: node peek_scoreboard.js
