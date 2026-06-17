@@ -57,12 +57,27 @@ function describeMatchup(m) {
     `${m.loser} took: ${m.loserCats.join(', ') || '—'}.${tie}`;
 }
 
+function fmtEt(ts) {
+  // Readable Eastern timestamp so the model can anchor real sequence.
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit', hour12: true,
+  }).format(new Date(ts * 1000));
+}
+
 function describeTransactions(txns) {
   if (!txns.length) return 'No transactions during the week.';
-  return txns.map(t => {
-    const parts = t.moves.map(mv => `${t === null ? '' : ''}${mv.action === 'add' ? 'added' : 'dropped'} ${mv.name} (${mv.pos}, ${mv.mlb})`);
+  // Yahoo returns transactions newest-first. Without sorting, the recap
+  // describes a drop before the add that preceded it (e.g. "dropped Shota,
+  // added Shota" when he was added at 11:42 then dropped at 11:43). Sort
+  // oldest-first and stamp each line so sequence is unambiguous.
+  const ordered = [...txns].sort((a, b) => a.timestamp - b.timestamp);
+  return ordered.map(t => {
+    const parts = t.moves.map(mv =>
+      `${mv.action === 'add' ? 'added' : 'dropped'} ${mv.name} (${mv.pos}, ${mv.mlb})`);
     const team = t.moves[0]?.team || 'A team';
-    return `${team}: ${parts.join('; ')}`;
+    return `[${fmtEt(t.timestamp)}] ${team}: ${parts.join('; ')}`;
   }).join('\n');
 }
 
@@ -99,7 +114,7 @@ ${data.matchups.map((m, i) => `${i + 1}. ${describeMatchup(m)}`).join('\n')}
 CURRENT STANDINGS (for Power Rankings — reflect these, don't invent positions):
 ${standings}
 
-TRANSACTIONS THIS WEEK (for Questionable Activity):
+TRANSACTIONS THIS WEEK (for Questionable Activity — listed oldest-first with [Eastern timestamps]; respect this exact order):
 ${describeTransactions(data.transactions)}
 
 === TASK ===
@@ -113,7 +128,9 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
 4. **POWER RANKINGS** — 1 through 12, one dry line each, ordered by the current
    standings above.
 5. **QUESTIONABLE ACTIVITY** — wry notes on the week's real transactions above.
-   If there were none, say so dryly. Do not invent moves.
+   If there were none, say so dryly. Do not invent moves. The transactions are
+   in chronological order — describe add/drop sequences in the order they
+   actually happened (an add-then-drop is not a drop-then-re-add).
 
 HARD RULES:
 - Use ONLY the data above. Never invent scores, categories, players, or moves.
