@@ -1,0 +1,46 @@
+# .github/workflows/newsletter.yml
+# Every Monday 11 AM ET: sync the completed week's data, generate the newsletter,
+# commit it to data/newsletters/. You review and copy it to WhatsApp/email.
+
+name: Generate Newsletter
+
+on:
+  schedule:
+    - cron: '0 15 * * 1'   # Monday 11 AM ET (15:00 UTC during EDT baseball season)
+  workflow_dispatch:
+
+jobs:
+  newsletter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create data directories
+        run: mkdir -p data/newsletters
+
+      - name: Sync matchup + transaction data
+        env:
+          YAHOO_REFRESH_TOKEN: ${{ secrets.YAHOO_REFRESH_TOKEN }}
+        run: node sync_newsletter.js
+
+      - name: Generate newsletter
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node generate_newsletter.js
+
+      - name: Commit newsletter
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/newsletter_data.json data/newsletters/
+          git commit -m "Weekly newsletter — $(date +%Y-%m-%d)" || echo "No changes"
+          git push
