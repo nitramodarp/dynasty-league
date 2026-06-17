@@ -690,27 +690,7 @@
           "team": "Bell Biv Devo"
         }
       ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781036793,
-      "moves": [
-        {
-          "name": "Kody Clemens",
-          "pos": "1B,2B,OF",
-          "mlb": "MIN",
-          "action": "add",
-          "team": "MayTheSchwarBeWithU"
-        },
-        {
-          "name": "Chase DeLauter",
-          "pos": "OF",
-          "mlb": "CLE",
-          "action": "drop",
-          "team": "MayTheSchwarBeWithU"
-        }
-      ]
     }
   ],
-  "generatedAt": "2026-06-17T14:03:44.150Z"
+  "generatedAt": "2026-06-17T19:25:30.395Z"
 }
