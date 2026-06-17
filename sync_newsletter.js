@@ -13,6 +13,42 @@ const STAT_NAMES = {
   '42': 'K', '26': 'ERA', '27': 'WHIP', '83': 'QS', '89': 'SV+H',
 };
 
+// ── Eastern wall-clock → Unix epoch (seconds) ────────────────────────
+// Yahoo week_start/week_end are calendar dates ("YYYY-MM-DD"). The recap
+// window is [weekStart 00:00:00, weekEnd 23:59:59] Eastern. We resolve the
+// real America/New_York offset for the date (handles EST -05:00 vs EDT
+// -04:00 — a hardcoded offset is wrong half the year) and THROW on any
+// unparseable input. The throw is the point: the old code silently produced
+// NaN bounds, and `ts < NaN || ts > NaN` is always false, which disabled the
+// filter entirely and let every transaction through. Failing loud beats a
+// recap that quietly includes the wrong week.
+function nyOffsetMinutes(utcMs) {
+  const dtf = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', hour12: false,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+  });
+  const p = Object.fromEntries(
+    dtf.formatToParts(new Date(utcMs)).filter(x => x.type !== 'literal').map(x => [x.type, x.value])
+  );
+  const wallAsUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second);
+  return Math.round((wallAsUTC - utcMs) / 60000); // EDT => -240, EST => -300
+}
+
+function easternEpoch(dateStr, timeStr) {
+  const m = String(dateStr == null ? '' : dateStr).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) throw new Error(`week window: cannot parse date ${JSON.stringify(dateStr)}`);
+  const [, Y, Mo, D] = m;
+  const [h, mi, s] = String(timeStr).split(':').map(Number);
+  const naiveUTC = Date.UTC(+Y, +Mo - 1, +D, h, mi, s);
+  const off = nyOffsetMinutes(naiveUTC);
+  let ms = naiveUTC - off * 60000;
+  const off2 = nyOffsetMinutes(ms);            // stabilize across a DST edge
+  if (off2 !== off) ms = naiveUTC - off2 * 60000;
+  if (!Number.isFinite(ms)) throw new Error(`week window: non-finite epoch for ${dateStr} ${timeStr}`);
+  return Math.floor(ms / 1000);
+}
+
 async function getAccessToken() {
   const rt = process.env.YAHOO_REFRESH_TOKEN;
   if (!rt) throw new Error('YAHOO_REFRESH_TOKEN not set');
@@ -143,8 +179,12 @@ async function fetchTransactions(leagueKey, token, weekStart, weekEnd) {
   const txBlock = data.fantasy_content.league[1].transactions || {};
   const count = txBlock.count || 0;
 
-  const startTs = Math.floor(Date.parse(`${weekStart}T00:00:00-04:00`) / 1000);
-  const endTs   = Math.floor(Date.parse(`${weekEnd}T23:59:59-04:00`) / 1000);
+  // Strict Eastern bounds. easternEpoch throws on bad input so a malformed
+  // week_start/week_end can never collapse into NaN and silently disable the
+  // filter (the original bug: NaN bounds => every transaction passed through).
+  const startTs = easternEpoch(weekStart, '00:00:00');
+  const endTs   = easternEpoch(weekEnd,   '23:59:59');
+  console.log(`  Window [${weekStart} 00:00 → ${weekEnd} 23:59 ET]  ts ${startTs}–${endTs}`);
 
   const txns = [];
   for (let i = 0; i < count; i++) {
@@ -153,7 +193,7 @@ async function fetchTransactions(leagueKey, token, weekStart, weekEnd) {
       const head = tr[0];
       if (head.status !== 'successful') continue;
       const ts = parseInt(head.timestamp);
-      if (ts < startTs || ts > endTs) continue;
+      if (!Number.isFinite(ts) || ts < startTs || ts > endTs) continue;
 
       const playersObj = tr[1].players;
       const pcount = playersObj.count || 0;
