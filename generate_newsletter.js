@@ -229,6 +229,10 @@ HARD RULES:
 - Don't reuse jokes from the sample — fresh observations for this week.
 - Brother matchups worth a wink if they occur: Chief Noc-A-Homa & Stone Jack
   Ballers; Thurgood Jenkins & Bad MoFo's.
+- Only reference a family/sibling relationship that is EXPLICITLY listed in the
+  rule above. Never infer who is related from team names, owners, standings, or
+  seeds, and never make aggregate claims like "the family owns the top seeds" or
+  "the brothers swept the week" — if it isn't stated above, don't assert it.
 - No closing footer or meta-commentary. End after QUESTIONABLE ACTIVITY.
 - Output clean Markdown.`;
 
