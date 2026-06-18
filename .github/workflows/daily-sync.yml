@@ -20,12 +20,12 @@ jobs:
           YAHOO_REFRESH_TOKEN: ${{ secrets.YAHOO_REFRESH_TOKEN }}
           GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
         run: node auto_sync.js
-      - name: Compute DYN Z from Savant
-        env:
-          GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
-        run: node savant_dynz.js
       - name: Sync Yahoo stats
         env:
           YAHOO_REFRESH_TOKEN: ${{ secrets.YAHOO_REFRESH_TOKEN }}
           GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
         run: node sync_stats.js
+      - name: Category VORP salary engine
+        env:
+          GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
+        run: node category_vorp.js
