@@ -37,13 +37,15 @@ const CAT_ALIASES = {
   WHIP: ['whip', 'walks + hits / innings pitched'],
   QS:   ['qs', 'quality starts'],
   SVH:  ['sv+h', 'svh', 's+h', 'saves + holds', 'saves plus holds', 'sv+hld', 'sv + h'],
-  // sample-size fields (not scoring cats, but needed for Phase D sample gate)
-  PA:   ['pa', 'plate appearances'],
+  // sample-size fields (not scoring cats, but needed for the Phase D sample gate).
+  // This league has no PA stat — it exposes H/AB instead, so we derive AB
+  // (the denominator) as the hitter sample. IP is the pitcher sample.
+  HAB:  ['h/ab'],
   IP:   ['ip', 'innings pitched', 'innings'],
 };
 
 // Column order for the STATS tab (header must match — see deploy notes).
-const OUT_COLS = ['player_id','player_name','R','HR','RBI','SB','OPS','K','ERA','WHIP','QS','SVH','PA','IP'];
+const OUT_COLS = ['player_id','player_name','R','HR','RBI','SB','OPS','K','ERA','WHIP','QS','SVH','AB','IP'];
 
 // ── YAHOO AUTH (mirrors sync_standings.js) ──────────────────────────────────
 async function getAccessToken() {
@@ -156,6 +158,12 @@ function parsePlayer(playerNode, idToCat) {
     const cat = idToCat[String(st.stat_id)];
     if (cat) out[cat] = st.value;
   }
+  // Derive hitter sample (AB) from the H/AB composite (e.g. "59/198" → 198).
+  if (out.HAB && typeof out.HAB === 'string' && out.HAB.includes('/')) {
+    const ab = parseInt(out.HAB.split('/')[1], 10);
+    if (!isNaN(ab)) out.AB = ab;
+  }
+  delete out.HAB;
   return out;
 }
 
@@ -211,7 +219,22 @@ async function main() {
       }
       console.log(`  batch ${b + 1}/${batches.length}: parsed ${count}`);
     } catch (e) {
-      console.warn(`  batch ${b + 1} failed: ${e.message}`);
+      // One invalid player_key 400s the whole batch. Recover the good ones by
+      // retrying this batch a single player at a time, skipping the offender.
+      console.warn(`  batch ${b + 1} failed (${e.message.slice(0, 70)}). Retrying individually...`);
+      for (const p of batches[b]) {
+        try {
+          const r = await yahooGet(`/league/${leagueKey}/players;player_keys=${gameKey}.p.${p.id}/stats;type=season`, token);
+          const po = r.fantasy_content.league[1].players;
+          const node = po && po[0];
+          if (node) {
+            const parsed = parsePlayer(node, idToCat);
+            if (parsed.player_id) byId[parsed.player_id] = parsed;
+          }
+        } catch (e2) {
+          console.warn(`    ✗ skipping bad player_id ${p.id}: ${e2.message.slice(0, 50)}`);
+        }
+      }
     }
   }
 
