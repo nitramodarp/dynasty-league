@@ -234,28 +234,31 @@ async function main() {
         ? playerData.age
         : (player.age || 27);
 
-      const ageMult = getAgeMult(effAge, playerData.isPitcher);
+      // ── CURRENT-VALUE SALARY (age-free) ───────────────────────────
+      // Salary reflects CURRENT production only. The age multiplier and the
+      // youth bonus are forward-looking and now belong to the trade lens,
+      // not the ledger. Salary tiers map off the raw, age-free score.
       const rawZ = playerData.isPitcher
         ? (Z_ANCHOR - regXwoba) / Z_SCALE   // pitchers: lower xwOBA = better
         : (regXwoba - Z_ANCHOR) / Z_SCALE;  // hitters: higher xwOBA = better
 
-      // Age multiplier applies ONLY to positive raw scores. Multiplying a
-      // negative rawZ by a youth bonus (>1) would amplify the penalty, which
-      // is backwards for a dynasty model. Below-average players keep raw rawZ.
-      let z = rawZ > 0 ? rawZ * ageMult : rawZ;
+      dynZ = parseFloat(rawZ.toFixed(3));   // age-free → PLAYERS.dyn_z (col H)
 
-      // Youth floor: dynasty benefit-of-the-doubt bump for young players.
-      if (Math.round(effAge) <= YOUTH_FLOOR_AGE) {
-        z += YOUTH_FLOOR_BONUS;
-      }
+      // ── SETTINGS-DRIVEN TIERS ─────────────────────────────────────
+      // Thresholds + salaries read from the SETTINGS tab (single source of
+      // truth), same pattern as escalation_rate. Lowering the Elite cut is
+      // now a one-cell edit in the Sheet — no code change required.
+      const num = (v, d) => { const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
+      const eliteMin = num(settingsMap.tier_elite_min, 3.0);
+      const starMin  = num(settingsMap.tier_star_min,  2.0);
+      const solidMin = num(settingsMap.tier_solid_min, 1.0);
+      const depthMin = num(settingsMap.tier_depth_min, 0.0);
 
-      dynZ = parseFloat(z.toFixed(3));
-
-      if (dynZ >= 3.0) { salaryTier = 'Elite'; baseSalary = 40; }
-      else if (dynZ >= 2.0) { salaryTier = 'Star'; baseSalary = 30; }
-      else if (dynZ >= 1.0) { salaryTier = 'Solid'; baseSalary = 20; }
-      else if (dynZ >= 0.0) { salaryTier = 'Depth'; baseSalary = 10; }
-      else { salaryTier = 'Minimum'; baseSalary = 3; }
+      if      (dynZ >= eliteMin) { salaryTier = 'Elite';   baseSalary = num(settingsMap.salary_elite,   40); }
+      else if (dynZ >= starMin)  { salaryTier = 'Star';    baseSalary = num(settingsMap.salary_star,    30); }
+      else if (dynZ >= solidMin) { salaryTier = 'Solid';   baseSalary = num(settingsMap.salary_solid,   20); }
+      else if (dynZ >= depthMin) { salaryTier = 'Depth';   baseSalary = num(settingsMap.salary_depth,   10); }
+      else                       { salaryTier = 'Minimum'; baseSalary = num(settingsMap.salary_minimum,  3); }
 
       if (isTaxDayPassed && player.year_held > 0) {
         const escalationRate = parseFloat(settingsMap.escalation_rate) || 0.12;
