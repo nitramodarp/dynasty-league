@@ -32,17 +32,19 @@ dynZ(p)          = rawZ(p) × ageFactor(p) × pitchAdj(p)         # TRADE input 
 
 Hitters and pitchers are scored within their own pools and never z-scored against each other.
 
-**Category → stat-column map (CONFIRM against the Sheet generator before coding).**
-Pitching order is inferred from the Ohtani-SP synthetic row
-(`stat1=165 K, stat2=2.85 ERA, stat3=1.02 WHIP, stat4=20 QS, stat5=0 SV+H`):
+**League category order — CONFIRMED** from the Sheet's team-category-totals tab header:
 
-| | stat1 | stat2 | stat3 | stat4 | stat5 |
-|---|---|---|---|---|---|
-| Hitter | R | HR | RBI | SB | OPS | *(order UNCONFIRMED — verify)* |
-| Pitcher | K | ERA | WHIP | QS | SV+H |
+| Hitting | R · HR · RBI · SB · OPS |
+| Pitching | K · ERA · WHIP · QS · SV+H |
 
-> Note categories: **QS, not W** (corrected this session). QS is ratio-skill core
+> **QS, not W** — confirmed; the tab header literally reads QS. QS is ratio-skill core
 > (earned-run side) + a workload piece — see §3.
+
+The per-player `stat1..stat5` columns the engine reads **do not live in the Google Sheet** —
+the Sheet's PLAYERS tab stores only a finished `dyn_z` + `salary_tier` per player. The raw
+per-category stats live in the **draft-data CSV in the GitHub repo** (parsed positionally by
+`index.html`). The order above is canonical; still verify the repo CSV writes its columns in
+exactly this order before coding — a transposed column silently corrupts every salary.
 
 ---
 
@@ -114,28 +116,37 @@ for each category c in pool:
 rawZ(p) = Σ z[c]        # sum, not mean → elite ≈ 5–8, not ~0.6
 ```
 
-**Scale-calibration flag (must resolve before tiers).** The current `dynZ` in the draft app
-runs ~0.6 for an ace, but the salary tiers in the constitution use Elite ≥ 3.0. Those are two
-different scales — summing five category z-scores does **not** land on the same axis as the
-draft app's normalized 0.6. **Do not hard-code the ≥3.0 / 2.0 / 1.0 thresholds.** Define tiers
-as cuts of the *live `rawZ` distribution* (see §5) so they self-calibrate every recompute.
+**Scale note — CORRECTED after reading the live Sheet.** Earlier I worried the salary score and
+the tier thresholds were on different scales. They're not. The salary `dyn_z` in the PLAYERS tab
+already sits on the tier scale: Mason Miller 2.96, Misiorowski 2.49, Trout 2.46, Judge 2.42
+(all Star), Skenes 1.84 (Solid), CJ Abrams 0.77 (Depth), Emerson −1.50 (Min). That's consistent
+with Elite ≥3.0 / Star 2–2.9 / etc. So the ≥3.0 thresholds are usable as-is — percentile cuts are
+*optional*, not required. (The draft app's separate ~0.6-scale `dynZ` is a **different** number —
+that's the two-DYN-Z divergence. Keep them separate; the salary path uses the Sheet-scale one.)
+The real calibration question is in §5.
 
 ---
 
 ## 5. Tier mapping (salary)
 
-Tiers from `rawZ` percentile/SD cuts, not magic numbers:
+Tiers from `dyn_z` (live Sheet thresholds, confirmed in SETTINGS):
 
 ```
-Elite  : rawZ ≥ p90  (or ≥ +2.0 SD of pool)   → $40M
-Star   : p75–p90                               → $30M
-Solid  : p50–p75                               → $20M
-Depth  : p25–p50                               → $10M
-Min    : < p25  (or rawZ < 0)                  → $3M floor
+Elite  : dyn_z ≥ 3.0   → $40M
+Star   : 2.0 – 2.9     → $30M
+Solid  : 1.0 – 1.9     → $20M
+Depth  : 0.0 – 0.9     → $10M
+Min    : < 0.0         → $3M floor
 ```
 
-- Calibrate the cut points once against the live distribution, then lock for the season so
-  salaries don't wobble on every CSV refresh.
+**Calibration question (real, straight from live data): nobody is currently Elite.** The top
+score in the whole league is Mason Miller at 2.96, then Misiorowski 2.49, Trout 2.46, Judge 2.42
+— all capping out as Star. The $40M Elite tier is effectively unreachable at the current scale.
+Decide: leave it as a rare ceiling (intended — Elite should mean a true outlier), or lower the
+Elite cut to ~2.7 so the best 3–5 assets in the league actually land at $40M. Tuning call, not a
+code blocker.
+
+- If thresholds are kept, lock them for the season so salaries don't wobble on every CSV refresh.
 - Escalation (12%/yr, compounding on current tier), trade-reset-to-Year-1, and the cap are
   **downstream** of this number and unchanged by this spec.
 
@@ -147,8 +158,9 @@ that's the edge.
 
 ## 6. Open items / things to tune
 
-1. **Confirm hitter stat-column order** (R/HR/RBI/SB/OPS) against the Sheet generator. Pitching
-   order is inferred, not confirmed.
+1. **Confirm per-player stat-column order in the repo draft CSV** (not the Sheet — see §1). League
+   category order is confirmed (R/HR/RBI/SB/OPS, K/ERA/WHIP/QS/SV+H); the CSV column positions
+   that `index.html` reads still need a visual check against that order.
 2. **Sample-gate thresholds** (`sampleFull` for PA and IP) need tuning — start ~450 PA / ~120 IP,
    adjust against how rookies grade.
 3. **SV+H — RESOLVED: data-only.** Read accumulated SV+H from Yahoo (YTD/trailing), sample-gated
@@ -159,4 +171,16 @@ that's the edge.
    not the ledger's.
 4. **Monthly CSV fields.** The Savant export must carry the de-luck columns each category needs
    (xwOBA, xERA, sprint speed, barrels, GB%) — confirm the manual upload includes them.
-5. **Tier cut calibration** — pick percentile vs SD cuts, run once on live data, lock for season.
+5. **Tier cut calibration** — keep ≥3.0 Elite (rare ceiling) or lower to ~2.7 so top assets land
+   there. Currently nobody is Elite (top = Miller 2.96). See §5.
+6. **AGE-ROUTING — the critical one.** The Sheet stores a single `dyn_z` per player. It's not
+   visible whether `savant_dynz.js` / the War Room already bakes the age factor into that number.
+   Our whole current-value decision requires salary to read the **age-free** score. Action: confirm
+   in the repo whether the pushed `dyn_z` includes age. If it does, split the output — push an
+   age-free score to the salary column and the age-adjusted score to the trade lens. This is the
+   single most important wiring fix; everything else is downstream.
+7. **Tax-rate contradiction in the live data.** SETTINGS says `tax_rate_per_10m = 1.5`; the
+   CHANGELOG ratification row says "$0.25 per $10M over." Cap is currently **370** (not 500/350).
+   Reconcile which is live before any payroll/tax math is trusted. (At cap 370, no team is over
+   today — top payroll is Chalk Dust at 347 — so the tax rate isn't yet biting, but the conflict
+   should be resolved.)
