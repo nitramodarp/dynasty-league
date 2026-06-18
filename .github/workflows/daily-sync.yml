@@ -24,7 +24,7 @@ jobs:
         env:
           GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
         run: node savant_dynz.js
-        - name: Sync Yahoo stats
+      - name: Sync Yahoo stats
         env:
           YAHOO_REFRESH_TOKEN: ${{ secrets.YAHOO_REFRESH_TOKEN }}
           GOOGLE_KEY_JSON: ${{ secrets.GOOGLE_KEY_JSON }}
