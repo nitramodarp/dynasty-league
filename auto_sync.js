@@ -29,9 +29,10 @@ async function getLeagueKey(token) {
 }
 
 async function getAllRosters(leagueKey, token) {
-const SAVANT_ID_OVERRIDES = {
-  'Shohei Ohtani (Batter)': '660271',
-};
+// (Removed) This map forced Ohtani's batter row to his MLBAM/Savant id 660271,
+// which is NOT his Yahoo id and 404s on the Yahoo stats lookup. We now use the
+// real Yahoo player_id that the roster fetch already provides below.
+const SAVANT_ID_OVERRIDES = {};
   const data = await yahooGet(`/league/${leagueKey}/teams/roster`, token);
   const teams = data.fantasy_content.league[1].teams;
   const rows = [];

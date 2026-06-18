@@ -189,7 +189,7 @@ async function main() {
   const playerRows = await getRange(sheets, 'PLAYERS!A2:B');
   const players = playerRows
     .map(r => ({ id: String(r[0] || '').trim(), name: (r[1] || '').trim() }))
-    .filter(p => p.id && /^\d+$/.test(p.id) && Number(p.id) < 1000000); // skip synthetic ids (e.g. Ohtani-SP)
+    .filter(p => p.id && /^\d+$/.test(p.id)); // include high two-way ids (e.g. Ohtani pitcher 1000002); genuinely-bad ids get skipped by the per-batch fallback
   console.log(`✓ ${players.length} Yahoo player ids from PLAYERS tab`);
 
   // 3) Batch-fetch season stats (25 player_keys per call)
@@ -232,7 +232,26 @@ async function main() {
             if (parsed.player_id) byId[parsed.player_id] = parsed;
           }
         } catch (e2) {
-          console.warn(`    ✗ skipping bad player_id ${p.id}: ${e2.message.slice(0, 50)}`);
+          // ID didn't resolve in Yahoo's namespace (e.g. a Savant/MLBAM id got
+          // into the PLAYERS row, as with Ohtani's batter entry). Self-heal:
+          // look the player up by NAME, then store under the ORIGINAL PLAYERS id
+          // so the STATS row still aligns. Strip any "(Batter)"/"(Pitcher)" tag.
+          const q = p.name.replace(/\s*\([^)]*\)\s*/g, ' ').trim();
+          try {
+            const sr = await yahooGet(`/league/${leagueKey}/players;search=${encodeURIComponent(q)}/stats;type=season`, token);
+            const po = sr.fantasy_content.league[1].players;
+            const node = po && po[0];
+            if (node) {
+              const parsed = parsePlayer(node, idToCat);
+              // keep the PLAYERS id/name so STATS stays keyed to your tab
+              byId[p.id] = { ...parsed, player_id: p.id, player_name: p.name };
+              console.log(`    ↻ recovered "${p.name}" via name search (PLAYERS id ${p.id})`);
+            } else {
+              console.warn(`    ✗ no name match for "${p.name}" (id ${p.id})`);
+            }
+          } catch (e3) {
+            console.warn(`    ✗ skipping "${p.name}" (id ${p.id}): ${e3.message.slice(0, 50)}`);
+          }
         }
       }
     }
