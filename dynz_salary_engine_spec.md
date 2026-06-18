@@ -158,9 +158,11 @@ that's the edge.
 
 ## 6. Open items / things to tune
 
-1. **Confirm per-player stat-column order in the repo draft CSV** (not the Sheet — see §1). League
-   category order is confirmed (R/HR/RBI/SB/OPS, K/ERA/WHIP/QS/SV+H); the CSV column positions
-   that `index.html` reads still need a visual check against that order.
+1. **Per-player stat-column order — not blocking the current engine.** Repo check shows
+   `savant_dynz.js` is **xwOBA-only**: `rawZ = (regXwoba − 0.320)/0.030` for hitters, inverted for
+   pitchers, with sample-based regression. It never reads `stat1..stat5` at all. So the column-order
+   concern only matters for the future category-VORP rebuild (§3), not for the current fix. Verify
+   the repo CSV order when we build §3, not before.
 2. **Sample-gate thresholds** (`sampleFull` for PA and IP) need tuning — start ~450 PA / ~120 IP,
    adjust against how rookies grade.
 3. **SV+H — RESOLVED: data-only.** Read accumulated SV+H from Yahoo (YTD/trailing), sample-gated
@@ -171,16 +173,48 @@ that's the edge.
    not the ledger's.
 4. **Monthly CSV fields.** The Savant export must carry the de-luck columns each category needs
    (xwOBA, xERA, sprint speed, barrels, GB%) — confirm the manual upload includes them.
-5. **Tier cut calibration** — keep ≥3.0 Elite (rare ceiling) or lower to ~2.7 so top assets land
-   there. Currently nobody is Elite (top = Miller 2.96). See §5.
-6. **AGE-ROUTING — the critical one.** The Sheet stores a single `dyn_z` per player. It's not
-   visible whether `savant_dynz.js` / the War Room already bakes the age factor into that number.
-   Our whole current-value decision requires salary to read the **age-free** score. Action: confirm
-   in the repo whether the pushed `dyn_z` includes age. If it does, split the output — push an
-   age-free score to the salary column and the age-adjusted score to the trade lens. This is the
-   single most important wiring fix; everything else is downstream.
+5. **Tier cuts — make settings-driven, set the Elite number AFTER the age-free recompute.** The
+   thresholds (3.0/2.0/1.0/0.0) and salaries (40/30/20/10/3) are currently **hardcoded** in
+   `savant_dynz.js` even though `escalation_rate` is already read from `settingsMap`. Fix: read
+   `tier_*_min` and `salary_*` from SETTINGS the same way, so the Sheet is the single source of
+   truth. **Caution:** the current "nobody is Elite" reading is on the *age-loaded* numbers.
+   Stripping age (item 6) reshuffles the top — productive vets jump (e.g. Trout at 34 carries a
+   ×0.60 age penalty now; age-free he's ~4.1, well into Elite), while young arms drop. Elite may
+   become reachable on its own. Set `tier_elite_min` against the age-free distribution, not today's.
+6. **AGE-ROUTING — RESOLVED from repo, and it's a live leak.** `savant_dynz.js` computes a clean
+   age-free `rawZ`, then overwrites it: `z = rawZ * ageMult` (HITTER_MULT/PITCHER_MULT curves,
+   21→1.18 down to 35→0.50) **plus** a flat `+0.5` youth bonus for age ≤23. That age-loaded `z`
+   becomes `dynZ`, which drives the salary tier. So salary is currently forward-looking — the exact
+   thing we decided to remove. **Fix (surgical): map the tier off `rawZ`, not `z`.** Drop ageMult +
+   youth bonus from the salary path; keep computing the age-adjusted number but store it separately
+   for the trade lens. `rawZ` already exists in the code — it's just being discarded.
 7. **Tax-rate contradiction in the live data.** SETTINGS says `tax_rate_per_10m = 1.5`; the
    CHANGELOG ratification row says "$0.25 per $10M over." Cap is currently **370** (not 500/350).
    Reconcile which is live before any payroll/tax math is trusted. (At cap 370, no team is over
    today — top payroll is Chalk Dust at 347 — so the tax rate isn't yet biting, but the conflict
    should be resolved.)
+
+---
+
+## 7. Current implementation (confirmed from repo `savant_dynz.js`)
+
+What's actually running today, so the rebuild is grounded in reality:
+
+- **Single input: xwOBA.** `rawZ = (regXwoba - 0.320)/0.030` (hitters), inverted for pitchers.
+  `regXwoba` is sample-regressed (k = 0.4 x mean sample). No category stats, no VORP, no positional
+  replacement. This is the whole model. Everything in §1-§4 is a **rebuild** of this file, not a tweak.
+- **Age is baked into the salary number.** `z = rawZ x ageMult (+0.5 if age <=23)` -> `dynZ` -> tier.
+- **Tiers + salaries hardcoded** (`if dynZ >= 3.0 ... 40`), while `escalation_rate` reads from SETTINGS.
+- **Tax not computed here** — luxury tax / payroll lives in a separate sync (standings/payroll).
+
+**Surgical fix set (small, ships before the full §3 rebuild):**
+
+1. Salary tier maps off **`rawZ`** (age-free), not `z`. Removes the forward-looking leak.
+2. Read tier thresholds (`tier_*_min`) and salaries (`salary_*`) from `settingsMap` — same pattern as
+   `escalation_rate`. Makes the Sheet the single source of truth; lowering Elite then = editing one cell.
+3. Still compute the age-adjusted `z` and store it in a separate column for the **trade lens**.
+4. Wire `settingsMap.tax_rate_per_10m` into the payroll/tax sync (separate file) so tax cascades from
+   SETTINGS. Resolve the SETTINGS (1.5) vs CHANGELOG ($0.25) conflict first.
+
+The full §3 category-VORP rebuild (SB, SV+H, QS, volume) replaces step-1's `rawZ` definition later;
+steps 2-4 stand regardless.
