@@ -458,8 +458,8 @@
     main { padding: 20px 16px; }
     .prize-banner { padding: 16px; gap: 16px; }
     .prize-stat .val { font-size: 28px; }
-    .player-row { grid-template-columns: 50px 1fr 50px; }
-    .player-row .year-chip, .player-row .salary-cell { display: none; }
+    .player-row { grid-template-columns: 44px 1fr 64px; }
+    .player-row .year-chip, .player-row > span:nth-child(3) { display: none; }
     .standings-hide-mobile { display: none; }
   }
 </style>
@@ -472,7 +472,7 @@
   <div class="header-meta">
     <span class="meta-pill">Season <strong>2026</strong></span>
     <span class="meta-pill">Daily Format</span>
-    <span class="meta-pill">R · HR · RBI · SB · OPS · W · K · ERA · WHIP · SV+H</span>
+    <span class="meta-pill">R · HR · RBI · SB · OPS · K · ERA · WHIP · QS · SV+H</span>
     <span class="last-updated" id="lastUpdated">Loading...</span>
   </div>
 </header>
@@ -537,8 +537,6 @@
               <th>PCT</th>
               <th class="standings-hide-mobile">Last Week</th>
               <th>GB</th>
-              <th class="standings-hide-mobile">Lux Tax</th>
-              <th class="standings-hide-mobile">Prize Contrib</th>
             </tr>
           </thead>
           <tbody id="standings-tbody"></tbody>
@@ -763,7 +761,6 @@ async function renderStandings() {
     const leader = standings[0];
     const myTeam = standings.find(r => r.team_name === 'Chief Noc-A-Homa');
     const clinched = standings.filter(r => r.playoff_clinched === 'Y').length;
-    const totalPrize = standings[0]?.total_prize_pool || '';
 
     document.getElementById('standings-banner').innerHTML = `
       <div class="prize-stat">
@@ -779,8 +776,8 @@ async function renderStandings() {
         <div class="lbl">Chief Noc-A-Homa</div>
       </div>
       <div class="prize-stat">
-        <div class="val">${totalPrize || '$' + (12 * 20)}</div>
-        <div class="lbl">Prize Pool</div>
+        <div class="val">$${(SETTINGS.num_teams||12) * (SETTINGS.base_entry_fee||20)}</div>
+        <div class="lbl">Championship Pool</div>
       </div>`;
 
     const tbody = document.getElementById('standings-tbody');
@@ -790,8 +787,6 @@ async function renderStandings() {
       const isMe    = r.team_name === 'Chief Noc-A-Homa';
       const gb      = r.games_back === '-' || r.games_back === '' ? '<span class="gb-dash">—</span>' : r.games_back;
       const lwt     = r.last_week_wlt || '<span class="muted">—</span>';
-      const tax     = r.luxury_tax_owed || '$0';
-      const contrib = r.prize_pool_contrib || '$20';
       const clinch  = r.playoff_clinched === 'Y'
         ? '<span class="clinch-badge">✓ CLINCHED</span>' : '';
 
@@ -804,8 +799,6 @@ async function renderStandings() {
         <td class="mono">${parseFloat(r.win_pct).toFixed(3)}</td>
         <td class="mono muted standings-hide-mobile">${lwt}</td>
         <td class="mono">${gb}</td>
-        <td class="mono standings-hide-mobile ${parseFloat(r.luxury_tax_owed) > 0 ? 'red' : 'muted'}">${tax}</td>
-        <td class="mono standings-hide-mobile gold">${contrib}</td>
       </tr>`;
     }).join('');
 
@@ -893,61 +886,81 @@ async function renderRules() {
     let mult = 1;
     for (let y = 1; y <= 10; y++) {
       escalRows += `<tr><td>Year ${y}</td><td>${y === 1 ? 'Base salary' : 'Base × ' + mult.toFixed(2)}</td></tr>`;
-      mult = Math.round(mult * (1 + rate) * 100) / 100;
+      if (y >= 1) mult = Math.round(mult * (1 + rate) * 100) / 100;
     }
+
+    const pool   = (S.num_teams || 12) * (S.base_entry_fee || 20);
+    const money  = (k) => '$' + Math.round(pool * (S[k] || 0));
+    const pctOf  = (k) => (((S[k] || 0) * 100).toFixed(1).replace(/\.0$/, '')) + '%';
 
     document.getElementById('rules-grid').innerHTML = `
       <div class="rules-card">
         <div class="rules-card-title">League Format</div>
         <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">Head-to-Head Categories</span></div>
-        <div class="rule-row"><span class="rule-key">Teams</span><span class="rule-val">${S.num_teams || 12}</span></div>
+        <div class="rule-row"><span class="rule-key">Teams</span><span class="rule-val">${S.num_teams || 12} · two divisions of 6</span></div>
         <div class="rule-row"><span class="rule-key">Lineup</span><span class="rule-val">Daily</span></div>
         <div class="rule-row"><span class="rule-key">Platform</span><span class="rule-val">Yahoo Fantasy</span></div>
         <div class="rule-row"><span class="rule-key">Trade Deadline</span><span class="rule-val">${S.trade_deadline || 'August 31'}</span></div>
         <div class="rule-row"><span class="rule-key">Entry Fee</span><span class="rule-val">$${S.base_entry_fee || 20} / team</span></div>
-        <div class="rule-row"><span class="rule-key">Prize</span><span class="rule-val">Winner Take All</span></div>
         <div class="rule-row"><span class="rule-key">Season</span><span class="rule-val">${S.current_season || 2026}</span></div>
       </div>
 
       <div class="rules-card">
         <div class="rules-card-title">Scoring Categories</div>
         <div class="rule-row"><span class="rule-key">Hitting (5)</span><span class="rule-val">R · HR · RBI · SB · OPS</span></div>
-        <div class="rule-row"><span class="rule-key">Pitching (5)</span><span class="rule-val">W · K · ERA · WHIP · SV+H</span></div>
+        <div class="rule-row"><span class="rule-key">Pitching (5)</span><span class="rule-val">K · ERA · WHIP · QS · SV+H</span></div>
         <div class="rule-row"><span class="rule-key">Matchup Week</span><span class="rule-val">Mon – Sun</span></div>
         <div class="rule-row"><span class="rule-key">Tie</span><span class="rule-val">0.5 each category</span></div>
       </div>
 
       <div class="rules-card">
         <div class="rules-card-title">Roster Structure</div>
-        <div class="rule-row"><span class="rule-key">Total Spots</span><span class="rule-val">30</span></div>
-        <div class="rule-row"><span class="rule-key">Active</span><span class="rule-val">C · 1B · 2B · 3B · SS · OF×3 · UTIL · SP×2 · RP×2 · P-FLEX×3</span></div>
-        <div class="rule-row"><span class="rule-key">Bench</span><span class="rule-val">4 (any position)</span></div>
-        <div class="rule-row"><span class="rule-key">IL</span><span class="rule-val">5</span></div>
+        <div class="rule-row"><span class="rule-key">Active (17)</span><span class="rule-val">C · 1B · 2B · 3B · SS · OF×3 · UTIL · SP×2 · RP×2 · P-FLEX×4</span></div>
+        <div class="rule-row"><span class="rule-key">Bench</span><span class="rule-val">Flexible (any position)</span></div>
+        <div class="rule-row"><span class="rule-key">IL</span><span class="rule-val">Injured list slots</span></div>
         <div class="rule-row"><span class="rule-key">NA (Prospects)</span><span class="rule-val">5</span></div>
         <div class="rule-row"><span class="rule-key">NA Eligibility</span><span class="rule-val">&lt;${S.na_pa_threshold || 50} PA / &lt;${S.na_ip_threshold || 30} IP / &lt;${S.na_service_threshold || 45} days</span></div>
       </div>
 
       <div class="rules-card">
         <div class="rules-card-title">Salary Cap System</div>
-        <div class="rule-row"><span class="rule-key">Cap (escalates +12% annually)</span><span class="rule-val">$${S.cap_threshold || 500}M</span></div>
-        <div class="rule-row"><span class="rule-key">Player Salary Escalation</span><span class="rule-val">+${Math.round((S.escalation_rate || 0.12) * 100)}% per year held</span></div>
-        <div class="rule-row"><span class="rule-key">Luxury Tax</span><span class="rule-val">$${S.tax_rate_per_10m || 0.25} per $10M over</span></div>
-        <div class="rule-row"><span class="rule-key">Tax → Prize Pool</span><span class="rule-val">Yes, automatic</span></div>
-        <div class="rule-row"><span class="rule-key">Trade Reset</span><span class="rule-val">Year 1 at CURRENT Dynasty Value</span></div>
+        <div class="rule-row"><span class="rule-key">Salary Cap</span><span class="rule-val">$${S.cap_threshold || 360}M (escalates ${Math.round(rate*100)}% each offseason)</span></div>
+        <div class="rule-row"><span class="rule-key">Salary Basis</span><span class="rule-val">Current-season category value (age-free)</span></div>
+        <div class="rule-row"><span class="rule-key">Player Escalation</span><span class="rule-val">+${Math.round(rate*100)}% per year held, from Year 2</span></div>
+        <div class="rule-row"><span class="rule-key">Trade Reset</span><span class="rule-val">Back to Year 1 at current value</span></div>
         <div class="rule-row"><span class="rule-key">Floor</span><span class="rule-val">$${S.min_salary || 3}M minimum</span></div>
         <table class="salary-tier-table">
-          <tr><td>Elite (DYN Z ≥ ${S.tier_elite_min || 3}.0)</td><td>$${S.salary_elite || 40}M</td></tr>
-          <tr><td>Star (DYN Z ${S.tier_star_min || 2}.0–${(S.tier_elite_min || 3) - 0.1})</td><td>$${S.salary_star || 30}M</td></tr>
-          <tr><td>Solid (DYN Z ${S.tier_solid_min || 1}.0–${(S.tier_star_min || 2) - 0.1})</td><td>$${S.salary_solid || 20}M</td></tr>
-          <tr><td>Depth (DYN Z ${S.tier_depth_min || 0}.0–${(S.tier_solid_min || 1) - 0.1})</td><td>$${S.salary_depth || 10}M</td></tr>
-          <tr><td>Minimum (DYN Z &lt; ${S.tier_depth_min || 0}.0)</td><td>$${S.salary_minimum || 3}M</td></tr>
+          <tr><td>Elite (DYN Z ≥ ${S.tier_elite_min})</td><td>$${S.salary_elite}M</td></tr>
+          <tr><td>Star (${S.tier_star_min} – ${S.tier_elite_min})</td><td>$${S.salary_star}M</td></tr>
+          <tr><td>Solid (${S.tier_solid_min} – ${S.tier_star_min})</td><td>$${S.salary_solid}M</td></tr>
+          <tr><td>Depth (${S.tier_depth_min} – ${S.tier_solid_min})</td><td>$${S.salary_depth}M</td></tr>
+          <tr><td>Minimum (&lt; ${S.tier_depth_min})</td><td>$${S.salary_minimum}M</td></tr>
         </table>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Luxury Tax</div>
+        <div class="rule-row"><span class="rule-key">Tier 1</span><span class="rule-val">$${S.tax_rate_tier1}/$10M over, up to +$${S.tax_breakpoint}M</span></div>
+        <div class="rule-row"><span class="rule-key">Tier 2</span><span class="rule-val">$${S.tax_rate_tier2}/$10M over, beyond +$${S.tax_breakpoint}M</span></div>
+        <div class="rule-row"><span class="rule-key">Distribution</span><span class="rule-val">Rebated to under-cap teams</span></div>
+        <div class="rule-row"><span class="rule-key">Rebate Split</span><span class="rule-val">Proportional to cap room</span></div>
+      </div>
+
+      <div class="rules-card">
+        <div class="rules-card-title">Prize Structure</div>
+        <div class="rule-row"><span class="rule-key">Championship Pool</span><span class="rule-val">$${pool} (entry fees)</span></div>
+        <div class="rule-row"><span class="rule-key">Champion</span><span class="rule-val">${money('prize_champion')} (${pctOf('prize_champion')})</span></div>
+        <div class="rule-row"><span class="rule-key">Runner-Up</span><span class="rule-val">${money('prize_runnerup')} (${pctOf('prize_runnerup')})</span></div>
+        <div class="rule-row"><span class="rule-key">Division Winners (×2)</span><span class="rule-val">${money('prize_division_each')} ea (${pctOf('prize_division_each')})</span></div>
+        <div class="rule-row"><span class="rule-key">Wake &amp; Bake Award</span><span class="rule-val">${money('prize_president')} (${pctOf('prize_president')})</span></div>
+        <div class="rule-row"><span class="rule-key">Toilet Bowl Champ</span><span class="rule-val">${money('prize_toilet')} (${pctOf('prize_toilet')})</span></div>
+        <div class="rule-row"><span class="rule-key">Wake &amp; Bake</span><span class="rule-val">Best overall regular-season record</span></div>
       </div>
 
       <div class="rules-card">
         <div class="rules-card-title">Annual Rookie Draft</div>
         <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">${S.rookie_draft_rounds || 2}-Round Snake · WhatsApp</span></div>
-        <div class="rule-row"><span class="rule-key">Window</span><span class="rule-val">Super Bowl → March Madness</span></div>
+        <div class="rule-row"><span class="rule-key">Date</span><span class="rule-val">Ides of March (Mar 15)</span></div>
         <div class="rule-row"><span class="rule-key">Pick Clock</span><span class="rule-val">${S.rookie_draft_clock_hrs || 8} hours</span></div>
         <div class="rule-row"><span class="rule-key">Opt-In</span><span class="rule-val">Drop 1 player = R1 pick</span></div>
         <div class="rule-row"><span class="rule-key"></span><span class="rule-val">Drop 2nd player = R2 pick</span></div>
