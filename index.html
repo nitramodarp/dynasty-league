@@ -505,7 +505,7 @@
               <th>Team</th>
               <th>Payroll</th>
               <th>vs Cap</th>
-              <th>Luxury Tax</th>
+              <th>Tax / Rebate</th>
               <th>Status</th>
               <th>Roster</th>
             </tr>
@@ -588,7 +588,10 @@ const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx
 
 // ── STATE ─────────────────────────────────────────────────────────
 let PLAYERS  = [];
-let SETTINGS = { cap_threshold: 500, tax_rate_per_10m: 0.25, base_entry_fee: 20, num_teams: 12,
+let SETTINGS = { cap_threshold: 360, tax_rate_per_10m: 1.15, base_entry_fee: 20, num_teams: 12,
+                 tax_breakpoint: 50, tax_rate_tier1: 1.15, tax_rate_tier2: 2.00,
+                 prize_champion: 0.55, prize_runnerup: 0.20, prize_division_each: 0.075,
+                 prize_president: 0.05, prize_toilet: 0.05,
                  escalation_rate: 0.12, min_salary: 3, salary_elite: 40, salary_star: 30,
                  salary_solid: 20, salary_depth: 10, salary_minimum: 3,
                  tier_elite_min: 3, tier_star_min: 2, tier_solid_min: 1, tier_depth_min: 0,
@@ -659,48 +662,81 @@ async function loadData() {
 }
 
 // ── PAYROLL VIEW ──────────────────────────────────────────────────
+function progressiveTax(over) {
+  if (over <= 0) return 0;
+  const bp = SETTINGS.tax_breakpoint, r1 = SETTINGS.tax_rate_tier1, r2 = SETTINGS.tax_rate_tier2;
+  const tier1 = Math.min(over, bp) / 10 * r1;        // first $bp M over
+  const tier2 = Math.max(0, over - bp) / 10 * r2;    // everything beyond
+  return Math.round((tier1 + tier2) * 2) / 2;        // nearest $0.50
+}
+
 async function renderPayroll() {
   try {
     await loadData();
 
+    const cap = SETTINGS.cap_threshold;
     const teamList = Object.values(TEAMS).sort((a, b) => b.payroll - a.payroll);
+
+    // Progressive luxury tax on over-cap teams; cap room on under-cap teams.
     let totalTax = 0;
     teamList.forEach(t => {
-      const over = Math.max(0, t.payroll - SETTINGS.cap_threshold);
-      t.tax = Math.round(over * (SETTINGS.tax_rate_per_10m / 10) * 2) / 2;
+      const over = Math.max(0, t.payroll - cap);
+      t.tax  = progressiveTax(over);
+      t.room = Math.max(0, cap - t.payroll);
       totalTax += t.tax;
     });
 
-    const prizePool = SETTINGS.num_teams * SETTINGS.base_entry_fee + totalTax;
+    // Rebate: the entire tax pool flows to under-cap teams, proportional to room.
+    const totalRoom = teamList.reduce((s, t) => s + t.room, 0);
+    teamList.forEach(t => {
+      t.rebate = (totalRoom > 0 && t.room > 0) ? totalTax * (t.room / totalRoom) : 0;
+    });
+
+    // Two pools: entry fees fund championship payouts; tax is rebated, not pooled.
+    const champPool = SETTINGS.num_teams * SETTINGS.base_entry_fee;
+    const pc  = (k) => champPool * (SETTINGS[k] || 0);
+    const pct = (k) => (((SETTINGS[k] || 0) * 100).toFixed(1).replace(/\.0$/, '')) + '%';
 
     document.getElementById('prize-banner').innerHTML = `
       <div class="prize-stat">
-        <div class="val">$${prizePool.toFixed(0)}</div>
-        <div class="lbl">Prize Pool</div>
+        <div class="val">$${champPool.toFixed(0)}</div>
+        <div class="lbl">Championship Pool</div>
       </div>
       <div class="prize-stat">
         <div class="val">$${totalTax.toFixed(2)}</div>
-        <div class="lbl">Luxury Tax Collected</div>
+        <div class="lbl">Luxury Tax → Rebated</div>
       </div>
       <div class="prize-stat">
-        <div class="val">${teamList.filter(t => t.payroll > SETTINGS.cap_threshold).length}</div>
+        <div class="val">${teamList.filter(t => t.payroll > cap).length}</div>
         <div class="lbl">Over-Cap Teams</div>
       </div>
       <div class="prize-stat">
-        <div class="val">$${SETTINGS.cap_threshold}M</div>
+        <div class="val">$${cap}M</div>
         <div class="lbl">Cap Threshold</div>
+      </div>
+      <div style="grid-column:1/-1;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);line-height:1.8;border-top:1px solid var(--border);padding-top:14px">
+        CHAMPIONSHIP POOL PAYOUT &nbsp;·&nbsp;
+        Champion $${pc('prize_champion').toFixed(0)} (${pct('prize_champion')}) &nbsp;·&nbsp;
+        Runner-up $${pc('prize_runnerup').toFixed(0)} (${pct('prize_runnerup')}) &nbsp;·&nbsp;
+        Division Winners $${pc('prize_division_each').toFixed(0)} ea (${pct('prize_division_each')}) &nbsp;·&nbsp;
+        Wake &amp; Bake $${pc('prize_president').toFixed(0)} (${pct('prize_president')}) &nbsp;·&nbsp;
+        Toilet Bowl $${pc('prize_toilet').toFixed(0)} (${pct('prize_toilet')})
       </div>`;
 
     const tbody = document.getElementById('payroll-tbody');
     tbody.innerHTML = teamList.map((t, i) => {
-      const over   = t.payroll - SETTINGS.cap_threshold;
+      const over   = t.payroll - cap;
       const isOver = over > 0;
+      const netCell = t.tax > 0
+        ? `<td class="mono red">-$${t.tax.toFixed(2)}</td>`
+        : (t.rebate > 0 ? `<td class="mono green">+$${t.rebate.toFixed(2)}</td>`
+                        : `<td class="mono muted">$0.00</td>`);
       return `<tr>
         <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
         <td><strong>${t.name}</strong></td>
         <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
         <td class="mono ${isOver ? 'red' : 'green'}">${isOver ? '+' : ''}$${over.toFixed(1)}M</td>
-        <td class="mono ${t.tax > 0 ? 'red' : 'muted'}">$${t.tax.toFixed(2)}</td>
+        ${netCell}
         <td><span class="tax-badge ${isOver ? 'over' : 'clean'}">${isOver ? 'OVER CAP' : 'CLEAN'}</span></td>
         <td class="mono muted">${t.players.length}</td>
       </tr>`;
