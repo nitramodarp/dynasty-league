@@ -173,8 +173,10 @@ async function main() {
       const raw = scored[id];
       const tier = tierFor(raw);
       const base = tierSal[tier];
-      const cur = (taxPassed && yearHeld > 0)
-        ? parseFloat((base * Math.pow(1 + escalationRate, yearHeld)).toFixed(1))
+      // Escalation starts in YEAR 2, not the launch year. year_held=1 → exponent 0
+      // → no escalation; year_held=2 → 12%; year_held=3 → 12% compounded twice; etc.
+      const cur = (taxPassed && yearHeld > 1)
+        ? parseFloat((base * Math.pow(1 + escalationRate, Math.max(0, yearHeld - 1))).toFixed(1))
         : base;
       dynZCol.push(raw); tierCol.push(tier); baseCol.push(base); curCol.push(cur);
       scoredCount++;
