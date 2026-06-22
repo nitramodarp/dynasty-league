@@ -81,6 +81,20 @@ function describeTransactions(txns) {
   // oldest-first and stamp each line so sequence is unambiguous.
   const ordered = [...txns].sort((a, b) => a.timestamp - b.timestamp);
   return ordered.map(t => {
+    if (t.type === 'trade') {
+      // Group by receiving team: "TeamA receives X (POS, MLB) from TeamB"
+      const byDest = {};
+      t.moves.forEach(mv => {
+        const dest = mv.destTeam || 'Unknown team';
+        (byDest[dest] = byDest[dest] || []).push(mv);
+      });
+      const sides = Object.entries(byDest).map(([dest, mvs]) => {
+        const src = mvs[0].sourceTeam || 'another team';
+        const players = mvs.map(mv => `${mv.name} (${mv.pos}, ${mv.mlb})`).join(', ');
+        return `${dest} receives ${players} from ${src}`;
+      });
+      return `[${fmtEt(t.timestamp)}] TRADE: ${sides.join('; ')}`;
+    }
     const parts = t.moves.map(mv =>
       `${mv.action === 'add' ? 'added' : 'dropped'} ${mv.name} (${mv.pos}, ${mv.mlb})`);
     const team = t.moves[0]?.team || 'A team';

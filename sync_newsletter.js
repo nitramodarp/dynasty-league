@@ -208,8 +208,10 @@ async function fetchTransactions(leagueKey, token, weekStart, weekEnd) {
         const td = Array.isArray(tdArr) ? tdArr[0] : tdArr;
         moves.push({
           name, pos, mlb,
-          action: td.type, // 'add' or 'drop'
+          action: td.type, // 'add', 'drop', or 'trade'
           team: td.destination_team_name || td.source_team_name || '',
+          sourceTeam: td.source_team_name || '',
+          destTeam: td.destination_team_name || '',
         });
       }
       txns.push({ type: head.type, timestamp: ts, moves });
