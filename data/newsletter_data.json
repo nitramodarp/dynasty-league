@@ -1,333 +1,992 @@
 {
-  "week": 12,
-  "weekStart": "2026-06-08",
-  "weekEnd": "2026-06-14",
+  "week": 13,
+  "weekStart": "2026-06-15",
+  "weekEnd": "2026-06-21",
   "matchups": [
     {
       "winner": "Chief Noc-A-Homa",
-      "loser": "Section 34",
-      "score": "7-3",
-      "isTied": false,
-      "isMatchupOfTheWeek": false,
-      "winnerCats": [
-        "R",
-        "HR",
-        "SB",
-        "K",
-        "WHIP",
-        "QS",
-        "SV+H"
-      ],
-      "loserCats": [
-        "RBI",
-        "OPS",
-        "ERA"
-      ],
-      "tiedCats": [],
-      "winnerStats": {
-        "R": "37",
-        "HR": "13",
-        "RBI": "31",
-        "SB": "2",
-        "OPS": ".817",
-        "K": "68",
-        "ERA": "5.62",
-        "WHIP": "1.20",
-        "QS": "4",
-        "SV+H": "4"
-      },
-      "loserStats": {
-        "R": "26",
-        "HR": "12",
-        "RBI": "39",
-        "SB": "1",
-        "OPS": ".894",
-        "K": "41",
-        "ERA": "3.80",
-        "WHIP": "1.43",
-        "QS": "2",
-        "SV+H": "1"
-      }
-    },
-    {
-      "winner": "Bell Biv Devo",
-      "loser": "Bad MoFo's",
-      "score": "6-4",
-      "isTied": false,
-      "isMatchupOfTheWeek": false,
-      "winnerCats": [
-        "HR",
-        "RBI",
-        "OPS",
-        "K",
-        "QS",
-        "SV+H"
-      ],
-      "loserCats": [
-        "R",
-        "SB",
-        "ERA",
-        "WHIP"
-      ],
-      "tiedCats": [],
-      "winnerStats": {
-        "R": "32",
-        "HR": "9",
-        "RBI": "28",
-        "SB": "3",
-        "OPS": ".868",
-        "K": "42",
-        "ERA": "4.63",
-        "WHIP": "1.59",
-        "QS": "2",
-        "SV+H": "7"
-      },
-      "loserStats": {
-        "R": "35",
-        "HR": "8",
-        "RBI": "24",
-        "SB": "8",
-        "OPS": ".702",
-        "K": "32",
-        "ERA": "3.86",
-        "WHIP": "1.16",
-        "QS": "1",
-        "SV+H": "4"
-      }
-    },
-    {
-      "winner": "Bip Roberts",
-      "loser": "Old Fashioned",
-      "score": "8-1-1",
-      "isTied": false,
-      "isMatchupOfTheWeek": false,
-      "winnerCats": [
-        "R",
-        "HR",
-        "RBI",
-        "SB",
-        "OPS",
-        "K",
-        "ERA",
-        "WHIP"
-      ],
-      "loserCats": [
-        "QS"
-      ],
-      "tiedCats": [
-        "SV+H"
-      ],
-      "winnerStats": {
-        "R": "36",
-        "HR": "14",
-        "RBI": "33",
-        "SB": "4",
-        "OPS": ".807",
-        "K": "52",
-        "ERA": "3.29",
-        "WHIP": "1.02",
-        "QS": "2",
-        "SV+H": "1"
-      },
-      "loserStats": {
-        "R": "24",
-        "HR": "9",
-        "RBI": "28",
-        "SB": "3",
-        "OPS": ".735",
-        "K": "48",
-        "ERA": "4.00",
-        "WHIP": "1.22",
-        "QS": "3",
-        "SV+H": "1"
-      }
-    },
-    {
-      "winner": "Grand Theft Votto",
-      "loser": "MayTheSchwarBeWithU",
-      "score": "5-5",
-      "isTied": true,
-      "isMatchupOfTheWeek": false,
-      "winnerCats": [
-        "SB",
-        "K",
-        "ERA",
-        "WHIP",
-        "QS"
-      ],
-      "loserCats": [
-        "R",
-        "HR",
-        "RBI",
-        "OPS",
-        "SV+H"
-      ],
-      "tiedCats": [],
-      "winnerStats": {
-        "R": "27",
-        "HR": "3",
-        "RBI": "19",
-        "SB": "12",
-        "OPS": ".728",
-        "K": "45",
-        "ERA": "3.91",
-        "WHIP": "1.07",
-        "QS": "4",
-        "SV+H": "3"
-      },
-      "loserStats": {
-        "R": "33",
-        "HR": "11",
-        "RBI": "27",
-        "SB": "6",
-        "OPS": ".786",
-        "K": "41",
-        "ERA": "5.52",
-        "WHIP": "1.60",
-        "QS": "2",
-        "SV+H": "6"
-      }
-    },
-    {
-      "winner": "Stone Jack Ballers",
-      "loser": "The Chicago Way",
-      "score": "6-4",
+      "loser": "Bip Roberts",
+      "score": "6-3-1",
       "isTied": false,
       "isMatchupOfTheWeek": true,
       "winnerCats": [
         "HR",
         "RBI",
-        "ERA",
+        "SB",
+        "K",
         "WHIP",
-        "QS",
         "SV+H"
       ],
       "loserCats": [
         "R",
-        "SB",
         "OPS",
-        "K"
+        "ERA"
       ],
-      "tiedCats": [],
+      "tiedCats": [
+        "QS"
+      ],
       "winnerStats": {
-        "R": "29",
+        "R": "32",
         "HR": "14",
-        "RBI": "36",
-        "SB": "3",
-        "OPS": ".768",
-        "K": "44",
-        "ERA": "2.36",
-        "WHIP": "0.96",
-        "QS": "4",
-        "SV+H": "6"
+        "RBI": "38",
+        "SB": "4",
+        "OPS": ".807",
+        "K": "48",
+        "ERA": "4.26",
+        "WHIP": "1.00",
+        "QS": "3",
+        "SV+H": "5"
       },
       "loserStats": {
-        "R": "34",
-        "HR": "13",
-        "RBI": "26",
-        "SB": "10",
-        "OPS": ".933",
-        "K": "54",
-        "ERA": "3.52",
-        "WHIP": "1.16",
+        "R": "33",
+        "HR": "11",
+        "RBI": "31",
+        "SB": "2",
+        "OPS": ".828",
+        "K": "39",
+        "ERA": "3.86",
+        "WHIP": "1.20",
         "QS": "3",
         "SV+H": "4"
       }
     },
     {
-      "winner": "Thurgood Jenkins",
-      "loser": "L-A-Loosh",
-      "score": "8-2",
+      "winner": "Bad MoFo's",
+      "loser": "Grand Theft Votto",
+      "score": "4-4-2",
+      "isTied": true,
+      "isMatchupOfTheWeek": false,
+      "winnerCats": [
+        "K",
+        "ERA",
+        "WHIP",
+        "SV+H"
+      ],
+      "loserCats": [
+        "R",
+        "RBI",
+        "SB",
+        "OPS"
+      ],
+      "tiedCats": [
+        "HR",
+        "QS"
+      ],
+      "winnerStats": {
+        "R": "20",
+        "HR": "9",
+        "RBI": "27",
+        "SB": "5",
+        "OPS": ".761",
+        "K": "44",
+        "ERA": "3.30",
+        "WHIP": "0.95",
+        "QS": "5",
+        "SV+H": "4"
+      },
+      "loserStats": {
+        "R": "26",
+        "HR": "9",
+        "RBI": "29",
+        "SB": "8",
+        "OPS": ".840",
+        "K": "38",
+        "ERA": "3.35",
+        "WHIP": "1.14",
+        "QS": "5",
+        "SV+H": "3"
+      }
+    },
+    {
+      "winner": "Bell Biv Devo",
+      "loser": "Thurgood Jenkins",
+      "score": "6-1-3",
+      "isTied": false,
+      "isMatchupOfTheWeek": false,
+      "winnerCats": [
+        "RBI",
+        "OPS",
+        "K",
+        "ERA",
+        "WHIP",
+        "QS"
+      ],
+      "loserCats": [
+        "R"
+      ],
+      "tiedCats": [
+        "HR",
+        "SB",
+        "SV+H"
+      ],
+      "winnerStats": {
+        "R": "28",
+        "HR": "7",
+        "RBI": "33",
+        "SB": "1",
+        "OPS": ".845",
+        "K": "44",
+        "ERA": "2.56",
+        "WHIP": "1.11",
+        "QS": "3",
+        "SV+H": "1"
+      },
+      "loserStats": {
+        "R": "30",
+        "HR": "7",
+        "RBI": "31",
+        "SB": "1",
+        "OPS": ".805",
+        "K": "33",
+        "ERA": "8.35",
+        "WHIP": "1.75",
+        "QS": "1",
+        "SV+H": "1"
+      }
+    },
+    {
+      "winner": "L-A-Loosh",
+      "loser": "Stone Jack Ballers",
+      "score": "5-4-1",
+      "isTied": false,
+      "isMatchupOfTheWeek": false,
+      "winnerCats": [
+        "HR",
+        "OPS",
+        "ERA",
+        "WHIP",
+        "SV+H"
+      ],
+      "loserCats": [
+        "R",
+        "RBI",
+        "K",
+        "QS"
+      ],
+      "tiedCats": [
+        "SB"
+      ],
+      "winnerStats": {
+        "R": "27",
+        "HR": "12",
+        "RBI": "25",
+        "SB": "3",
+        "OPS": ".965",
+        "K": "45",
+        "ERA": "4.46",
+        "WHIP": "1.46",
+        "QS": "2",
+        "SV+H": "5"
+      },
+      "loserStats": {
+        "R": "34",
+        "HR": "11",
+        "RBI": "30",
+        "SB": "3",
+        "OPS": ".799",
+        "K": "51",
+        "ERA": "6.62",
+        "WHIP": "1.49",
+        "QS": "3",
+        "SV+H": "3"
+      }
+    },
+    {
+      "winner": "MayTheSchwarBeWithU",
+      "loser": "Old Fashioned",
+      "score": "6-4",
       "isTied": false,
       "isMatchupOfTheWeek": false,
       "winnerCats": [
         "R",
         "HR",
         "RBI",
+        "SB",
         "OPS",
-        "ERA",
-        "WHIP",
-        "QS",
         "SV+H"
       ],
       "loserCats": [
-        "SB",
-        "K"
+        "K",
+        "ERA",
+        "WHIP",
+        "QS"
       ],
       "tiedCats": [],
       "winnerStats": {
-        "R": "37",
-        "HR": "18",
-        "RBI": "39",
-        "SB": "3",
-        "OPS": ".911",
-        "K": "52",
-        "ERA": "4.02",
-        "WHIP": "1.09",
-        "QS": "3",
+        "R": "32",
+        "HR": "8",
+        "RBI": "25",
+        "SB": "5",
+        "OPS": ".759",
+        "K": "35",
+        "ERA": "6.21",
+        "WHIP": "1.52",
+        "QS": "0",
         "SV+H": "7"
       },
       "loserStats": {
+        "R": "23",
+        "HR": "4",
+        "RBI": "10",
+        "SB": "2",
+        "OPS": ".525",
+        "K": "40",
+        "ERA": "2.62",
+        "WHIP": "1.14",
+        "QS": "3",
+        "SV+H": "1"
+      }
+    },
+    {
+      "winner": "The Chicago Way",
+      "loser": "Section 34",
+      "score": "5-3-2",
+      "isTied": false,
+      "isMatchupOfTheWeek": false,
+      "winnerCats": [
+        "R",
+        "SB",
+        "OPS",
+        "K",
+        "SV+H"
+      ],
+      "loserCats": [
+        "RBI",
+        "ERA",
+        "WHIP"
+      ],
+      "tiedCats": [
+        "HR",
+        "QS"
+      ],
+      "winnerStats": {
         "R": "33",
-        "HR": "11",
-        "RBI": "33",
+        "HR": "8",
+        "RBI": "21",
         "SB": "6",
-        "OPS": ".812",
-        "K": "56",
-        "ERA": "4.93",
-        "WHIP": "1.46",
-        "QS": "1",
-        "SV+H": "6"
+        "OPS": ".865",
+        "K": "55",
+        "ERA": "4.17",
+        "WHIP": "1.37",
+        "QS": "2",
+        "SV+H": "5"
+      },
+      "loserStats": {
+        "R": "29",
+        "HR": "8",
+        "RBI": "33",
+        "SB": "2",
+        "OPS": ".801",
+        "K": "48",
+        "ERA": "3.00",
+        "WHIP": "1.33",
+        "QS": "2",
+        "SV+H": "3"
       }
     }
   ],
   "matchupOfTheWeek": {
-    "winner": "Stone Jack Ballers",
-    "loser": "The Chicago Way",
-    "score": "6-4",
+    "winner": "Chief Noc-A-Homa",
+    "loser": "Bip Roberts",
+    "score": "6-3-1",
     "isTied": false,
     "isMatchupOfTheWeek": true,
     "winnerCats": [
       "HR",
       "RBI",
-      "ERA",
+      "SB",
+      "K",
       "WHIP",
-      "QS",
       "SV+H"
     ],
     "loserCats": [
       "R",
-      "SB",
       "OPS",
-      "K"
+      "ERA"
     ],
-    "tiedCats": [],
+    "tiedCats": [
+      "QS"
+    ],
     "winnerStats": {
-      "R": "29",
+      "R": "32",
       "HR": "14",
-      "RBI": "36",
-      "SB": "3",
-      "OPS": ".768",
-      "K": "44",
-      "ERA": "2.36",
-      "WHIP": "0.96",
-      "QS": "4",
-      "SV+H": "6"
+      "RBI": "38",
+      "SB": "4",
+      "OPS": ".807",
+      "K": "48",
+      "ERA": "4.26",
+      "WHIP": "1.00",
+      "QS": "3",
+      "SV+H": "5"
     },
     "loserStats": {
-      "R": "34",
-      "HR": "13",
-      "RBI": "26",
-      "SB": "10",
-      "OPS": ".933",
-      "K": "54",
-      "ERA": "3.52",
-      "WHIP": "1.16",
+      "R": "33",
+      "HR": "11",
+      "RBI": "31",
+      "SB": "2",
+      "OPS": ".828",
+      "K": "39",
+      "ERA": "3.86",
+      "WHIP": "1.20",
       "QS": "3",
       "SV+H": "4"
     }
   },
   "transactions": [
+    {
+      "type": "add",
+      "timestamp": 1782057182,
+      "moves": [
+        {
+          "name": "Stephen Kolek",
+          "pos": "SP",
+          "mlb": "KC",
+          "action": "add",
+          "team": "Thurgood Jenkins"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1782053734,
+      "moves": [
+        {
+          "name": "Shota Imanaga",
+          "pos": "SP",
+          "mlb": "CHC",
+          "action": "add",
+          "team": "Chief Noc-A-Homa"
+        },
+        {
+          "name": "Emerson Hancock",
+          "pos": "SP,RP",
+          "mlb": "SEA",
+          "action": "drop",
+          "team": "Chief Noc-A-Homa"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1782049041,
+      "moves": [
+        {
+          "name": "Edward Cabrera",
+          "pos": "SP",
+          "mlb": "CHC",
+          "action": "drop",
+          "team": "Bad MoFo's"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1782042459,
+      "moves": [
+        {
+          "name": "Yoendrys Gómez",
+          "pos": "SP,RP",
+          "mlb": "MIN",
+          "action": "add",
+          "team": "MayTheSchwarBeWithU"
+        },
+        {
+          "name": "Caleb Thielbar",
+          "pos": "RP",
+          "mlb": "CHC",
+          "action": "drop",
+          "team": "MayTheSchwarBeWithU"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1782033788,
+      "moves": [
+        {
+          "name": "Sam Antonacci",
+          "pos": "2B,3B,OF",
+          "mlb": "CWS",
+          "action": "add",
+          "team": "L-A-Loosh"
+        },
+        {
+          "name": "Cole Carrigg",
+          "pos": "OF",
+          "mlb": "COL",
+          "action": "drop",
+          "team": "L-A-Loosh"
+        }
+      ]
+    },
+    {
+      "type": "trade",
+      "timestamp": 1781969400,
+      "moves": [
+        {
+          "name": "Kyle Tucker",
+          "pos": "OF",
+          "mlb": "LAD",
+          "action": "trade",
+          "team": "L-A-Loosh"
+        },
+        {
+          "name": "Raisel Iglesias",
+          "pos": "RP",
+          "mlb": "ATL",
+          "action": "trade",
+          "team": "Stone Jack Ballers"
+        }
+      ]
+    },
+    {
+      "type": "add",
+      "timestamp": 1781963892,
+      "moves": [
+        {
+          "name": "George Springer",
+          "pos": "OF",
+          "mlb": "TOR",
+          "action": "add",
+          "team": "Grand Theft Votto"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781916798,
+      "moves": [
+        {
+          "name": "Mauricio Dubón",
+          "pos": "2B,3B,SS,OF",
+          "mlb": "ATL",
+          "action": "add",
+          "team": "Stone Jack Ballers"
+        },
+        {
+          "name": "Kevin Kelly",
+          "pos": "RP",
+          "mlb": "TB",
+          "action": "drop",
+          "team": "Stone Jack Ballers"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781903731,
+      "moves": [
+        {
+          "name": "Fernando Cruz",
+          "pos": "RP",
+          "mlb": "NYY",
+          "action": "drop",
+          "team": "L-A-Loosh"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781820161,
+      "moves": [
+        {
+          "name": "Paul Goldschmidt",
+          "pos": "1B",
+          "mlb": "NYY",
+          "action": "add",
+          "team": "Stone Jack Ballers"
+        },
+        {
+          "name": "Carson Benge",
+          "pos": "OF",
+          "mlb": "NYM",
+          "action": "drop",
+          "team": "Stone Jack Ballers"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781792762,
+      "moves": [
+        {
+          "name": "Will Klein",
+          "pos": "RP",
+          "mlb": "LAD",
+          "action": "add",
+          "team": "Thurgood Jenkins"
+        },
+        {
+          "name": "Sean Newcomb",
+          "pos": "SP,RP",
+          "mlb": "CWS",
+          "action": "drop",
+          "team": "Thurgood Jenkins"
+        }
+      ]
+    },
+    {
+      "type": "add",
+      "timestamp": 1781719918,
+      "moves": [
+        {
+          "name": "Jo Adell",
+          "pos": "OF",
+          "mlb": "LAA",
+          "action": "add",
+          "team": "Bell Biv Devo"
+        }
+      ]
+    },
+    {
+      "type": "add",
+      "timestamp": 1781700571,
+      "moves": [
+        {
+          "name": "Sean Newcomb",
+          "pos": "SP,RP",
+          "mlb": "CWS",
+          "action": "add",
+          "team": "Thurgood Jenkins"
+        }
+      ]
+    },
+    {
+      "type": "add",
+      "timestamp": 1781697950,
+      "moves": [
+        {
+          "name": "Caden Bodine",
+          "pos": "C",
+          "mlb": "TB",
+          "action": "add",
+          "team": "Bell Biv Devo"
+        }
+      ]
+    },
+    {
+      "type": "add",
+      "timestamp": 1781697870,
+      "moves": [
+        {
+          "name": "Eugenio Suárez",
+          "pos": "3B",
+          "mlb": "CIN",
+          "action": "add",
+          "team": "Bell Biv Devo"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781697272,
+      "moves": [
+        {
+          "name": "Jeffrey Springs",
+          "pos": "SP",
+          "mlb": "ATH",
+          "action": "drop",
+          "team": "Bell Biv Devo"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781697241,
+      "moves": [
+        {
+          "name": "Janson Junk",
+          "pos": "SP,RP",
+          "mlb": "MIA",
+          "action": "drop",
+          "team": "Bell Biv Devo"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781681120,
+      "moves": [
+        {
+          "name": "Bryson Stott",
+          "pos": "2B,SS",
+          "mlb": "PHI",
+          "action": "add",
+          "team": "Bip Roberts"
+        },
+        {
+          "name": "Garrett Whitlock",
+          "pos": "RP",
+          "mlb": "BOS",
+          "action": "drop",
+          "team": "Bip Roberts"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781653957,
+      "moves": [
+        {
+          "name": "Caleb Thielbar",
+          "pos": "RP",
+          "mlb": "CHC",
+          "action": "add",
+          "team": "MayTheSchwarBeWithU"
+        },
+        {
+          "name": "Jackson Jobe",
+          "pos": "SP,RP",
+          "mlb": "DET",
+          "action": "drop",
+          "team": "MayTheSchwarBeWithU"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781639032,
+      "moves": [
+        {
+          "name": "Rico Garcia",
+          "pos": "RP",
+          "mlb": "BAL",
+          "action": "drop",
+          "team": "Chief Noc-A-Homa"
+        }
+      ]
+    },
+    {
+      "type": "add",
+      "timestamp": 1781619990,
+      "moves": [
+        {
+          "name": "Justin Wrobleski",
+          "pos": "SP,RP",
+          "mlb": "LAD",
+          "action": "add",
+          "team": "Bad MoFo's"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781619484,
+      "moves": [
+        {
+          "name": "Brooks Raley",
+          "pos": "RP",
+          "mlb": "NYM",
+          "action": "add",
+          "team": "Thurgood Jenkins"
+        },
+        {
+          "name": "José A. Ferrer",
+          "pos": "RP",
+          "mlb": "SEA",
+          "action": "drop",
+          "team": "Thurgood Jenkins"
+        }
+      ]
+    },
+    {
+      "type": "add",
+      "timestamp": 1781619350,
+      "moves": [
+        {
+          "name": "Samad Taylor",
+          "pos": "2B,OF",
+          "mlb": "SD",
+          "action": "add",
+          "team": "MayTheSchwarBeWithU"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781619327,
+      "moves": [
+        {
+          "name": "J.T. Ginn",
+          "pos": "SP,RP",
+          "mlb": "ATH",
+          "action": "add",
+          "team": "Thurgood Jenkins"
+        },
+        {
+          "name": "Spencer Arrighetti",
+          "pos": "SP",
+          "mlb": "HOU",
+          "action": "drop",
+          "team": "Thurgood Jenkins"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781619248,
+      "moves": [
+        {
+          "name": "Corbin Burnes",
+          "pos": "SP",
+          "mlb": "AZ",
+          "action": "drop",
+          "team": "MayTheSchwarBeWithU"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781619160,
+      "moves": [
+        {
+          "name": "Dominic Canzone",
+          "pos": "OF",
+          "mlb": "SEA",
+          "action": "add",
+          "team": "Thurgood Jenkins"
+        },
+        {
+          "name": "Justin Crawford",
+          "pos": "OF",
+          "mlb": "PHI",
+          "action": "drop",
+          "team": "Thurgood Jenkins"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781614678,
+      "moves": [
+        {
+          "name": "Nick Pivetta",
+          "pos": "SP",
+          "mlb": "SD",
+          "action": "drop",
+          "team": "The Chicago Way"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781611894,
+      "moves": [
+        {
+          "name": "Keibert Ruiz",
+          "pos": "C",
+          "mlb": "WSH",
+          "action": "drop",
+          "team": "Chief Noc-A-Homa"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781609785,
+      "moves": [
+        {
+          "name": "Taylor Ward",
+          "pos": "OF",
+          "mlb": "BAL",
+          "action": "drop",
+          "team": "Bell Biv Devo"
+        }
+      ]
+    },
+    {
+      "type": "drop",
+      "timestamp": 1781607775,
+      "moves": [
+        {
+          "name": "Spencer Horwitz",
+          "pos": "1B",
+          "mlb": "PIT",
+          "action": "drop",
+          "team": "L-A-Loosh"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781597875,
+      "moves": [
+        {
+          "name": "Garrett Whitlock",
+          "pos": "RP",
+          "mlb": "BOS",
+          "action": "add",
+          "team": "Bip Roberts"
+        },
+        {
+          "name": "Hunter Gaddis",
+          "pos": "RP",
+          "mlb": "CLE",
+          "action": "drop",
+          "team": "Bip Roberts"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781587503,
+      "moves": [
+        {
+          "name": "Dustin May",
+          "pos": "SP",
+          "mlb": "STL",
+          "action": "add",
+          "team": "Stone Jack Ballers"
+        },
+        {
+          "name": "Mauricio Dubón",
+          "pos": "2B,3B,SS,OF",
+          "mlb": "ATL",
+          "action": "drop",
+          "team": "Stone Jack Ballers"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781556949,
+      "moves": [
+        {
+          "name": "Spencer Horwitz",
+          "pos": "1B",
+          "mlb": "PIT",
+          "action": "add",
+          "team": "L-A-Loosh"
+        },
+        {
+          "name": "Samad Taylor",
+          "pos": "2B,OF",
+          "mlb": "SD",
+          "action": "drop",
+          "team": "L-A-Loosh"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781546417,
+      "moves": [
+        {
+          "name": "Elvis Alvarado",
+          "pos": "RP",
+          "mlb": "ATH",
+          "action": "add",
+          "team": "MayTheSchwarBeWithU"
+        },
+        {
+          "name": "Michael McGreevy",
+          "pos": "SP",
+          "mlb": "STL",
+          "action": "drop",
+          "team": "MayTheSchwarBeWithU"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781546378,
+      "moves": [
+        {
+          "name": "Dalton Rushing",
+          "pos": "C",
+          "mlb": "LAD",
+          "action": "add",
+          "team": "MayTheSchwarBeWithU"
+        },
+        {
+          "name": "Brandon Valenzuela",
+          "pos": "C,1B",
+          "mlb": "TOR",
+          "action": "drop",
+          "team": "MayTheSchwarBeWithU"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781522677,
+      "moves": [
+        {
+          "name": "Samad Taylor",
+          "pos": "2B,OF",
+          "mlb": "SD",
+          "action": "add",
+          "team": "L-A-Loosh"
+        },
+        {
+          "name": "Connelly Early",
+          "pos": "SP",
+          "mlb": "BOS",
+          "action": "drop",
+          "team": "L-A-Loosh"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781522019,
+      "moves": [
+        {
+          "name": "Hogan Harris",
+          "pos": "RP",
+          "mlb": "ATH",
+          "action": "add",
+          "team": "Grand Theft Votto"
+        },
+        {
+          "name": "Carlos Estévez",
+          "pos": "RP",
+          "mlb": "KC",
+          "action": "drop",
+          "team": "Grand Theft Votto"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781507027,
+      "moves": [
+        {
+          "name": "Hunter Gaddis",
+          "pos": "RP",
+          "mlb": "CLE",
+          "action": "add",
+          "team": "Bip Roberts"
+        },
+        {
+          "name": "Will Vest",
+          "pos": "RP",
+          "mlb": "DET",
+          "action": "drop",
+          "team": "Bip Roberts"
+        }
+      ]
+    },
+    {
+      "type": "add/drop",
+      "timestamp": 1781506885,
+      "moves": [
+        {
+          "name": "Sonny Gray",
+          "pos": "SP",
+          "mlb": "BOS",
+          "action": "add",
+          "team": "Bip Roberts"
+        },
+        {
+          "name": "Landen Roupp",
+          "pos": "SP",
+          "mlb": "SF",
+          "action": "drop",
+          "team": "Bip Roberts"
+        }
+      ]
+    },
     {
       "type": "add",
       "timestamp": 1781451868,
@@ -439,258 +1098,7 @@
           "team": "MayTheSchwarBeWithU"
         }
       ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781376703,
-      "moves": [
-        {
-          "name": "Luke Raley",
-          "pos": "1B,OF",
-          "mlb": "SEA",
-          "action": "add",
-          "team": "Bad MoFo's"
-        },
-        {
-          "name": "Spencer Steer",
-          "pos": "1B,2B,OF",
-          "mlb": "CIN",
-          "action": "drop",
-          "team": "Bad MoFo's"
-        }
-      ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781376676,
-      "moves": [
-        {
-          "name": "Brandon Marsh",
-          "pos": "OF",
-          "mlb": "PHI",
-          "action": "add",
-          "team": "Bad MoFo's"
-        },
-        {
-          "name": "Dansby Swanson",
-          "pos": "SS",
-          "mlb": "CHC",
-          "action": "drop",
-          "team": "Bad MoFo's"
-        }
-      ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781376560,
-      "moves": [
-        {
-          "name": "Ranger Suarez",
-          "pos": "SP",
-          "mlb": "BOS",
-          "action": "add",
-          "team": "Bad MoFo's"
-        },
-        {
-          "name": "Dennis Santana",
-          "pos": "RP",
-          "mlb": "PIT",
-          "action": "drop",
-          "team": "Bad MoFo's"
-        }
-      ]
-    },
-    {
-      "type": "add",
-      "timestamp": 1781362031,
-      "moves": [
-        {
-          "name": "Luis Lara",
-          "pos": "OF",
-          "mlb": "MIL",
-          "action": "add",
-          "team": "MayTheSchwarBeWithU"
-        }
-      ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781361987,
-      "moves": [
-        {
-          "name": "Kaelen Culpepper",
-          "pos": "SS",
-          "mlb": "MIN",
-          "action": "add",
-          "team": "MayTheSchwarBeWithU"
-        },
-        {
-          "name": "Dylan Crews",
-          "pos": "OF",
-          "mlb": "WSH",
-          "action": "drop",
-          "team": "MayTheSchwarBeWithU"
-        }
-      ]
-    },
-    {
-      "type": "add",
-      "timestamp": 1781361856,
-      "moves": [
-        {
-          "name": "Noah Cameron",
-          "pos": "SP",
-          "mlb": "KC",
-          "action": "add",
-          "team": "MayTheSchwarBeWithU"
-        }
-      ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781353284,
-      "moves": [
-        {
-          "name": "Cole Carrigg",
-          "pos": "OF",
-          "mlb": "COL",
-          "action": "add",
-          "team": "L-A-Loosh"
-        },
-        {
-          "name": "Garrett Whitlock",
-          "pos": "RP",
-          "mlb": "BOS",
-          "action": "drop",
-          "team": "L-A-Loosh"
-        }
-      ]
-    },
-    {
-      "type": "add",
-      "timestamp": 1781289961,
-      "moves": [
-        {
-          "name": "Tyler Stephenson",
-          "pos": "C",
-          "mlb": "CIN",
-          "action": "add",
-          "team": "Grand Theft Votto"
-        }
-      ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781270595,
-      "moves": [
-        {
-          "name": "Ezequiel Duran",
-          "pos": "1B,2B,3B,SS,OF",
-          "mlb": "TEX",
-          "action": "add",
-          "team": "The Chicago Way"
-        },
-        {
-          "name": "Bryson Stott",
-          "pos": "2B,SS",
-          "mlb": "PHI",
-          "action": "drop",
-          "team": "The Chicago Way"
-        }
-      ]
-    },
-    {
-      "type": "add",
-      "timestamp": 1781270440,
-      "moves": [
-        {
-          "name": "Colton Cowser",
-          "pos": "OF",
-          "mlb": "BAL",
-          "action": "add",
-          "team": "The Chicago Way"
-        }
-      ]
-    },
-    {
-      "type": "drop",
-      "timestamp": 1781184131,
-      "moves": [
-        {
-          "name": "Jose Altuve",
-          "pos": "2B,OF",
-          "mlb": "HOU",
-          "action": "drop",
-          "team": "Bip Roberts"
-        }
-      ]
-    },
-    {
-      "type": "add",
-      "timestamp": 1781166468,
-      "moves": [
-        {
-          "name": "Willy Adames",
-          "pos": "SS",
-          "mlb": "SF",
-          "action": "add",
-          "team": "Bell Biv Devo"
-        }
-      ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781138842,
-      "moves": [
-        {
-          "name": "Brandon Young",
-          "pos": "SP",
-          "mlb": "BAL",
-          "action": "add",
-          "team": "Section 34"
-        },
-        {
-          "name": "J.T. Ginn",
-          "pos": "SP,RP",
-          "mlb": "ATH",
-          "action": "drop",
-          "team": "Section 34"
-        }
-      ]
-    },
-    {
-      "type": "drop",
-      "timestamp": 1781092739,
-      "moves": [
-        {
-          "name": "J.T. Realmuto",
-          "pos": "C",
-          "mlb": "PHI",
-          "action": "drop",
-          "team": "Bell Biv Devo"
-        }
-      ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1781079399,
-      "moves": [
-        {
-          "name": "Gabriel Moreno",
-          "pos": "C",
-          "mlb": "AZ",
-          "action": "add",
-          "team": "Bell Biv Devo"
-        },
-        {
-          "name": "Clayton Beeter",
-          "pos": "RP",
-          "mlb": "WSH",
-          "action": "drop",
-          "team": "Bell Biv Devo"
-        }
-      ]
     }
   ],
-  "generatedAt": "2026-06-17T23:34:43.130Z"
+  "generatedAt": "2026-06-22T13:20:01.216Z"
 }
