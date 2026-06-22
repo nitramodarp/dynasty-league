@@ -342,7 +342,9 @@
           "pos": "SP",
           "mlb": "KC",
           "action": "add",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "",
+          "destTeam": "Thurgood Jenkins"
         }
       ]
     },
@@ -355,14 +357,18 @@
           "pos": "SP",
           "mlb": "CHC",
           "action": "add",
-          "team": "Chief Noc-A-Homa"
+          "team": "Chief Noc-A-Homa",
+          "sourceTeam": "",
+          "destTeam": "Chief Noc-A-Homa"
         },
         {
           "name": "Emerson Hancock",
           "pos": "SP,RP",
           "mlb": "SEA",
           "action": "drop",
-          "team": "Chief Noc-A-Homa"
+          "team": "Chief Noc-A-Homa",
+          "sourceTeam": "Chief Noc-A-Homa",
+          "destTeam": ""
         }
       ]
     },
@@ -375,7 +381,9 @@
           "pos": "SP",
           "mlb": "CHC",
           "action": "drop",
-          "team": "Bad MoFo's"
+          "team": "Bad MoFo's",
+          "sourceTeam": "Bad MoFo's",
+          "destTeam": ""
         }
       ]
     },
@@ -388,14 +396,18 @@
           "pos": "SP,RP",
           "mlb": "MIN",
           "action": "add",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "",
+          "destTeam": "MayTheSchwarBeWithU"
         },
         {
           "name": "Caleb Thielbar",
           "pos": "RP",
           "mlb": "CHC",
           "action": "drop",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "MayTheSchwarBeWithU",
+          "destTeam": ""
         }
       ]
     },
@@ -408,14 +420,18 @@
           "pos": "2B,3B,OF",
           "mlb": "CWS",
           "action": "add",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "",
+          "destTeam": "L-A-Loosh"
         },
         {
           "name": "Cole Carrigg",
           "pos": "OF",
           "mlb": "COL",
           "action": "drop",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "L-A-Loosh",
+          "destTeam": ""
         }
       ]
     },
@@ -428,14 +444,18 @@
           "pos": "OF",
           "mlb": "LAD",
           "action": "trade",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "Stone Jack Ballers",
+          "destTeam": "L-A-Loosh"
         },
         {
           "name": "Raisel Iglesias",
           "pos": "RP",
           "mlb": "ATL",
           "action": "trade",
-          "team": "Stone Jack Ballers"
+          "team": "Stone Jack Ballers",
+          "sourceTeam": "L-A-Loosh",
+          "destTeam": "Stone Jack Ballers"
         }
       ]
     },
@@ -448,7 +468,9 @@
           "pos": "OF",
           "mlb": "TOR",
           "action": "add",
-          "team": "Grand Theft Votto"
+          "team": "Grand Theft Votto",
+          "sourceTeam": "",
+          "destTeam": "Grand Theft Votto"
         }
       ]
     },
@@ -461,14 +483,18 @@
           "pos": "2B,3B,SS,OF",
           "mlb": "ATL",
           "action": "add",
-          "team": "Stone Jack Ballers"
+          "team": "Stone Jack Ballers",
+          "sourceTeam": "",
+          "destTeam": "Stone Jack Ballers"
         },
         {
           "name": "Kevin Kelly",
           "pos": "RP",
           "mlb": "TB",
           "action": "drop",
-          "team": "Stone Jack Ballers"
+          "team": "Stone Jack Ballers",
+          "sourceTeam": "Stone Jack Ballers",
+          "destTeam": ""
         }
       ]
     },
@@ -481,7 +507,9 @@
           "pos": "RP",
           "mlb": "NYY",
           "action": "drop",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "L-A-Loosh",
+          "destTeam": ""
         }
       ]
     },
@@ -494,14 +522,18 @@
           "pos": "1B",
           "mlb": "NYY",
           "action": "add",
-          "team": "Stone Jack Ballers"
+          "team": "Stone Jack Ballers",
+          "sourceTeam": "",
+          "destTeam": "Stone Jack Ballers"
         },
         {
           "name": "Carson Benge",
           "pos": "OF",
           "mlb": "NYM",
           "action": "drop",
-          "team": "Stone Jack Ballers"
+          "team": "Stone Jack Ballers",
+          "sourceTeam": "Stone Jack Ballers",
+          "destTeam": ""
         }
       ]
     },
@@ -514,14 +546,18 @@
           "pos": "RP",
           "mlb": "LAD",
           "action": "add",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "",
+          "destTeam": "Thurgood Jenkins"
         },
         {
           "name": "Sean Newcomb",
           "pos": "SP,RP",
           "mlb": "CWS",
           "action": "drop",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "Thurgood Jenkins",
+          "destTeam": ""
         }
       ]
     },
@@ -534,7 +570,9 @@
           "pos": "OF",
           "mlb": "LAA",
           "action": "add",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "",
+          "destTeam": "Bell Biv Devo"
         }
       ]
     },
@@ -547,7 +585,9 @@
           "pos": "SP,RP",
           "mlb": "CWS",
           "action": "add",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "",
+          "destTeam": "Thurgood Jenkins"
         }
       ]
     },
@@ -560,7 +600,9 @@
           "pos": "C",
           "mlb": "TB",
           "action": "add",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "",
+          "destTeam": "Bell Biv Devo"
         }
       ]
     },
@@ -573,7 +615,9 @@
           "pos": "3B",
           "mlb": "CIN",
           "action": "add",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "",
+          "destTeam": "Bell Biv Devo"
         }
       ]
     },
@@ -586,7 +630,9 @@
           "pos": "SP",
           "mlb": "ATH",
           "action": "drop",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "Bell Biv Devo",
+          "destTeam": ""
         }
       ]
     },
@@ -599,7 +645,9 @@
           "pos": "SP,RP",
           "mlb": "MIA",
           "action": "drop",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "Bell Biv Devo",
+          "destTeam": ""
         }
       ]
     },
@@ -612,14 +660,18 @@
           "pos": "2B,SS",
           "mlb": "PHI",
           "action": "add",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "",
+          "destTeam": "Bip Roberts"
         },
         {
           "name": "Garrett Whitlock",
           "pos": "RP",
           "mlb": "BOS",
           "action": "drop",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "Bip Roberts",
+          "destTeam": ""
         }
       ]
     },
@@ -632,14 +684,18 @@
           "pos": "RP",
           "mlb": "CHC",
           "action": "add",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "",
+          "destTeam": "MayTheSchwarBeWithU"
         },
         {
           "name": "Jackson Jobe",
           "pos": "SP,RP",
           "mlb": "DET",
           "action": "drop",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "MayTheSchwarBeWithU",
+          "destTeam": ""
         }
       ]
     },
@@ -652,7 +708,9 @@
           "pos": "RP",
           "mlb": "BAL",
           "action": "drop",
-          "team": "Chief Noc-A-Homa"
+          "team": "Chief Noc-A-Homa",
+          "sourceTeam": "Chief Noc-A-Homa",
+          "destTeam": ""
         }
       ]
     },
@@ -665,7 +723,9 @@
           "pos": "SP,RP",
           "mlb": "LAD",
           "action": "add",
-          "team": "Bad MoFo's"
+          "team": "Bad MoFo's",
+          "sourceTeam": "",
+          "destTeam": "Bad MoFo's"
         }
       ]
     },
@@ -678,14 +738,18 @@
           "pos": "RP",
           "mlb": "NYM",
           "action": "add",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "",
+          "destTeam": "Thurgood Jenkins"
         },
         {
           "name": "José A. Ferrer",
           "pos": "RP",
           "mlb": "SEA",
           "action": "drop",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "Thurgood Jenkins",
+          "destTeam": ""
         }
       ]
     },
@@ -698,7 +762,9 @@
           "pos": "2B,OF",
           "mlb": "SD",
           "action": "add",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "",
+          "destTeam": "MayTheSchwarBeWithU"
         }
       ]
     },
@@ -711,14 +777,18 @@
           "pos": "SP,RP",
           "mlb": "ATH",
           "action": "add",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "",
+          "destTeam": "Thurgood Jenkins"
         },
         {
           "name": "Spencer Arrighetti",
           "pos": "SP",
           "mlb": "HOU",
           "action": "drop",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "Thurgood Jenkins",
+          "destTeam": ""
         }
       ]
     },
@@ -731,7 +801,9 @@
           "pos": "SP",
           "mlb": "AZ",
           "action": "drop",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "MayTheSchwarBeWithU",
+          "destTeam": ""
         }
       ]
     },
@@ -744,14 +816,18 @@
           "pos": "OF",
           "mlb": "SEA",
           "action": "add",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "",
+          "destTeam": "Thurgood Jenkins"
         },
         {
           "name": "Justin Crawford",
           "pos": "OF",
           "mlb": "PHI",
           "action": "drop",
-          "team": "Thurgood Jenkins"
+          "team": "Thurgood Jenkins",
+          "sourceTeam": "Thurgood Jenkins",
+          "destTeam": ""
         }
       ]
     },
@@ -764,7 +840,9 @@
           "pos": "SP",
           "mlb": "SD",
           "action": "drop",
-          "team": "The Chicago Way"
+          "team": "The Chicago Way",
+          "sourceTeam": "The Chicago Way",
+          "destTeam": ""
         }
       ]
     },
@@ -777,7 +855,9 @@
           "pos": "C",
           "mlb": "WSH",
           "action": "drop",
-          "team": "Chief Noc-A-Homa"
+          "team": "Chief Noc-A-Homa",
+          "sourceTeam": "Chief Noc-A-Homa",
+          "destTeam": ""
         }
       ]
     },
@@ -790,7 +870,9 @@
           "pos": "OF",
           "mlb": "BAL",
           "action": "drop",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "Bell Biv Devo",
+          "destTeam": ""
         }
       ]
     },
@@ -803,7 +885,9 @@
           "pos": "1B",
           "mlb": "PIT",
           "action": "drop",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "L-A-Loosh",
+          "destTeam": ""
         }
       ]
     },
@@ -816,14 +900,18 @@
           "pos": "RP",
           "mlb": "BOS",
           "action": "add",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "",
+          "destTeam": "Bip Roberts"
         },
         {
           "name": "Hunter Gaddis",
           "pos": "RP",
           "mlb": "CLE",
           "action": "drop",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "Bip Roberts",
+          "destTeam": ""
         }
       ]
     },
@@ -836,14 +924,18 @@
           "pos": "SP",
           "mlb": "STL",
           "action": "add",
-          "team": "Stone Jack Ballers"
+          "team": "Stone Jack Ballers",
+          "sourceTeam": "",
+          "destTeam": "Stone Jack Ballers"
         },
         {
           "name": "Mauricio Dubón",
           "pos": "2B,3B,SS,OF",
           "mlb": "ATL",
           "action": "drop",
-          "team": "Stone Jack Ballers"
+          "team": "Stone Jack Ballers",
+          "sourceTeam": "Stone Jack Ballers",
+          "destTeam": ""
         }
       ]
     },
@@ -856,14 +948,18 @@
           "pos": "1B",
           "mlb": "PIT",
           "action": "add",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "",
+          "destTeam": "L-A-Loosh"
         },
         {
           "name": "Samad Taylor",
           "pos": "2B,OF",
           "mlb": "SD",
           "action": "drop",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "L-A-Loosh",
+          "destTeam": ""
         }
       ]
     },
@@ -876,14 +972,18 @@
           "pos": "RP",
           "mlb": "ATH",
           "action": "add",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "",
+          "destTeam": "MayTheSchwarBeWithU"
         },
         {
           "name": "Michael McGreevy",
           "pos": "SP",
           "mlb": "STL",
           "action": "drop",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "MayTheSchwarBeWithU",
+          "destTeam": ""
         }
       ]
     },
@@ -896,14 +996,18 @@
           "pos": "C",
           "mlb": "LAD",
           "action": "add",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "",
+          "destTeam": "MayTheSchwarBeWithU"
         },
         {
           "name": "Brandon Valenzuela",
           "pos": "C,1B",
           "mlb": "TOR",
           "action": "drop",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "MayTheSchwarBeWithU",
+          "destTeam": ""
         }
       ]
     },
@@ -916,14 +1020,18 @@
           "pos": "2B,OF",
           "mlb": "SD",
           "action": "add",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "",
+          "destTeam": "L-A-Loosh"
         },
         {
           "name": "Connelly Early",
           "pos": "SP",
           "mlb": "BOS",
           "action": "drop",
-          "team": "L-A-Loosh"
+          "team": "L-A-Loosh",
+          "sourceTeam": "L-A-Loosh",
+          "destTeam": ""
         }
       ]
     },
@@ -936,14 +1044,18 @@
           "pos": "RP",
           "mlb": "ATH",
           "action": "add",
-          "team": "Grand Theft Votto"
+          "team": "Grand Theft Votto",
+          "sourceTeam": "",
+          "destTeam": "Grand Theft Votto"
         },
         {
           "name": "Carlos Estévez",
           "pos": "RP",
           "mlb": "KC",
           "action": "drop",
-          "team": "Grand Theft Votto"
+          "team": "Grand Theft Votto",
+          "sourceTeam": "Grand Theft Votto",
+          "destTeam": ""
         }
       ]
     },
@@ -956,14 +1068,18 @@
           "pos": "RP",
           "mlb": "CLE",
           "action": "add",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "",
+          "destTeam": "Bip Roberts"
         },
         {
           "name": "Will Vest",
           "pos": "RP",
           "mlb": "DET",
           "action": "drop",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "Bip Roberts",
+          "destTeam": ""
         }
       ]
     },
@@ -976,14 +1092,18 @@
           "pos": "SP",
           "mlb": "BOS",
           "action": "add",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "",
+          "destTeam": "Bip Roberts"
         },
         {
           "name": "Landen Roupp",
           "pos": "SP",
           "mlb": "SF",
           "action": "drop",
-          "team": "Bip Roberts"
+          "team": "Bip Roberts",
+          "sourceTeam": "Bip Roberts",
+          "destTeam": ""
         }
       ]
     },
@@ -996,7 +1116,9 @@
           "pos": "SP",
           "mlb": "ATH",
           "action": "add",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "",
+          "destTeam": "Bell Biv Devo"
         }
       ]
     },
@@ -1009,7 +1131,9 @@
           "pos": "SP",
           "mlb": "CHC",
           "action": "drop",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "Bell Biv Devo",
+          "destTeam": ""
         }
       ]
     },
@@ -1022,14 +1146,18 @@
           "pos": "SP",
           "mlb": "CHC",
           "action": "add",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "",
+          "destTeam": "Bell Biv Devo"
         },
         {
           "name": "Eugenio Suárez",
           "pos": "3B",
           "mlb": "CIN",
           "action": "drop",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "Bell Biv Devo",
+          "destTeam": ""
         }
       ]
     },
@@ -1042,7 +1170,9 @@
           "pos": "OF",
           "mlb": "BAL",
           "action": "add",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "",
+          "destTeam": "Bell Biv Devo"
         }
       ]
     },
@@ -1055,7 +1185,9 @@
           "pos": "SS",
           "mlb": "SF",
           "action": "drop",
-          "team": "Bell Biv Devo"
+          "team": "Bell Biv Devo",
+          "sourceTeam": "Bell Biv Devo",
+          "destTeam": ""
         }
       ]
     },
@@ -1068,14 +1200,18 @@
           "pos": "2B,3B,SS,OF",
           "mlb": "BAL",
           "action": "add",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "",
+          "destTeam": "MayTheSchwarBeWithU"
         },
         {
           "name": "Luis Lara",
           "pos": "OF",
           "mlb": "MIL",
           "action": "drop",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "MayTheSchwarBeWithU",
+          "destTeam": ""
         }
       ]
     },
@@ -1088,17 +1224,21 @@
           "pos": "SP",
           "mlb": "STL",
           "action": "add",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "",
+          "destTeam": "MayTheSchwarBeWithU"
         },
         {
           "name": "Noah Cameron",
           "pos": "SP",
           "mlb": "KC",
           "action": "drop",
-          "team": "MayTheSchwarBeWithU"
+          "team": "MayTheSchwarBeWithU",
+          "sourceTeam": "MayTheSchwarBeWithU",
+          "destTeam": ""
         }
       ]
     }
   ],
-  "generatedAt": "2026-06-22T13:20:01.216Z"
+  "generatedAt": "2026-06-22T13:35:10.015Z"
 }
