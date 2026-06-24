@@ -1,69 +1,90 @@
 # 40s and Blunts Weekly Rolling Coverage
-#### Week 13 · The one where the commissioner beat the guy everyone was tired of admitting was good
+### Week 13 · The one where the commissioner remembered he runs this league
 
 ---
 
 **MATCHUP OF THE WEEK**
 
-Yahoo designated this one officially, which is appropriate, because it was. Chief Noc-A-Homa defeated Bip Roberts 6–3–1 in a matchup that amounted to a structural argument: pitching ratios and saves against run-scoring and slugging, with each side winning exactly what you'd expect it to win. What you would not necessarily have expected — and what makes it worth a paragraph — is that Chief Noc-A-Homa also took HR, RBI, and SB, which are supposed to be Bip's living room. Bip took ERA, which is supposed to be the commissioner's weakness. The categories swapped personalities and Chief Noc-A-Homa still won. The lone tie was QS, the category that always insists on inserting itself.
+Yahoo designated this the matchup of the week, and for once the algorithm earned its paycheck. **Chief Noc-A-Homa def. Bip Roberts, 6–3–1.** The commissioner went into the league's best team and took six categories — HR, RBI, SB, K, WHIP, and SV+H — leaving Bip Roberts with runs, OPS, ERA, and a quality start tie. Bip has spent most of the season being tiresomely good. This week the commissioner took the HR category off a team known for hitting home runs, the strikeout category off a team with real pitching, and still had room to sweep the ratios. The league will file this under "noted" and return to its regularly scheduled assumption that Bip is fine.
 
 ---
 
 **LAST WEEK'S RESULTS**
 
-**Chief Noc-A-Homa def. Bip Roberts, 6–3–1.** Covered above at length. The commissioner dropped a 6–3–1 on the first-place team and would like you to know he did not plan any of this.
+**Chief Noc-A-Homa def. Bip Roberts, 6–3–1.** Covered above at appropriate length.
 
-**Bad MoFo's def. Grand Theft Votto, 4–4–2.** This finished in a four-way tie in categories, two more ties, and technically a win for Bad MoFo's on the strength of K, ERA, WHIP, and SV+H — the full pitching slate. Grand Theft Votto took the bats and got outrun at the finish. A tie-heavy 4–4–2 is the fantasy equivalent of a meeting that could have been an email, but Bad MoFo's takes the W and that's what goes in the ledger.
+**Bad MoFo's def. Grand Theft Votto, 4–4–2.** A tie in everything that matters is still a tie, and Bad MoFo's had enough left over to edge it 4–4–2. The pitching side was decisive — Bad MoFo's swept K, ERA, WHIP, and SV+H while Grand Theft Votto built its case entirely on the offense. Both teams tied HR and QS. The final score has the energy of a game both managers feel fine about, which for Bad MoFo's represents a genuine step forward.
 
-**Bell Biv Devo def. Thurgood Jenkins, 6–1–3.** This was not close. Bell Biv Devo swept pitching, took RBI and OPS, and left Thurgood Jenkins with a single category win in R and three polite ties in HR, SB, and SV+H. A 6–1–3 is the kind of week that makes a manager go digging through the waiver wire at midnight, which, as it happens, Thurgood Jenkins then did.
+**Bell Biv Devo def. Thurgood Jenkins, 6–1–3.** Bell Biv Devo won RBI, OPS, K, ERA, WHIP, and QS. Thurgood Jenkins won runs. The three ties in HR, SB, and SV+H were the only categories that didn't go Bell Biv Devo's way. Thurgood's solitary category win is the kind of result that technically counts as participation.
 
-**L-A-Loosh def. Stone Jack Ballers, 5–4–1.** Stone Jack took hitting production — R, RBI, K, QS — and it wasn't enough. L-A-Loosh swept the ratios and added HR and SV+H, which is not how you beat a team that's trying that hard. Stone Jack can out-transact anyone in this league and still came home with four categories on a Saturday. L-A-Loosh, it should be noted, is currently 54–67–9. Make of that what you will.
+**L-A-Loosh def. Stone Jack Ballers, 5–4–1.** L-A-Loosh, a team currently sitting eleventh in the standings, beat Stone Jack Ballers — a team that has been in third place all season — by winning the pitching ratios and OPS, and leaving the commissioner's brother to collect runs, RBI, K, and QS like a man gathering consolation prizes at a work raffle. This is completely normal behavior for L-A-Loosh and should not be interpreted as anything.
 
-**MayTheSchwarBeWithU def. Old Fashioned, 6–4.** MayTheSchwarBeWithU took six categories including all four offensive rate and counting stat leaders. Old Fashioned, somehow, took K, ERA, WHIP, and QS, meaning the pitching staff did its job with the diligence of a team whose manager has no idea what's happening. Old Fashioned's rotation continues to hold up its end of the arrangement. The rest is left as an exercise for the reader.
+**MayTheSchwarBeWithU def. Old Fashioned, 6–4.** MayTheSchwarBeWithU took runs, HR, RBI, SB, OPS, and SV+H. Old Fashioned, in what has to be acknowledged as a structurally interesting outcome, won K, ERA, WHIP, and QS — the four pitching categories — which means Old Fashioned's pitching is doing its job under what can only be described as supervisory abandonment. The bullpen doesn't know. Nobody tell it.
 
-**The Chicago Way def. Section 34, 5–3–2.** The Chicago Way took R, SB, OPS, K, and SV+H. Section 34 responded with RBI, ERA, and WHIP. Two ties — HR, QS — softened nothing. Quietly efficient, no wasted motion. This is what The Chicago Way does. It's beginning to seem intentional.
+**The Chicago Way def. Section 34, 5–3–2.** Chicago took runs, SB, OPS, K, and SV+H. Section 34 held ERA, WHIP, and RBI. Two ties in HR and QS. A professional result from both sides, which seems about right for the two teams in this league most likely to have a process document.
 
 ---
 
 **POWER RANKINGS**
 
-1. **Chief Noc-A-Homa** — Beats the powerhouse, 6–3–1, while the powerhouse was taking his ERA category. First place.
-2. **The Chicago Way** — 17 games clear of the cut line and still accelerating, somehow without drawing attention to itself.
-3. **Stone Jack Ballers** — Lost to a team currently sitting 11th in the standings, then traded Kyle Tucker for a reliever. A productive week.
-4. **Bad MoFo's** — Fourth in the overall standings. This sentence has been reviewed and we can confirm it is accurate.
-5. **Bip Roberts** — Still in the playoffs. Still tiresomely talented. Just had a weird week where the commissioner out-hit him. It will probably not happen again, and Bip almost certainly knows that.
-6. **Section 34** — Comfortably inside the cut line, exactly five games ahead of the team just below, in a race with nine weeks left. Section 34 is playing rope-a-dope and it may not be intentional.
-7. **Bell Biv Devo** — Won 6–1–3 and is still five back of a playoff spot. That's where Bell Biv Devo lives right now. The rent is not cheap.
-8. **Grand Theft Votto** — Same record as Bell Biv Devo, same distance out, different path there. Worth mentioning and then moving on.
-9. **Thurgood Jenkins** — Lost 6–1–3 and responded by making six waiver moves in two days. This is a reasonable response to losing 6–1–3.
-10. **MayTheSchwarBeWithU** — Won 6–4 against Old Fashioned and still sits tenth. The math is not working in their favor; they have enough self-awareness to be making moves anyway.
-11. **L-A-Loosh** — Won this week. Is 54–67–9 on the season. Acquired Kyle Tucker. Seven games back of the playoffs in June, which historically is where L-A-Loosh prefers to start the conversation.
-12. **Old Fashioned** — Won four categories against an active opponent, which is genuinely fine. Fifteen back of the cut line. The pitching staff remains employed; the manager remains theoretical.
+1. **Chief Noc-A-Homa** — Beat the league's best team this week, leads the standings by four games, and has the ERA ratios locked up like a safe nobody else has the combination to. The newsletter endorses this standing.
+2. **The Chicago Way** — Seventeen games clear of the cut line and still not saying anything about it. Extremely suspicious.
+3. **Stone Jack Ballers** — Traded Kyle Tucker for Raisel Iglesias this week, which we will address shortly. Twelve games up on the bubble. The lead is load-bearing.
+4. **Bad MoFo's** — Fourth in the standings. Fourth. We have reviewed this and can confirm it is accurate.
+5. **Bip Roberts** — Lost to the commissioner, dropped to fifth, and is now only 5.5 clear of the cut line. The reigning powerhouse is not in danger; it's just closer to the staircase than it used to be.
+6. **Section 34** — Six teams are in, Section 34 is the sixth. Five games of cushion is a real number, not a comfortable one, but it's theirs.
+7. **Bell Biv Devo** — Five back of the playoff line after a 6–1–3 win, which raises the question of what Bell Biv Devo could accomplish if it did this every week. We don't have an answer.
+8. **Grand Theft Votto** — Tied with Bell Biv Devo in record, tied with Bell Biv Devo in rank, and carrying $69M of IL salary. Eighth seems right.
+9. **Thurgood Jenkins** — Won one category. Filed it.
+10. **MayTheSchwarBeWithU** — Beat Old Fashioned to move to tenth, which is a win worth having even if it requires a small asterisk about the opponent.
+11. **L-A-Loosh** — Beat a playoff team from eleventh place while sitting seven out of a playoff spot. This is not a drill. It is also not yet a plan.
+12. **Old Fashioned** — Fifteen games back of the cut line. The pitching categories are doing their best out there.
 
 ---
 
 **PLAYOFF PICTURE**
 
-The top six remain the top six: Chief Noc-A-Homa, The Chicago Way, Stone Jack Ballers, Bad MoFo's, Bip Roberts, and Section 34 are all inside the line, with Chief Noc-A-Homa and The Chicago Way holding cushions large enough that the subject is closed for the foreseeable future. Stone Jack is 12 clear. Bad MoFo's is 8 clear. Even Bip Roberts, after a rough week, sits 5.5 ahead of the cut line.
+With nine weeks left and roughly ninety category decisions still to be made, the top six has a comfortable but not permanent shape. Chief Noc-A-Homa, The Chicago Way, and Stone Jack Ballers are in and have meaningful distance on the field. Bad MoFo's sits fourth at eight clear — a stranger sentence than it looks, but the data is what it is. Bip Roberts and Section 34 round out the six, each holding a gap in the low fives that feels safe until it doesn't.
 
-Section 34 is the one to watch — five games clear of the bubble with nine weeks remaining. That's not a lot of room at this stage of the season.
+The bubble starts at Bell Biv Devo and Grand Theft Votto, both exactly five back and deadlocked in the standings. Thurgood Jenkins, MayTheSchwarBeWithU, and L-A-Loosh are within seven games of the line — not hopeless, but in a spot where winning the matchup actually has to start mattering every week. The dataset does not designate anyone clinched or eliminated, and with nine weeks remaining, that's the right call. The gap at the cut line is real; it is not, however, a verdict.
 
-Below the line, Bell Biv Devo and Grand Theft Votto share identical records and identical distances: five back of sixth, six back if you prefer the slightly more generous framing. Thurgood Jenkins is a half-game further. MayTheSchwarBeWithU, despite a 6–4 win this week, is 6.5 out. The candidate field to replace Section 34 is crowded and none of them won the week by a margin that changes the arithmetic materially.
-
-L-A-Loosh is seven out and has just added Kyle Tucker. The league has been pretending not to notice since June.
+Old Fashioned is fifteen back. No additional commentary necessary.
 
 ---
 
 **QUESTIONABLE ACTIVITY**
 
-The week's transactions began on Saturday morning, before the week even started, when **MayTheSchwarBeWithU** made four moves in under two hours: a pitching swap, a position player swap, a catcher swap, and a reliever added in exchange for a starter they had acquired 95 minutes earlier. Michael McGreevy lasted one hour and forty minutes on that roster. He did not pitch in that window.
+The most active manager of the week was **Thurgood Jenkins**, who executed five transactions between Monday morning and Friday, including a complete 39-minute cycle of adding Sean Newcomb (SP, CWS) and then removing Sean Newcomb (SP, CWS). The rest of the moves — Dominic Canzone in, Justin Crawford out; J.T. Ginn in, Spencer Arrighetti out; Brooks Raley in, José A. Ferrer out; Will Klein in for the departed Newcomb — suggest a man with strong opinions that are evolving in real time. By Sunday he'd added Stephen Kolek. The roster stabilized. Probably.
 
-**Bell Biv Devo** had a complicated Saturday. Willy Adames was dropped. Taylor Ward came in. Shota Imanaga was added. Eugenio Suárez was dropped to make room. Then, one minute later, Imanaga was dropped. Jeffrey Springs arrived to fill the vacancy left by the pitcher who left to make room for the pitcher who just left. Ward was then also dropped two days later. By Tuesday, Eugenio Suárez was back, joined by Caden Bodine and Jo Adell. Bell Biv Devo won 6–1–3 this week. We decline to suggest this is despite the roster management.
+**MayTheSchwarBeWithU** dropped Corbin Burnes to add Samad Taylor, then added Caleb Thielbar to replace Jackson Jobe, and then on Sunday dropped Caleb Thielbar to add Yoendrys Gómez. Three moves, one week, a net roster that presumably reflects what was intended. We assume.
 
-**Bip Roberts** made three moves across Sunday and Monday, cycling through Sonny Gray, Hunter Gaddis, Garrett Whitlock, and Bryson Stott in a sequence that ended with Whitlock on the roster for approximately 13 hours before being replaced by Stott, a second baseman. The reigning powerhouse is tinkering. 
+**Bell Biv Devo** dropped Taylor Ward, Janson Junk, and Jeffrey Springs — three players, one morning — before adding Eugenio Suárez, Caden Bodine, and Jo Adell. The resulting team won 6–1–3. Bell Biv Devo either figured something out or got very lucky, and the distinction may not matter.
 
-**L-A-Loosh** added Samad Taylor, dropped Samad Taylor for Spencer Horwitz, then dropped Spencer Horwitz the next morning — a 25-hour round trip for Horwitz that concluded with him back on the wire and L-A-Loosh no more improved for it. Then, on Friday, L-A-Loosh acquired Kyle Tucker in a trade with Stone Jack Ballers, surrendering Raisel Iglesias. Stone Jack received an elite closer and sent away a top-30 outfielder. These are the decisions that get reviewed in October with either admiration or silence.
+The week's trade: **L-A-Loosh receives Kyle Tucker from Stone Jack Ballers; Stone Jack Ballers receives Raisel Iglesias from L-A-Loosh.** Stone Jack Ballers is third in the standings with a real playoff seed to protect and has traded one of the better outfielders available for a closer. L-A-Loosh is eleventh and has acquired a genuine difference-maker. A reasonable transaction for one side. The newsletter declines to specify which side.
 
-**Thurgood Jenkins** had a busy Monday: three moves in eight minutes, including adding and dropping Sean Newcomb within 24 hours once a better option emerged. Nobody held it against them. Sean Newcomb pitches for the White Sox.
+**Chief Noc-A-Homa** dropped Keibert Ruiz and Rico Garcia early in the week, then on Sunday added Shota Imanaga and dropped Emerson Hancock. The commissioner upgraded his own rotation the same week he beat the league's best team. Filed under: not an accident.
 
-**Chief Noc-A-Homa** made two quiet drops — Keibert Ruiz and Rico Garcia — spread across Monday, then closed out the week by adding Shota Imanaga on Sunday. Imanaga, it may be recalled, was briefly on Bell Biv Devo's roster six days earlier before being released into the wild. The commissioner was there to receive him. This is either opportunism or patience. The commissioner would probably accept either characterization.
+**Bip Roberts** added Bryson Stott and dropped Garrett Whitlock at 3:25 AM on Tuesday. The 3:25 AM timestamp is not something we can explain or are willing to judge.
+
+Old Fashioned made no moves.
+
+---
+
+**SALARY STOCK TICKER**
+
+Baseline week. One dry observation: everyone's number is now on the record.
+
+```
+SALARY STOCK TICKER — WEEK 13
+(baseline set this week — price movement starts next issue.)
+```
+
+---
+
+**THIS WEEK IN VALUE**
+
+**The Moneyball Award — Thurgood Jenkins: 36.9 wins per $100M ($149M payroll, 55 wins).** The most efficient operation in the league is currently sitting five and a half games outside the playoffs, which is either a testament to market inefficiency or a fairly pointed comment on what efficiency actually gets you.
+
+**The Salary-Cap Sucker — Stone Jack Ballers: 13.1 wins per $100M ($520M payroll, 68 wins).** Third in the standings, last in return on investment, and now also the team that just traded Kyle Tucker away. The payroll stays; the outfield does not.
+
+**Dead Money — Grand Theft Votto: $69M of salary on the IL.** Sixty-nine million dollars, not playing, while the team sits five games outside the playoff line. The IL is doing what IL does. The standings do not care about the IL's reasons.
