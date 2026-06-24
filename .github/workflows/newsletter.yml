@@ -44,6 +44,5 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/newsletter_data.json data/newsletters/
-          git commit -m "Weekly newsletter — $(date +%Y-%m-%d)" || echo "No changes"
+          git add data/newsletter_data.json data/newsletters/ data/salary_history/          git commit -m "Weekly newsletter — $(date +%Y-%m-%d)" || echo "No changes"
           git push
