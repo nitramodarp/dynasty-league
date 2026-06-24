@@ -111,11 +111,15 @@ async function buildSalaryLayer(standingsRows, week) {
   settingsRows.forEach(r => { if (r.Key) S[r.Key] = r.Value; });
   const cap = snum(S.cap_threshold, 360);
   const money = n => `$${n}M`;
+  // Single source of truth for a player's salary — mirrors the website exactly.
+  // Blank current_salary (IL/unscored) falls back to base_salary, then $3M floor.
+  const salOf = p => snum(p.current_salary) || snum(p.base_salary) || 3;
 
   // Aggregate payroll + IL salary per team; capture every player's current price.
   const teams = {}, prices = {};
   players.forEach(p => {
-    const id = p.player_id, team = p.fantasy_team_name, sal = snum(p.current_salary, 0);
+    const id = p.player_id, team = p.fantasy_team_name;
+    const sal = salOf(p);
     if (id) prices[id] = sal;
     if (!team) return;
     const t = teams[team] || (teams[team] = { name: team, payroll: 0, il: 0 });
@@ -147,7 +151,7 @@ async function buildSalaryLayer(standingsRows, week) {
     players.forEach(p => {
       const id = p.player_id;
       if (!id || !(id in prev)) return;
-      const to = snum(p.current_salary, 0), from = snum(prev[id], 0), delta = to - from;
+      const to = salOf(p), from = snum(prev[id], 0), delta = to - from;
       if (delta !== 0) moves.push({ name: p.player_name, team: p.fantasy_team_name || '—', from, to, delta });
     });
   }
