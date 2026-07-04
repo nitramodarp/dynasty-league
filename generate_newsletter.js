@@ -201,10 +201,16 @@ async function buildSalaryLayer(standingsRows, week) {
 }
 
 function describeMatchup(m) {
-  const tie = m.tiedCats.length ? ` Tied: ${m.tiedCats.join(', ')}.` : '';
+  const tied = m.tiedCats.length ? ` Tied categories: ${m.tiedCats.join(', ')}.` : '';
+  if (m.isTied) {
+    return `OFFICIAL TIE, ${m.score} (NO winner): ${m.winner} and ${m.loser} split the week. ` +
+      `${m.winner} took ${m.winnerCats.length}: ${m.winnerCats.join(', ') || '—'}. ` +
+      `${m.loser} took ${m.loserCats.length}: ${m.loserCats.join(', ') || '—'}.${tied} ` +
+      `Do NOT name a winner for this matchup.`;
+  }
   return `${m.winner} def. ${m.loser}, ${m.score}. ` +
-    `${m.winner} took: ${m.winnerCats.join(', ') || '—'}. ` +
-    `${m.loser} took: ${m.loserCats.join(', ') || '—'}.${tie}`;
+    `${m.winner} took exactly these ${m.winnerCats.length} categories: ${m.winnerCats.join(', ') || '—'}. ` +
+    `${m.loser} took exactly these ${m.loserCats.length}: ${m.loserCats.join(', ') || '—'}.${tied}`;
 }
 
 function fmtEt(ts) {
@@ -216,8 +222,28 @@ function fmtEt(ts) {
   }).format(new Date(ts * 1000));
 }
 
+// A player added then dropped by the same team within 24h is a streamer
+// (usually a two-start SP spot-started for a day's counting stats). Flag by
+// name so the recap treats it as routine strategy, not "questionable activity."
+function detectStreamers(txns) {
+  const evs = [];
+  txns.forEach(t => {
+    if (t.type === 'trade') return;
+    t.moves.forEach(mv => evs.push({ name: mv.name, team: mv.team, action: mv.action, ts: t.timestamp }));
+  });
+  const streamed = new Set();
+  for (const a of evs) {
+    if (a.action !== 'add') continue;
+    const dropped = evs.some(e => e.action === 'drop' && e.name === a.name
+      && e.team === a.team && e.ts >= a.ts && (e.ts - a.ts) <= 86400);
+    if (dropped) streamed.add(a.name);
+  }
+  return streamed;
+}
+
 function describeTransactions(txns) {
   if (!txns.length) return 'No transactions during the week.';
+  const streamed = detectStreamers(txns);
   // Yahoo returns transactions newest-first. Without sorting, the recap
   // describes a drop before the add that preceded it (e.g. "dropped Shota,
   // added Shota" when he was added at 11:42 then dropped at 11:43). Sort
@@ -238,8 +264,10 @@ function describeTransactions(txns) {
       });
       return `[${fmtEt(t.timestamp)}] TRADE: ${sides.join('; ')}`;
     }
-    const parts = t.moves.map(mv =>
-      `${mv.action === 'add' ? 'added' : 'dropped'} ${mv.name} (${mv.pos}, ${mv.mlb})`);
+    const parts = t.moves.map(mv => {
+      const tag = streamed.has(mv.name) ? ' [streamer]' : '';
+      return `${mv.action === 'add' ? 'added' : 'dropped'} ${mv.name} (${mv.pos}, ${mv.mlb})${tag}`;
+    });
     const team = t.moves[0]?.team || 'A team';
     return `[${fmtEt(t.timestamp)}] ${team}: ${parts.join('; ')}`;
   }).join('\n');
@@ -420,6 +448,11 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
    flagged above. If none was flagged, skip this segment entirely.
 3. **LAST WEEK'S RESULTS** — one short paragraph per matchup. Use the category
    breakdowns for specific, accurate detail. Let boring matchups be brief.
+   The score is AUTHORITATIVE: an N-M result means the winner took EXACTLY N
+   categories and the loser took EXACTLY M. Name only categories that appear in
+   that matchup's took-lists. Never write "sweep," "swept every category," or
+   "every offensive/pitching category" unless the loser took ZERO categories
+   (a 10-0 result). An 8-2 is not a sweep.
 4. **POWER RANKINGS** — 1 through 12, one dry line each, ordered by the current
    standings above.
 5. **PLAYOFF PICTURE** — a short segment on the top-6 race using ONLY the playoff
@@ -432,6 +465,10 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
    If there were none, say so dryly. Do not invent moves. The transactions are
    in chronological order — describe add/drop sequences in the order they
    actually happened (an add-then-drop is not a drop-then-re-add).
+   Moves tagged [streamer] are routine spot-starts — the same player added then
+   dropped by one team within 24 hours, almost always a two-start pitcher grabbed
+   for a day of counting stats. Treat these as normal, competent strategy; never
+   frame a [streamer] move as suspicious, indecisive, or questionable.
 7. **SALARY STOCK TICKER** — reproduce the ticker block above EXACTLY as given
    (names, teams, dollar figures verbatim, in a code block so it stays aligned).
    You may add one short deadpan line before or after it. If it says baseline was
@@ -443,6 +480,10 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
 
 HARD RULES:
 - Use ONLY the data above. Never invent scores, categories, players, or moves.
+- A matchup marked OFFICIAL TIE has NO winner. Never say one team "def." or beat
+  the other or "took the week" — call it a tie and move on.
+- Category counts are exact: N-M means N and M categories. Only 10-0 is a sweep;
+  never round a lopsided win up to "every category."
 - Don't reuse jokes from the sample — fresh observations for this week.
 - Brother matchups worth a wink if they occur: Chief Noc-A-Homa & Stone Jack
   Ballers; Thurgood Jenkins & Bad MoFo's.
