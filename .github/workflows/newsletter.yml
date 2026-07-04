@@ -6,7 +6,7 @@ name: Generate Newsletter
 
 on:
   schedule:
-    - cron: '0 15 * * 1'   # Monday 11 AM ET (15:00 UTC during EDT baseball season)
+    - cron: '0 12 * * 1'   # Monday 8 AM ET (EDT, UTC-4)
   workflow_dispatch:
 
 permissions:
