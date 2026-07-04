@@ -6,6 +6,7 @@
 <title>Newsletter Archive — 40s and Blunts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
 <style>
   :root{
     --navy:#1B3A6B; --gold:#C9A84C; --cream:#F5F0E8; --dark:#0D1B2A;
@@ -55,6 +56,39 @@
     main{padding:20px 16px;}
     .nl-row{grid-template-columns:1fr;}
     .nl-action{width:100%;}
+  }
+
+  /* ── Dark broadsheet: article view ────────────────────────────── */
+  .nl-paper{max-width:660px;margin:0 auto;}
+  .nl-masthead{text-align:center;padding:4px 0 0;border-bottom:3px double var(--gold);}
+  .nl-masthead .plate{font-family:'Bebas Neue',sans-serif;font-size:clamp(46px,12vw,88px);letter-spacing:5px;line-height:.9;color:var(--text);}
+  .nl-masthead .plate b{color:var(--gold);font-weight:400;}
+  .nl-dateline{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin:11px 0 4px;}
+  .nl-dateline b{color:var(--gold);font-weight:500;}
+  .nl-meme{display:block;width:100%;border-radius:6px;margin:20px 0 0;}
+  .nl-article{font-family:Georgia,'Times New Roman',serif;color:var(--text);font-size:17px;line-height:1.72;margin-top:22px;}
+  .nl-article h1{display:none;}
+  .nl-article h2{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:500;margin:36px 0 14px;padding-top:18px;border-top:1px solid var(--border);}
+  .nl-article h3{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin:22px 0 10px;}
+  .nl-article p{margin:0 0 16px;}
+  .nl-article strong{color:var(--text);font-weight:700;}
+  .nl-article em{color:var(--dim);font-style:italic;}
+  .nl-article a{color:var(--gold);}
+  .nl-article ul{list-style:none;margin:0 0 18px;padding:0;}
+  .nl-article li{position:relative;padding-left:22px;margin:0 0 11px;}
+  .nl-article li::before{content:'\2014';position:absolute;left:0;color:var(--gold);}
+  .nl-article pre{background:rgba(13,27,42,0.92);border:1px solid var(--border);border-radius:6px;padding:14px;overflow-x:auto;margin:0 0 18px;}
+  .nl-article pre code{font-family:'DM Mono',monospace;font-size:12px;line-height:1.55;color:var(--text);white-space:pre;}
+  .nl-article code{font-family:'DM Mono',monospace;font-size:.9em;color:var(--gold);}
+  .nl-article hr{border:0;border-top:1px solid var(--border);margin:26px 0;}
+  .nl-deck{font-family:Georgia,serif;font-style:italic;font-size:19px;line-height:1.5;color:var(--dim);text-align:center;margin:0 0 28px;padding-bottom:22px;border-bottom:1px solid var(--border);}
+  .nl-deck strong{color:var(--gold);font-style:normal;font-weight:600;}
+  .nl-lead::first-letter{float:left;font-family:'Bebas Neue',sans-serif;font-size:66px;line-height:.7;padding:6px 12px 0 0;color:var(--gold);}
+  .nl-copy{margin:30px auto 0;display:block;}
+  @media (max-width:640px){
+    .nl-article{font-size:16px;}
+    .nl-deck{font-size:17px;}
+    .nl-masthead .plate{letter-spacing:3px;}
   }
 </style>
 </head>
@@ -134,26 +168,54 @@ async function loadNewsletters() {
 
 async function loadNewsletter(week) {
   try {
-    const res = await fetch(`${NEWSLETTERS_URL}week_${week}.txt`);
+    const res = await fetch(`${NEWSLETTERS_URL}week_${week}.md`);
     if (!res.ok) throw new Error(`Week ${week} not found`);
-    const content = await res.text();
-    
+    const md = await res.text();
+
     const list = document.getElementById('list');
     const contentBox = document.getElementById('content');
     const backLink = document.getElementById('backLink');
-    
     list.style.display = 'none';
     contentBox.style.display = 'block';
     backLink.style.display = 'inline-block';
-    
+
+    const esc = t => t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    const bodyHtml = window.marked
+      ? marked.parse(md)
+      : `<pre style="white-space:pre-wrap;font-family:Georgia,serif">${esc(md)}</pre>`;
+
     contentBox.innerHTML = `
-      <div class="section-title">Week ${week}</div>
-      <div class="content-box">
-        <div class="content-inner">${content}</div>
-        <button class="copy-btn" onclick="copyToClipboard('${content.replace(/'/g, "\\'")}')">Copy to clipboard</button>
-      </div>
-    `;
-    
+      <div class="nl-paper">
+        <div class="nl-masthead"><div class="plate">40s <b>&amp;</b> Blunts</div></div>
+        <div class="nl-dateline">
+          <span>Vol. I</span><span>&middot;</span><span><b>Week ${week}</b></span>
+          <span>&middot;</span><span>Rolling Coverage</span><span>&middot;</span><span>Price: Free</span>
+        </div>
+        <img class="nl-meme" alt=""
+          src="${NEWSLETTERS_URL}week_${week}.png"
+          onerror="if(!this.dataset.j){this.dataset.j=1;this.src='${NEWSLETTERS_URL}week_${week}.jpg';}else{this.remove();}">
+        <div class="nl-article" id="nlArticle">${bodyHtml}</div>
+        <button class="copy-btn nl-copy" id="nlCopy">Copy plain text</button>
+      </div>`;
+
+    // Post-process: drop a duplicate title, set the deck, drop-cap the lead.
+    const art = document.getElementById('nlArticle');
+    while (art.firstElementChild && /^H[1-3]$/.test(art.firstElementChild.tagName)
+           && /blunts|rolling coverage|weekly/i.test(art.firstElementChild.textContent)) {
+      art.firstElementChild.remove();
+    }
+    const firstEl = art.firstElementChild;
+    if (firstEl && firstEl.tagName !== 'H2') firstEl.classList.add('nl-deck');
+    const h2 = art.querySelector('h2');
+    const lead = h2 ? h2.nextElementSibling : art.querySelector('p');
+    if (lead && lead.tagName === 'P') lead.classList.add('nl-lead');
+
+    document.getElementById('nlCopy').addEventListener('click', () => {
+      navigator.clipboard.writeText(art.innerText).then(
+        () => alert('Copied.'),
+        () => alert('Copy failed \u2014 select the text manually.'));
+    });
+
     contentBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (e) {
     alert(`Error loading newsletter: ${e.message}`);
