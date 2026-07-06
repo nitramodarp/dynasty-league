@@ -103,7 +103,7 @@ Bad MoFo's beat the commissioner 8–2 and their best player went down $10M. The
 
 - **The Moneyball Award — MayTheSchwarBeWithU: 29.1 wins per $100M ($230M payroll, 67 wins).** Went 9–1 this week with the most efficient roster in the league, and still sits 3.5 games outside the playoff line. Efficiency has its limits.
 
-- **The Salary-Cap Sucker — Stone Jack Ballers: 15.4 wins per $100M ($527M payroll, 81 wins).** Running the second-largest payroll in the league and second in the standings. Whether those facts are connected or merely coincidental is a philosophical question Stone Jack Ballers seems uninterested in entertaining.
+- **The Salary-Cap Sucker — Stone Jack Ballers: 15.4 wins per $100M ($527M payroll, 81 wins).** Running the largest payroll in the league and second in the standings. Whether those facts are connected or merely coincidental is a philosophical question Stone Jack Ballers seems uninterested in entertaining.
 
 - **Dead Money — Grand Theft Votto: $73M of salary on the IL.** Seventy-three million dollars. Sitting there. Seven games back of the playoff cut line. These numbers are presented as a unit.
 
