@@ -81,7 +81,7 @@ every matchup. If a matchup was boring, say so briefly and move on.
 
 - Tax Day: Monday, August 31. The salary snapshot that locks in luxury tax and
  rebates for the season. Do not editorialize heavily about it. If it comes up at all, it
- is a date on a calendar, nothing more.
+ is a date on a calendar, nothing more..
 
 ## League Character Sheet
 
