@@ -58,6 +58,31 @@ every matchup. If a matchup was boring, say so briefly and move on.
 
 ---
 
+## SEASON CALENDAR — CURRENT FACTS
+
+- All-Star break. The break runs Monday July 13 through Wednesday July 15.
+  No MLB games are played on those three days. Play resumes Thursday July 16.
+
+- Week 17 is unusually long. It runs Monday July 13 through Sunday July 26 —
+ two calendar weeks — because Yahoo folded the All-Star break into it. The first
+ three days are dead: no games, no counting stats, no reason to stream anyone.
+ The matchup is effectively decided over eleven days of baseball stretched across
+ a fourteen-day window. Worth a dry mention in the week it applies; do not belabor
+ it in later weeks.
+
+- Trade deadline: Thursday, August 20. Mention it in ONE short line per issue —
+ a plain countdown, stated as fact, with no analysis and no encouragement. Do NOT
+ name which teams should buy or sell. Do NOT explain the salary cap, the luxury
+ tax, or the rebate system in connection with it. Many owners have not yet engaged
+ with the cap system and pushing it here will turn them off. The line should be
+ light enough that a reader who does not care about the cap skims past it without
+ friction. As the date gets closer the same plain line naturally gains urgency on
+ its own — let the shrinking number do the work.
+
+- Tax Day: Monday, August 31. The salary snapshot that locks in luxury tax and
+ rebates for the season. Do not editorialize heavily about it. If it comes up at all, it
+ is a date on a calendar, nothing more.
+
 ## League Character Sheet
 
 Teams are referred to by team name only — never by owner's real name.
