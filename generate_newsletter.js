@@ -44,6 +44,9 @@ async function getStandings() {
         w: parseInt(r.wins || r.W || r.w || '0', 10) || 0,
         l: parseInt(r.losses || r.L || r.l || '0', 10) || 0,
         t: parseInt(r.ties || r.T || r.t || '0', 10) || 0,
+        // Yahoo's real games-back. NEVER let the model compute this from W-L —
+        // it hallucinates (it once put a 5-back team at "twelve games back").
+        gb: (r.games_back ?? r.games_behind ?? r.GB ?? r.gb ?? '').toString().trim(),
       }))
       .filter(r => r.name);
   } catch (e) {
@@ -56,7 +59,10 @@ function standingsLines(rows) {
   if (!rows.length) return '(standings unavailable this run)';
   return [...rows]
     .sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99))
-    .map(r => `${r.rank ?? '?'}. ${r.name} (${r.w}-${r.l}-${r.t})`)
+    .map(r => {
+      const gb = (r.gb === '' || r.gb === '-' || r.gb === '0') ? 'leader' : `${r.gb} GB`;
+      return `${r.rank ?? '?'}. ${r.name} (${r.w}-${r.l}-${r.t}, ${gb})`;
+    })
     .join('\n');
 }
 
@@ -378,41 +384,70 @@ THIS week's issue using ONLY the data provided. Match the structure, length, and
 joke density of the sample, and follow the VOICE SPEC exactly.
 
 === VOICE SPEC ===
-Register: mock-formal deadpan. Narrate trivial fantasy-baseball events with the
-composed, slightly elevated diction of someone writing internal-memo minutes —
-then puncture it. Think Ian Frazier's straight-faced elevation of the mundane
-and the Onion's deadpan institutional authority. Dry, literate, confident. Being
-funny is the point; accuracy is the floor, not the goal.
+Register: mock-formal deadpan — but with RANGE. Narrate trivial fantasy-baseball
+events with the composed diction of someone writing internal-memo minutes, then
+puncture it. Ian Frazier's straight-faced elevation of the mundane; the Onion's
+institutional authority. Dry, literate, confident. Being funny is the point;
+accuracy is the floor, not the goal.
 
-How the comedy works — VARY THE DEVICE. Rotate through several; never run the
-same move twice in a row (illustrations only, do NOT reuse these lines):
-  • Understatement / anticlimax — "second place has feelings too."
-  • Mock-bureaucratic procedure — "We have reviewed this and can confirm it is
-    accurate."
-  • The confident absurd verdict stated as settled fact — "Eighth seems right."
-  • The committed opinion that owns its own flaw — "A reasonable response. Wrong
-    response, probably, but reasonable."
-  • An occasional dry meta-aside about the newsletter itself.
+DYNAMIC RANGE IS THE WHOLE GAME. The deadpan only lands when it has something to
+play against. A newsletter delivered entirely at one emotional temperature reads
+as monotone and the jokes stop registering, because the reader's ear adjusts.
+So:
 
-The short clipped kicker is ONE tool, not the structure. MOST paragraphs should
-NOT end on a clipped deflation. If every section lands on the same little
-deadpan beat, the rhythm becomes a tic and the jokes die because the reader sees
-them coming. Surprise beats consistency. Take a genuine swing once or twice per
-issue and COMMIT to the bolder joke instead of hedging it.
+1. BE GENUINELY EXCITED SOMETIMES. Once or twice an issue, when something is
+   actually great — a 9-1 dismantling, a $3M nobody going nuclear, a genuinely
+   audacious move — drop the detachment and say so plainly. Real enthusiasm,
+   no irony, no hedge. The whiplash back to deadpan is what makes the deadpan
+   funny again. If nothing in the issue is ever allowed to be great, nothing
+   feels great. (This overrides the old "no hype" rule: earned enthusiasm is
+   not hype. Still no exclamation points, emoji, or fantasy-bro slang.)
 
-Trust your lines. Never explain or soften a joke with a follow-up clause (cut
-the "and mostly did" that defuses "a week that should have felt like progress").
-Land it and move on. Give the single best joke in a section room to breathe
-rather than burying it mid-paragraph; let a flat, factual sentence sit there
-unjoked when that's funnier than forcing one.
+2. VARY THE RHYTHM LIKE A PITCHER CHANGES SPEEDS. Do not write paragraph after
+   paragraph of medium-length declaratives. Use fragments. Then open up into a
+   long, winding sentence that earns its length. Short punch. "Grand Theft Votto
+   won SB. That's the list." does more work than three measured sentences.
+   Rhythm variation alone reads as alive.
+
+3. GIVE EACH SECTION ITS OWN REGISTER. They should not all sound the same:
+   • LAST WEEK'S RESULTS — reportorial, varied; some games deserve two sentences,
+     one might deserve a whole indulgent paragraph.
+   • POWER RANKINGS — clipped and verdict-like. Short. Confident. Judgmental.
+   • QUESTIONABLE ACTIVITY — the loosest, funniest, most specific section. This
+     is where you get weird. Specific detail is the engine ("a placeholder
+     between thoughts" beats any general observation).
+   • THIS WEEK IN VALUE — the DRIEST section. Let the numbers do the work and
+     get out of the way.
+
+4. NO CLOSING-TIC CRUTCH. You have been ending nearly every paragraph on the
+   same move: a flat statement of institutional withdrawal — "This information is
+   provided without further comment," "These numbers are presented as a unit,"
+   "The league has reviewed this and can confirm it is accurate," "This is no
+   longer worth questioning." STOP. You may use this construction ONCE per issue,
+   maximum. Every other paragraph must find a different ending: end on a concrete
+   detail, on an opinion, mid-thought, on a genuinely funny image, or simply stop
+   without a kicker at all. A paragraph does not need a button.
+
+5. HAVE OPINIONS. Take a side occasionally. "Ranking L-A-Loosh ninth is starting
+   to look irresponsible" is better than any neutral observation, because a reader
+   can argue with it. Commit to a verdict and own it. Arguable beats observable.
+   Be willing to be wrong in an interesting way.
+
+Comedy devices — rotate, never run the same move twice in a row (illustrations
+only, do NOT reuse these lines): understatement/anticlimax; mock-bureaucratic
+procedure; the confident absurd verdict stated as settled fact; the committed
+opinion that owns its own flaw; the occasional dry meta-aside.
+
+Trust your lines. Never explain or soften a joke with a follow-up clause. Land it
+and move on. Give the best joke in a section room to breathe; let a flat, factual
+sentence sit unjoked when that's funnier than forcing one.
 
 Reference well: contemporary and mundane — corporate, suburban, administrative,
-procedural. No classical, literary, historical, or philosophical allusions and
-no Latin. Elevated diction is welcome; ornate sentences built to impress are not.
+procedural. No classical, literary, historical, or philosophical allusions, no
+Latin. Elevated diction is welcome; ornate sentences built to impress are not.
 
 Stance: fond but unillusioned — affectionate, never cruel, no moral weight, no
-profundity for its own sake. No hype words, exclamation points, emoji, or
-fantasy-bro slang.
+profundity for its own sake.
 
 === CONTEXT & VOICE GUIDE ===
 ${context}
@@ -425,7 +460,10 @@ ${motw}
 ALL MATCHUPS (winner, final category score, and which categories each side won):
 ${data.matchups.map((m, i) => `${i + 1}. ${describeMatchup(m)}`).join('\n')}
 
-CURRENT STANDINGS (for Power Rankings — reflect these, don't invent positions):
+CURRENT STANDINGS (for Power Rankings — AUTHORITATIVE. Each line is: rank, team,
+(wins-losses-ties, games back). Use these records and games-back figures EXACTLY as
+given. NEVER compute games-back yourself from win totals — it is already provided
+and your arithmetic will be wrong. Do not invent positions, records, or distances):
 ${standings}
 
 PLAYOFF PICTURE (top 6 make it; the data already states each team's exact status — use these facts, do not compute your own clinch/elimination):
@@ -480,6 +518,9 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
 
 HARD RULES:
 - Use ONLY the data above. Never invent scores, categories, players, or moves.
+- Games-back figures are GIVEN in the standings. Never derive, estimate, or
+  recompute a team's games-back from its win-loss record. Quote the given number
+  or say nothing about distance.
 - A matchup marked OFFICIAL TIE has NO winner. Never say one team "def." or beat
   the other or "took the week" — call it a tie and move on.
 - Category counts are exact: N-M means N and M categories. Only 10-0 is a sweep;
