@@ -46,7 +46,7 @@ Six teams are in; six teams are not. The top four — Chief Noc-A-Homa, Stone Ja
 
 That 1.5 is the number that matters. Bell Biv Devo and Section 34 are each 1.5 back, sitting in identical positions below the line with six weeks left and roughly 60 category decisions still on the table. Grand Theft Votto is 3.5 back, Thurgood Jenkins is four back, and MayTheSchwarBeWithU is 4.5 back — all technically alive, none of them comfortable. Old Fashioned is 20 back of the sixth seed. This is not a conversation about Old Fashioned.
 
-The trade deadline is Thursday, August 20. Twenty-four teams remain available to buy or sell. No further guidance is provided here.
+The trade deadline is Thursday, August 20. No further guidance is provided here.
 
 ---
 
