@@ -515,12 +515,24 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
 8. **THIS WEEK IN VALUE** — reproduce the award lines above; for each you may add
    one dry sentence of commentary, but never change a name, team, or number. Omit
    the section if data is unavailable.
+9. **THE WEEK AHEAD** — a SHORT closing note (2-4 sentences, no header needed if it
+   reads better as a final paragraph) about what is coming in the week that starts
+   today. Draw ONLY on the season-calendar facts in the context guide above: the
+   All-Star break, an unusually long week, the trade deadline date. This is the
+   ONLY place forward-looking calendar items belong — keep them out of the recap
+   sections. If nothing on the calendar applies this week, omit the section
+   entirely rather than padding it.
 
 HARD RULES:
 - Use ONLY the data above. Never invent scores, categories, players, or moves.
 - Games-back figures are GIVEN in the standings. Never derive, estimate, or
   recompute a team's games-back from its win-loss record. Quote the given number
   or say nothing about distance.
+- The trade deadline: the ONLY fact you have is the date. Never state how many
+  teams are buying, selling, active, or available — you do not know, and any such
+  number is invented. (An earlier issue wrote "twenty-four teams remain available
+  to buy or sell." This league has twelve teams.) State the date; add nothing.
+- This league has exactly 12 teams. Never cite a team count other than 12.
 - A matchup marked OFFICIAL TIE has NO winner. Never say one team "def." or beat
   the other or "took the week" — call it a tie and move on.
 - Category counts are exact: N-M means N and M categories. Only 10-0 is a sweep;
@@ -534,7 +546,8 @@ HARD RULES:
   "the brothers swept the week" — if it isn't stated above, don't assert it.
 - The Salary Stock Ticker and Value Awards figures are FINAL — reproduce every
   name, team, and dollar amount exactly; never recompute, round, or invent them.
-- No closing footer or meta-commentary. End after THIS WEEK IN VALUE.
+- No closing footer or meta-commentary. End after THE WEEK AHEAD (or after THIS
+  WEEK IN VALUE if there is nothing on the calendar to note).
 - Output clean Markdown.`;
 
   console.log('Calling Anthropic API...');
