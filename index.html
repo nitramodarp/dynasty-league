@@ -474,7 +474,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>Team</th>
             <th>Payroll</th>
             <th>Pool</th>
-            <th>Lottery Skim*</th>
+            <th>Cap Penalty*</th>
             <th>Ball Impact*</th>
             <th>Proj. Win %*</th>
             <th>Status</th>
@@ -556,7 +556,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>Raw Balls</th>
             <th class="lottery-hide-mobile">Payroll</th>
             <th>Tax Owed</th>
-            <th>Skim</th>
+            <th>Cap Penalty</th>
             <th>Adj. Balls</th>
             <th>Win %</th>
             <th>Final Pick</th>
@@ -575,7 +575,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>Raw Balls</th>
             <th class="lottery-hide-mobile">Payroll</th>
             <th>Tax Owed</th>
-            <th>Skim</th>
+            <th>Cap Penalty</th>
             <th>Adj. Balls</th>
             <th>Win %</th>
             <th>Final Pick</th>
@@ -587,10 +587,11 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
     <div class="lottery-note">
       <strong>HOW IT WORKS</strong> · Two pools of six, split by playoff qualification. Within each pool, balls are
       awarded by finish: the best finisher in the pool gets 6, down to 1 for the worst. The non-playoff pool draws
-      for picks 1–6; the playoff pool draws for picks 7–12. Over-cap teams (per the Aug 31 Tax Day snapshot) have
-      lottery weight skimmed at <strong>(tax owed ÷ $10M) × 5%</strong>, floored at 25% retained weight. Skimmed
-      weight redistributes to under-cap teams in the same pool, proportional to cap room. The draw itself is run
-      live off-app and results are logged here after — odds shown are final and locked before the draw.
+      for picks 1–6; the playoff pool draws for picks 7–12. Over-cap teams (per the Aug 31 Tax Day snapshot) take a
+      <strong>cap penalty</strong> — their lottery weight is reduced by <strong>(tax owed ÷ $10M) × 5%</strong>,
+      down to a floor of 25% retained. The reduced weight redistributes to under-cap teams in the same pool,
+      proportional to cap room. The draw itself is run live off-app and results are logged here after — odds shown
+      are final and locked before the draw.
     </div>
   </div>
 </div>
@@ -776,11 +777,11 @@ async function renderPayroll() {
     document.getElementById('prize-banner').innerHTML = `
       <div class="prize-stat">
         <div class="val">${skimmedTeams.length}</div>
-        <div class="lbl">Teams Skimmed*</div>
+        <div class="lbl">Teams Penalized*</div>
       </div>
       <div class="prize-stat">
         <div class="val">${biggestSkim > 0 ? '-' + (biggestSkim * 100).toFixed(0) + '%' : '—'}</div>
-        <div class="lbl">Biggest Skim*</div>
+        <div class="lbl">Biggest Penalty*</div>
       </div>
       <div class="prize-stat">
         <div class="val">$${champPool.toFixed(0)}</div>
@@ -1106,7 +1107,7 @@ async function renderLottery() {
       </div>
       <div class="prize-stat">
         <div class="val">${overCapCount}</div>
-        <div class="lbl">Teams Skimmed</div>
+        <div class="lbl">Teams Penalized</div>
       </div>
       <div class="prize-stat">
         <div class="val">$${totalTaxSnap.toFixed(2)}</div>
@@ -1212,7 +1213,7 @@ async function renderRules() {
         <div class="rule-row"><span class="rule-key">Tier 2</span><span class="rule-val">$${S.tax_rate_tier2}/$10M over, beyond +$${S.tax_breakpoint}M</span></div>
         <div class="rule-row"><span class="rule-key">Distribution</span><span class="rule-val">Rebated to under-cap teams</span></div>
         <div class="rule-row"><span class="rule-key">Rebate Split</span><span class="rule-val">Proportional to cap room</span></div>
-        <div class="rule-row"><span class="rule-key">Draft Penalty</span><span class="rule-val">Lottery weight skim (see Rookie Draft)</span></div>
+        <div class="rule-row"><span class="rule-key">Draft Penalty</span><span class="rule-val">Cap penalty on lottery odds (see Rookie Draft)</span></div>
       </div>
       <div class="rules-card">
         <div class="rules-card-title">Prize Structure</div>
@@ -1233,7 +1234,7 @@ async function renderRules() {
         <div class="rule-row"><span class="rule-key">Tier A (Playoff, 1st–6th)</span><span class="rule-val">Picks 7–12 · Best odds → 6th place</span></div>
         <div class="rule-row"><span class="rule-key">Tier B (Non-Playoff, 7th–12th)</span><span class="rule-val">Picks 1–6 · Best odds → 7th place</span></div>
         <div class="rule-row"><span class="rule-key">Ball Distribution</span><span class="rule-val">6-5-4-3-2-1 per pool (best → worst finish)</span></div>
-        <div class="rule-row"><span class="rule-key">Cap Penalty</span><span class="rule-val">Weight skim: (tax ÷ $10M) × 5% · 25% floor · in-pool only</span></div>
+        <div class="rule-row"><span class="rule-key">Cap Penalty</span><span class="rule-val">Odds reduced (tax ÷ $10M) × 5% · 25% floor · in-pool only</span></div>
         <div class="rule-row"><span class="rule-key">Snapshot Date</span><span class="rule-val">Tax Day (Aug 31)</span></div>
         <div class="rule-row"><span class="rule-key">Pick Trading</span><span class="rule-val">Fully tradeable · max 2 draft years out</span></div>
         <div class="rule-row"><span class="rule-key">Rookie Salary</span><span class="rule-val">Standard DYN Z scoring · no special tiering</span></div>
