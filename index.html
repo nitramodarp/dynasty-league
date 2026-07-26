@@ -473,6 +473,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>#</th>
             <th>Team</th>
             <th>Payroll</th>
+            <th>Pool</th>
             <th>Lottery Skim*</th>
             <th>Ball Impact*</th>
             <th>Proj. Win %*</th>
@@ -744,7 +745,10 @@ async function renderPayroll() {
       const projPlayoff = rankedTeams.slice(0, 6).reverse();  // index 0 = 6th place = best odds
       const projNonPlayoff = rankedTeams.slice(6, 12);        // index 0 = 7th place = best odds
 
-      [projPlayoff, projNonPlayoff].forEach(pool => {
+      [
+        { pool: projPlayoff, label: 'P' },
+        { pool: projNonPlayoff, label: 'NP' }
+      ].forEach(({ pool, label }) => {
         const poolTeams = pool.map(t => ({
           ref: t,
           payroll_snapshot: t.payroll,
@@ -756,27 +760,31 @@ async function renderPayroll() {
           pt.ref.projRawBalls = pt.rawBalls;
           pt.ref.projAdjBalls = pt.adjBalls;
           pt.ref.projWinPct = pt.winPct;
+          pt.ref.projPool = label;
         });
       });
     }
 
-    // Two pools: entry fees fund championship payouts; tax is rebated, not pooled.
+    // Banner: all-lottery framing (per-team dollar tax lives on Draft Lottery tab).
     const champPool = SETTINGS.num_teams * SETTINGS.base_entry_fee;
     const pc = (k) => champPool * (SETTINGS[k] || 0);
     const pct = (k) => (((SETTINGS[k] || 0) * 100).toFixed(1).replace(/\.0$/, '')) + '%';
 
+    const skimmedTeams = teamList.filter(t => t.projSkimPct > 0);
+    const biggestSkim = skimmedTeams.reduce((mx, t) => Math.max(mx, t.projSkimPct), 0);
+
     document.getElementById('prize-banner').innerHTML = `
+      <div class="prize-stat">
+        <div class="val">${skimmedTeams.length}</div>
+        <div class="lbl">Teams Skimmed*</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">${biggestSkim > 0 ? '-' + (biggestSkim * 100).toFixed(0) + '%' : '—'}</div>
+        <div class="lbl">Biggest Skim*</div>
+      </div>
       <div class="prize-stat">
         <div class="val">$${champPool.toFixed(0)}</div>
         <div class="lbl">Championship Pool</div>
-      </div>
-      <div class="prize-stat">
-        <div class="val">$${totalTax.toFixed(2)}</div>
-        <div class="lbl">Luxury Tax → Rebated</div>
-      </div>
-      <div class="prize-stat">
-        <div class="val">${teamList.filter(t => t.payroll > cap).length}</div>
-        <div class="lbl">Over-Cap Teams</div>
       </div>
       <div class="prize-stat">
         <div class="val">$${cap}M</div>
@@ -813,7 +821,12 @@ async function renderPayroll() {
         ballCell = `<td class="mono ${cls}">${t.projAdjBalls.toFixed(2)} <span class="muted" style="font-size:10px">(${deltaStr})</span></td>`;
       }
 
-      // Projected win % for the pool's top pick
+      // Pool tag: P = playoff pool (picks 7–12), NP = non-playoff pool (picks 1–6)
+      const poolCell = hasProj && t.projPool
+        ? `<td class="mono ${t.projPool === 'NP' ? 'green' : 'muted'}">${t.projPool}</td>`
+        : `<td class="mono muted">—</td>`;
+
+      // Projected win % at the TOP pick of that team's pool
       const winCell = hasProj
         ? `<td class="mono gold">${t.projWinPct.toFixed(1)}%</td>`
         : `<td class="mono muted">—</td>`;
@@ -822,6 +835,7 @@ async function renderPayroll() {
         <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
         <td><strong>${t.name}</strong></td>
         <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
+        ${poolCell}
         ${skimCell}
         ${ballCell}
         ${winCell}
@@ -833,7 +847,10 @@ async function renderPayroll() {
     document.getElementById('payroll-footnote').innerHTML =
       `* PROJECTED — computed as if Tax Day were today, using live payroll and current standings rank.
        Official lottery odds lock at the Aug 31 snapshot — see the <strong>Draft Lottery</strong> tab.
-       Dollar tax/rebate amounts remain in the banner above and are finalized at Tax Day.`;
+       <br><strong>Pool:</strong> NP = non-playoff (drafts picks 1–6), P = playoff (drafts picks 7–12).
+       The two pools draw separately, so a team's Proj. Win % is its odds at the <em>top pick of its own pool</em> —
+       that's why an NP team can show higher odds than a better-finishing P team. Per-team dollar tax/rebate
+       lives on the <strong>Draft Lottery</strong> tab.`;
 
     document.getElementById('payroll-loading').style.display = 'none';
     document.getElementById('payroll-content').style.display = 'block';
