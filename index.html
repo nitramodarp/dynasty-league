@@ -486,8 +486,6 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>Team</th>
             <th>Payroll</th>
             <th>Cap Penalty*</th>
-            <th>Lottery Balls*</th>
-            <th>1st Pick Odds*</th>
             <th>Status</th>
             <th>Roster</th>
           </tr>
@@ -815,46 +813,27 @@ async function renderPayroll() {
       const isOver = over > 0;
       const hasProj = t.projWinPct !== undefined;
 
-      // Lottery Skim: % of raw lottery weight lost to the cap penalty
+      // Cap Penalty: % of raw lottery weight lost to the cap penalty
       const skimCell = !hasProj
         ? `<td class="mono muted">—</td>`
         : (t.projSkimPct > 0
           ? `<td class="mono red">-${(t.projSkimPct * 100).toFixed(0)}%</td>`
           : `<td class="mono muted">—</td>`);
 
-      // Lottery Balls: adjusted balls vs raw balls (penalty lost or redistribution gained)
-      let ballCell = `<td class="mono muted">—</td>`;
-      if (hasProj) {
-        const delta = t.projAdjBalls - t.projRawBalls;
-        const deltaStr = (delta >= 0 ? '+' : '') + delta.toFixed(2);
-        const cls = delta < -0.005 ? 'red' : (delta > 0.005 ? 'green' : 'muted');
-        ballCell = `<td class="mono ${cls}">${t.projAdjBalls.toFixed(2)} <span class="muted" style="font-size:10px">(${deltaStr})</span></td>`;
-      }
-
-      // Projected win % at the TOP pick of that team's pool
-      const winCell = hasProj
-        ? `<td class="mono gold">${t.projWinPct.toFixed(1)}%</td>`
-        : `<td class="mono muted">—</td>`;
-
       return `<tr>
         <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
         <td><strong>${t.name}</strong></td>
         <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
         ${skimCell}
-        ${ballCell}
-        ${winCell}
         <td><span class="tax-badge ${isOver ? 'over' : 'clean'}">${isOver ? 'OVER CAP' : 'CLEAN'}</span></td>
         <td class="mono muted">${t.players.length}</td>
       </tr>`;
     }).join('');
 
     document.getElementById('payroll-footnote').innerHTML =
-      `* PROJECTED — computed as if Tax Day were today, using live payroll and current standings rank.
-       Official lottery odds lock at the Aug 31 snapshot — see the <strong>Draft Lottery</strong> tab.
-       The lottery runs as two separate six-team pools (non-playoff drafts picks 1–6, playoff drafts picks 7–12),
-       so 1st Pick Odds is a team's chance at the top pick of <em>its own pool</em> — that's why a lower-finishing team
-       can show higher odds than a better-finishing one. The Draft Lottery tab breaks this out by pool, and also
-       holds per-team dollar tax/rebate.`;
+      `* PROJECTED — Cap Penalty is computed as if Tax Day were today, using live payroll.
+       Official lottery odds and each team's full draft position lock at the Aug 31 snapshot —
+       see the <strong>Draft Lottery</strong> tab, which also holds per-team dollar tax/rebate.`;
 
     document.getElementById('payroll-loading').style.display = 'none';
     document.getElementById('payroll-content').style.display = 'block';
