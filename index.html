@@ -473,8 +473,9 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>#</th>
             <th>Team</th>
             <th>Payroll</th>
-            <th>vs Cap</th>
-            <th>Tax / Rebate</th>
+            <th>Lottery Skim*</th>
+            <th>Ball Impact*</th>
+            <th>Proj. Win %*</th>
             <th>Status</th>
             <th>Roster</th>
           </tr>
@@ -482,6 +483,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
         <tbody id="payroll-tbody"></tbody>
       </table>
     </div>
+    <div class="lottery-note" id="payroll-footnote" style="margin-top:16px"></div>
   </div>
 </div>
 
@@ -671,7 +673,8 @@ async function loadData() {
   for (const p of PLAYERS) {
     const t = p.fantasy_team_name;
     if (!t) continue;
-    if (!TEAMS[t]) TEAMS[t] = { name: t, id: p.fantasy_team_id, players: [], payroll: 0 };
+    const tid = parseInt(p.fantasy_team_id);
+    if (!TEAMS[t]) TEAMS[t] = { name: t, id: p.fantasy_team_id, tid: isNaN(tid) ? null : tid, players: [], payroll: 0 };
     const sal = parseFloat(p.current_salary) || parseFloat(p.base_salary) || 3;
     TEAMS[t].players.push({ ...p, sal });
     TEAMS[t].payroll += sal;
@@ -710,6 +713,53 @@ async function renderPayroll() {
       t.rebate = (totalRoom > 0 && t.room > 0) ? totalTax * (t.room / totalRoom) : 0;
     });
 
+    // ── PROJECTED LOTTERY IMPLICATIONS ────────────────────────────
+    // "If Tax Day were today": run the lottery skim math against LIVE
+    // payroll + tax and CURRENT standings rank. Official odds lock at
+    // the Aug 31 snapshot on the Draft Lottery tab; this is a preview.
+    // Joined on fantasy_team_id (stable), NOT team_name — so a mid-week
+    // rename never breaks the link to a team's standings row.
+    let rankById = {};
+    let nameById = {};
+    try {
+      const standings = await fetchCSV('STANDINGS');
+      standings.forEach(r => {
+        const tid = parseInt(r.team_id || r.fantasy_team_id);
+        if (isNaN(tid)) return;
+        rankById[tid] = parseInt(r.rank) || 0;
+        nameById[tid] = r.team_name || '';   // current name lives in STANDINGS
+      });
+    } catch(e) { console.warn('Could not load STANDINGS for lottery projection', e); }
+
+    // Adopt the STANDINGS name as the canonical current display name.
+    teamList.forEach(t => {
+      if (t.tid != null && nameById[t.tid]) t.name = nameById[t.tid];
+    });
+
+    const rankedTeams = teamList
+      .filter(t => t.tid != null && rankById[t.tid] > 0)
+      .sort((a, b) => rankById[a.tid] - rankById[b.tid]);
+
+    if (rankedTeams.length >= 12) {
+      const projPlayoff = rankedTeams.slice(0, 6).reverse();  // index 0 = 6th place = best odds
+      const projNonPlayoff = rankedTeams.slice(6, 12);        // index 0 = 7th place = best odds
+
+      [projPlayoff, projNonPlayoff].forEach(pool => {
+        const poolTeams = pool.map(t => ({
+          ref: t,
+          payroll_snapshot: t.payroll,
+          tax_owed_snapshot: t.tax
+        }));
+        computePoolOdds(poolTeams);
+        poolTeams.forEach(pt => {
+          pt.ref.projSkimPct = pt.skimPct;
+          pt.ref.projRawBalls = pt.rawBalls;
+          pt.ref.projAdjBalls = pt.adjBalls;
+          pt.ref.projWinPct = pt.winPct;
+        });
+      });
+    }
+
     // Two pools: entry fees fund championship payouts; tax is rebated, not pooled.
     const champPool = SETTINGS.num_teams * SETTINGS.base_entry_fee;
     const pc = (k) => champPool * (SETTINGS[k] || 0);
@@ -745,20 +795,45 @@ async function renderPayroll() {
     tbody.innerHTML = teamList.map((t, i) => {
       const over = t.payroll - cap;
       const isOver = over > 0;
-      const netCell = t.tax > 0
-        ? `<td class="mono red">-$${t.tax.toFixed(2)}</td>`
-        : (t.rebate > 0 ? `<td class="mono green">+$${t.rebate.toFixed(2)}</td>`
-        : `<td class="mono muted">$0.00</td>`);
+      const hasProj = t.projWinPct !== undefined;
+
+      // Lottery Skim: % of raw lottery weight lost to the cap penalty
+      const skimCell = !hasProj
+        ? `<td class="mono muted">—</td>`
+        : (t.projSkimPct > 0
+          ? `<td class="mono red">-${(t.projSkimPct * 100).toFixed(0)}%</td>`
+          : `<td class="mono muted">—</td>`);
+
+      // Ball Impact: adjusted balls vs raw balls (skim lost or redistribution gained)
+      let ballCell = `<td class="mono muted">—</td>`;
+      if (hasProj) {
+        const delta = t.projAdjBalls - t.projRawBalls;
+        const deltaStr = (delta >= 0 ? '+' : '') + delta.toFixed(2);
+        const cls = delta < -0.005 ? 'red' : (delta > 0.005 ? 'green' : 'muted');
+        ballCell = `<td class="mono ${cls}">${t.projAdjBalls.toFixed(2)} <span class="muted" style="font-size:10px">(${deltaStr})</span></td>`;
+      }
+
+      // Projected win % for the pool's top pick
+      const winCell = hasProj
+        ? `<td class="mono gold">${t.projWinPct.toFixed(1)}%</td>`
+        : `<td class="mono muted">—</td>`;
+
       return `<tr>
         <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
         <td><strong>${t.name}</strong></td>
         <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
-        <td class="mono ${isOver ? 'red' : 'green'}">${isOver ? '+' : ''}$${over.toFixed(1)}M</td>
-        ${netCell}
+        ${skimCell}
+        ${ballCell}
+        ${winCell}
         <td><span class="tax-badge ${isOver ? 'over' : 'clean'}">${isOver ? 'OVER CAP' : 'CLEAN'}</span></td>
         <td class="mono muted">${t.players.length}</td>
       </tr>`;
     }).join('');
+
+    document.getElementById('payroll-footnote').innerHTML =
+      `* PROJECTED — computed as if Tax Day were today, using live payroll and current standings rank.
+       Official lottery odds lock at the Aug 31 snapshot — see the <strong>Draft Lottery</strong> tab.
+       Dollar tax/rebate amounts remain in the banner above and are finalized at Tax Day.`;
 
     document.getElementById('payroll-loading').style.display = 'none';
     document.getElementById('payroll-content').style.display = 'block';
@@ -835,6 +910,21 @@ async function renderStandings() {
 // ── ROSTER VIEW ───────────────────────────────────────────────────
 async function renderRoster() {
   if (PLAYERS.length === 0) await loadData();
+
+  // Adopt current display names from STANDINGS (keyed on ID) so a renamed
+  // team shows its current name here too, not the stale PLAYERS name.
+  try {
+    const standings = await fetchCSV('STANDINGS');
+    const nameById = {};
+    standings.forEach(r => {
+      const tid = parseInt(r.team_id || r.fantasy_team_id);
+      if (!isNaN(tid) && r.team_name) nameById[tid] = r.team_name;
+    });
+    Object.values(TEAMS).forEach(t => {
+      if (t.tid != null && nameById[t.tid]) t.name = nameById[t.tid];
+    });
+  } catch(e) { console.warn('Could not load STANDINGS for roster names', e); }
+
   const teamList = Object.values(TEAMS).sort((a, b) => a.name.localeCompare(b.name));
   document.getElementById('team-grid').innerHTML = teamList.map(t => {
     const active = t.players.filter(p => p.roster_slot === 'Active').length;
@@ -854,7 +944,9 @@ async function renderRoster() {
 }
 
 function showRoster(teamName) {
-  const t = TEAMS[teamName];
+  // TEAMS is keyed by the original PLAYERS name, but t.name may have been
+  // adopted from STANDINGS. Match on the current display name.
+  const t = Object.values(TEAMS).find(x => x.name === teamName) || TEAMS[teamName];
   if (!t) return;
   document.getElementById('detail-team-name').textContent = teamName;
   document.getElementById('team-grid-view').style.display = 'none';
@@ -933,22 +1025,32 @@ async function renderLottery() {
     const standings = await fetchCSV('STANDINGS');
     const lottery = await fetchCSV('LOTTERY');
 
-    // Build lookup + validate LOTTERY names against STANDINGS names.
-    const standingsNames = new Set(standings.filter(r => r.team_name).map(r => r.team_name));
-    const lotteryMap = {};
-    const orphanRows = [];
+    // Index the frozen snapshot by fantasy_team_id (stable across renames).
+    // team_name in the LOTTERY tab is a human convenience label only —
+    // the display name always comes from STANDINGS via the ID.
+    const snapById = {};
+    const orphanIds = [];
+    const standingsIds = new Set(
+      standings.map(r => parseInt(r.team_id || r.fantasy_team_id)).filter(n => !isNaN(n))
+    );
     lottery.forEach(r => {
-      if (!r.team_name) return;
-      lotteryMap[r.team_name] = r;
-      if (!standingsNames.has(r.team_name)) orphanRows.push(r.team_name);
+      const tid = parseInt(r.fantasy_team_id || r.team_id);
+      if (isNaN(tid)) return;
+      snapById[tid] = r;
+      if (!standingsIds.has(tid)) orphanIds.push(tid);
     });
-    if (orphanRows.length) {
-      console.warn('LOTTERY tab has team names with no STANDINGS match (typo? trailing space?):', orphanRows);
+    if (orphanIds.length) {
+      console.warn('LOTTERY rows with fantasy_team_id not found in STANDINGS:', orphanIds);
     }
 
     const ranked = standings
-      .filter(r => r.team_name)
-      .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+      .map(r => ({
+        team_id: parseInt(r.team_id || r.fantasy_team_id),
+        team_name: r.team_name || '',
+        rank: parseInt(r.rank) || 0
+      }))
+      .filter(r => !isNaN(r.team_id) && r.rank > 0)
+      .sort((a, b) => a.rank - b.rank);
 
     // Playoff pool: ranks 1–6, reversed so index 0 = 6th place = best odds.
     // Non-playoff pool: ranks 7–12, natural order so index 0 = 7th = best odds.
@@ -957,9 +1059,10 @@ async function renderLottery() {
 
     function buildPoolTeams(pool) {
       return pool.map(r => {
-        const l = lotteryMap[r.team_name];
+        const l = snapById[r.team_id];
         return {
-          team_name: r.team_name,
+          team_id: r.team_id,
+          team_name: r.team_name,       // current name from STANDINGS
           rank: r.rank,
           hasSnapshot: !!l,
           payroll_snapshot: l ? (parseFloat(l.payroll_snapshot) || 0) : 0,
@@ -998,7 +1101,7 @@ async function renderLottery() {
       </div>
       ${missingSnapshots > 0 ? `
       <div style="grid-column:1/-1;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--red);border-top:1px solid var(--border);padding-top:14px">
-        ⚠ ${missingSnapshots} team(s) missing from LOTTERY tab — treated as under-cap with $0 tax. Check team_name spelling against STANDINGS.
+        ⚠ ${missingSnapshots} team(s) missing from LOTTERY tab — treated as under-cap with $0 tax. Add their fantasy_team_id row to the LOTTERY tab.
       </div>` : ''}`;
 
     function renderPoolRows(teams) {
