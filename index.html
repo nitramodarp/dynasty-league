@@ -7,465 +7,435 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy:   #1B3A6B;
-    --gold:   #C9A84C;
-    --cream:  #F5F0E8;
-    --dark:   #0D1B2A;
-    --mid:    #1E2D3D;
-    --muted:  #4A6080;
-    --text:   #E8E0D0;
-    --dim:    #8A9BB0;
-    --green:  #4CAF82;
-    --red:    #E05A5A;
-    --border: rgba(201,168,76,0.2);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--dark);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(27,58,107,0.4) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201,168,76,0.08) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  header {
-    position: relative;
-    z-index: 10;
-    padding: 32px 40px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .league-badge {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    opacity: 0.8;
-  }
-
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 6vw, 72px);
-    letter-spacing: 4px;
-    line-height: 1;
-    color: var(--text);
-  }
-
-  h1 span { color: var(--gold); }
-
-  .header-meta {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-top: 12px;
-    padding-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .meta-pill {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--dim);
-    letter-spacing: 1px;
-  }
-
-  .meta-pill strong { color: var(--gold); }
-
-  .last-updated {
-    margin-left: auto;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-  }
-
-  nav {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: flex;
-    gap: 0;
-    padding: 0 40px;
-    background: rgba(13,27,42,0.8);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(10px);
-  }
-
-  .nav-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--dim);
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    padding: 16px 24px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .nav-btn:hover { color: var(--text); }
-  .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-  main {
-    position: relative;
-    z-index: 1;
-    padding: 40px;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .view { display: none; }
-  .view.active { display: block; }
-
-  .loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 80px;
-    gap: 16px;
-    color: var(--dim);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 2px;
-  }
-
-  .spinner {
-    width: 32px; height: 32px;
-    border: 2px solid var(--border);
-    border-top-color: var(--gold);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .prize-banner {
-    background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px 32px;
-    margin-bottom: 32px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 24px;
-  }
-
-  .prize-stat { text-align: center; }
-
-  .prize-stat .val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 40px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    line-height: 1;
-  }
-
-  .prize-stat .lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--dim);
-    margin-top: 4px;
-    text-transform: uppercase;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .table-wrap {
-    overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  thead tr { background: rgba(27,58,107,0.6); }
-
-  th {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    text-transform: uppercase;
-    padding: 12px 16px;
-    text-align: left;
-    white-space: nowrap;
-  }
-
-  td {
-    padding: 12px 16px;
-    border-top: 1px solid rgba(255,255,255,0.04);
-    white-space: nowrap;
-    font-size: 13px;
-  }
-
-  tbody tr { transition: background 0.15s; }
-  tbody tr:hover { background: rgba(201,168,76,0.05); }
-
-  .mono { font-family: 'DM Mono', monospace; font-size: 12px; }
-  .muted { color: var(--dim); }
-  .gold { color: var(--gold); }
-  .green { color: var(--green); }
-  .red { color: var(--red); }
-
-  .rank-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    background: rgba(27,58,107,0.4);
-    color: var(--dim);
-  }
-
-  .rank-badge.top { background: rgba(201,168,76,0.2); color: var(--gold); }
-
-  .tax-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-  }
-
-  .tax-badge.over  { background: rgba(224,90,90,0.15);  color: var(--red);   }
-  .tax-badge.clean { background: rgba(76,175,130,0.15); color: var(--green); }
-
-  .clinch-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    background: rgba(76,175,130,0.15);
-    color: var(--green);
-  }
-
-  .team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  .team-card {
-    background: rgba(30,45,61,0.6);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .team-card:hover {
-    border-color: var(--gold);
-    background: rgba(30,45,61,0.9);
-    transform: translateY(-2px);
-  }
-
-  .team-card-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 2px;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-
-  .team-card-meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--dim);
-    display: flex;
-    gap: 12px;
-  }
-
-  .roster-detail { display: none; }
-  .roster-detail.active { display: block; }
-
-  .roster-header {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .roster-team-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    letter-spacing: 3px;
-  }
-
-  .back-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--gold);
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 6px 12px;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: all 0.2s;
-  }
-
-  .back-btn:hover { background: rgba(201,168,76,0.1); }
-
-  .slot-group { margin-bottom: 24px; }
-
-  .slot-group-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 3px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .player-row {
-    display: grid;
-    grid-template-columns: 60px 1fr 60px 80px 80px;
-    gap: 8px;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    align-items: center;
-    font-size: 13px;
-  }
-
-  .pos-pill {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    background: rgba(27,58,107,0.5);
-    color: var(--dim);
-    text-align: center;
-  }
-
-  .pos-pill.SP { background: rgba(100,80,200,0.3); color: #A090FF; }
-  .pos-pill.RP { background: rgba(200,80,80,0.3);  color: #FF9090; }
-  .pos-pill.C  { background: rgba(27,58,107,0.5);  color: #6090FF; }
-  .pos-pill.OF { background: rgba(80,160,80,0.3);  color: #80D080; }
-
-  .year-chip {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--dim);
-    text-align: center;
-  }
-
-  /* ── STANDINGS ── */
-  .standings-banner {
-    background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px 32px;
-    margin-bottom: 32px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 24px;
-  }
-
-  .gb-dash { color: var(--gold); font-weight: 600; }
-
-  /* ── RULES ── */
-  .rules-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 24px;
-  }
-
-  .rules-card {
-    background: rgba(30,45,61,0.5);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 24px;
-  }
-
-  .rules-card-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .rule-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    font-size: 13px;
-    gap: 16px;
-  }
-
-  .rule-key { color: var(--dim); font-size: 12px; }
-  .rule-val { color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; text-align: right; }
-
-  .salary-tier-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-  .salary-tier-table td { padding: 6px 8px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-  .salary-tier-table td:first-child { color: var(--dim); }
-  .salary-tier-table td:last-child  { font-family: 'DM Mono', monospace; color: var(--gold); text-align: right; }
-
-  .escalation-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-  .escalation-table td { padding: 5px 8px; font-size: 11px; font-family: 'DM Mono', monospace; border-bottom: 1px solid rgba(255,255,255,0.04); }
-  .escalation-table td:first-child { color: var(--dim); }
-  .escalation-table td:last-child  { color: var(--gold); text-align: right; }
-
-  @media (max-width: 640px) {
-    header { padding: 20px 16px 0; }
-    nav { padding: 0 8px; }
-    .nav-btn { padding: 14px 12px; font-size: 10px; }
-    main { padding: 20px 16px; }
-    .prize-banner { padding: 16px; gap: 16px; }
-    .prize-stat .val { font-size: 28px; }
-    .player-row { grid-template-columns: 44px 1fr 64px; }
-    .player-row .year-chip, .player-row > span:nth-child(3) { display: none; }
-    .standings-hide-mobile { display: none; }
-  }
+:root {
+  --navy: #1B3A6B;
+  --gold: #C9A84C;
+  --cream: #F5F0E8;
+  --dark: #0D1B2A;
+  --mid: #1E2D3D;
+  --muted: #4A6080;
+  --text: #E8E0D0;
+  --dim: #8A9BB0;
+  --green: #4CAF82;
+  --red: #E05A5A;
+  --border: rgba(201,168,76,0.2);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--dark);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(27,58,107,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(201,168,76,0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+header {
+  position: relative;
+  z-index: 10;
+  padding: 32px 40px 0;
+  border-bottom: 1px solid var(--border);
+}
+.league-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px, 6vw, 72px);
+  letter-spacing: 4px;
+  line-height: 1;
+  color: var(--text);
+}
+h1 span { color: var(--gold); }
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 12px;
+  padding-bottom: 20px;
+  flex-wrap: wrap;
+}
+.meta-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 1px;
+}
+.meta-pill strong { color: var(--gold); }
+.last-updated {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+}
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 0;
+  padding: 0 40px;
+  background: rgba(13,27,42,0.8);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.nav-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+main {
+  position: relative;
+  z-index: 1;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.view { display: none; }
+.view.active { display: block; }
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px;
+  gap: 16px;
+  color: var(--dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+.spinner {
+  width: 32px; height: 32px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.prize-banner {
+  background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 24px;
+}
+.prize-stat { text-align: center; }
+.prize-stat .val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  line-height: 1;
+}
+.prize-stat .lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead tr { background: rgba(27,58,107,0.6); }
+th {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-transform: uppercase;
+  padding: 12px 16px;
+  text-align: left;
+  white-space: nowrap;
+}
+td {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  white-space: nowrap;
+  font-size: 13px;
+}
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: rgba(201,168,76,0.05); }
+.mono { font-family: 'DM Mono', monospace; font-size: 12px; }
+.muted { color: var(--dim); }
+.gold { color: var(--gold); }
+.green { color: var(--green); }
+.red { color: var(--red); }
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(27,58,107,0.4);
+  color: var(--dim);
+}
+.rank-badge.top { background: rgba(201,168,76,0.2); color: var(--gold); }
+.tax-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+}
+.tax-badge.over { background: rgba(224,90,90,0.15); color: var(--red); }
+.tax-badge.clean { background: rgba(76,175,130,0.15); color: var(--green); }
+.clinch-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  background: rgba(76,175,130,0.15);
+  color: var(--green);
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.team-card {
+  background: rgba(30,45,61,0.6);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.team-card:hover {
+  border-color: var(--gold);
+  background: rgba(30,45,61,0.9);
+  transform: translateY(-2px);
+}
+.team-card-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.team-card-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  display: flex;
+  gap: 12px;
+}
+.roster-detail { display: none; }
+.roster-detail.active { display: block; }
+.roster-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.roster-team-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 3px;
+}
+.back-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--gold);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+}
+.back-btn:hover { background: rgba(201,168,76,0.1); }
+.slot-group { margin-bottom: 24px; }
+.slot-group-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.player-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 60px 80px 80px;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  align-items: center;
+  font-size: 13px;
+}
+.pos-pill {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  background: rgba(27,58,107,0.5);
+  color: var(--dim);
+  text-align: center;
+}
+.pos-pill.SP { background: rgba(100,80,200,0.3); color: #A090FF; }
+.pos-pill.RP { background: rgba(200,80,80,0.3); color: #FF9090; }
+.pos-pill.C { background: rgba(27,58,107,0.5); color: #6090FF; }
+.pos-pill.OF { background: rgba(80,160,80,0.3); color: #80D080; }
+.year-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  text-align: center;
+}
+/* ── STANDINGS ── */
+.standings-banner {
+  background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 24px;
+}
+.gb-dash { color: var(--gold); font-weight: 600; }
+/* ── RULES ── */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+.rules-card {
+  background: rgba(30,45,61,0.5);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+}
+.rules-card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.rule-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 13px;
+  gap: 16px;
+}
+.rule-key { color: var(--dim); font-size: 12px; }
+.rule-val { color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; text-align: right; }
+.salary-tier-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.salary-tier-table td { padding: 6px 8px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.salary-tier-table td:first-child { color: var(--dim); }
+.salary-tier-table td:last-child { font-family: 'DM Mono', monospace; color: var(--gold); text-align: right; }
+.escalation-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.escalation-table td { padding: 5px 8px; font-size: 11px; font-family: 'DM Mono', monospace; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.escalation-table td:first-child { color: var(--dim); }
+.escalation-table td:last-child { color: var(--gold); text-align: right; }
+/* ── DRAFT LOTTERY ── */
+.lottery-banner {
+  background: linear-gradient(135deg, rgba(27,58,107,0.6), rgba(201,168,76,0.1));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 24px;
+}
+.lottery-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 1.8;
+  margin: 16px 0 32px;
+  padding: 16px 20px;
+  background: rgba(30,45,61,0.4);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.lottery-note strong { color: var(--gold); }
+.mismatch-warn {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  background: rgba(224,90,90,0.15);
+  color: var(--red);
+}
+@media (max-width: 640px) {
+  header { padding: 20px 16px 0; }
+  nav { padding: 0 8px; }
+  .nav-btn { padding: 14px 12px; font-size: 10px; }
+  main { padding: 20px 16px; }
+  .prize-banner { padding: 16px; gap: 16px; }
+  .prize-stat .val { font-size: 28px; }
+  .player-row { grid-template-columns: 44px 1fr 64px; }
+  .player-row .year-chip, .player-row > span:nth-child(3) { display: none; }
+  .standings-hide-mobile { display: none; }
+  .lottery-hide-mobile { display: none; }
+}
 </style>
 </head>
 <body>
-
 <header>
   <div class="league-badge">12-Team · Head-to-Head · Dynasty · Yahoo</div>
   <h1>40s and <span>Blunts</span></h1>
@@ -476,146 +446,199 @@
     <span class="last-updated" id="lastUpdated">Loading...</span>
   </div>
 </header>
-
 <nav>
   <button class="nav-btn active" onclick="switchView('payroll', this)">Payroll</button>
   <button class="nav-btn" onclick="switchView('standings', this)">Standings</button>
   <button class="nav-btn" onclick="switchView('roster', this)">Rosters</button>
+  <button class="nav-btn" onclick="switchView('lottery', this)">Draft Lottery</button>
   <button class="nav-btn" onclick="switchView('rules', this)">Rules</button>
   <button class="nav-btn" onclick="window.location.href='newsletter.html'">Newsletter</button>
   <button class="nav-btn" onclick="window.location.href='history.html'">History</button>
 </nav>
-
 <main>
 
-  <!-- PAYROLL VIEW -->
-  <div class="view active" id="view-payroll">
-    <div class="loading" id="payroll-loading">
-      <div class="spinner"></div>
-      LOADING LEDGER
-    </div>
-    <div id="payroll-content" style="display:none">
-      <div class="prize-banner" id="prize-banner"></div>
-      <div class="section-title">TEAM PAYROLL STANDINGS</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Team</th>
-              <th>Payroll</th>
-              <th>vs Cap</th>
-              <th>Tax / Rebate</th>
-              <th>Status</th>
-              <th>Roster</th>
-            </tr>
-          </thead>
-          <tbody id="payroll-tbody"></tbody>
-        </table>
-      </div>
+<!-- PAYROLL VIEW -->
+<div class="view active" id="view-payroll">
+  <div class="loading" id="payroll-loading">
+    <div class="spinner"></div>
+    LOADING LEDGER
+  </div>
+  <div id="payroll-content" style="display:none">
+    <div class="prize-banner" id="prize-banner"></div>
+    <div class="section-title">TEAM PAYROLL STANDINGS</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>Payroll</th>
+            <th>vs Cap</th>
+            <th>Tax / Rebate</th>
+            <th>Status</th>
+            <th>Roster</th>
+          </tr>
+        </thead>
+        <tbody id="payroll-tbody"></tbody>
+      </table>
     </div>
   </div>
+</div>
 
-  <!-- STANDINGS VIEW -->
-  <div class="view" id="view-standings">
-    <div class="loading" id="standings-loading">
-      <div class="spinner"></div>
-      LOADING STANDINGS
-    </div>
-    <div id="standings-content" style="display:none">
-      <div class="standings-banner" id="standings-banner"></div>
-      <div class="section-title">LEAGUE STANDINGS</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Team</th>
-              <th>W</th>
-              <th>L</th>
-              <th>T</th>
-              <th>PCT</th>
-              <th class="standings-hide-mobile">Last Week</th>
-              <th>GB</th>
-            </tr>
-          </thead>
-          <tbody id="standings-tbody"></tbody>
-        </table>
-      </div>
+<!-- STANDINGS VIEW -->
+<div class="view" id="view-standings">
+  <div class="loading" id="standings-loading">
+    <div class="spinner"></div>
+    LOADING STANDINGS
+  </div>
+  <div id="standings-content" style="display:none">
+    <div class="standings-banner" id="standings-banner"></div>
+    <div class="section-title">LEAGUE STANDINGS</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>W</th>
+            <th>L</th>
+            <th>T</th>
+            <th>PCT</th>
+            <th class="standings-hide-mobile">Last Week</th>
+            <th>GB</th>
+          </tr>
+        </thead>
+        <tbody id="standings-tbody"></tbody>
+      </table>
     </div>
   </div>
+</div>
 
-  <!-- ROSTER VIEW -->
-  <div class="view" id="view-roster">
-    <div class="loading" id="roster-loading">
-      <div class="spinner"></div>
-      LOADING ROSTERS
+<!-- ROSTER VIEW -->
+<div class="view" id="view-roster">
+  <div class="loading" id="roster-loading">
+    <div class="spinner"></div>
+    LOADING ROSTERS
+  </div>
+  <div id="roster-content" style="display:none">
+    <div id="team-grid-view">
+      <div class="section-title">SELECT A TEAM</div>
+      <div class="team-grid" id="team-grid"></div>
     </div>
-    <div id="roster-content" style="display:none">
-      <div id="team-grid-view">
-        <div class="section-title">SELECT A TEAM</div>
-        <div class="team-grid" id="team-grid"></div>
+    <div id="roster-detail-view" class="roster-detail">
+      <div class="roster-header">
+        <button class="back-btn" onclick="showTeamGrid()">← All Teams</button>
+        <div class="roster-team-name" id="detail-team-name"></div>
       </div>
-      <div id="roster-detail-view" class="roster-detail">
-        <div class="roster-header">
-          <button class="back-btn" onclick="showTeamGrid()">← All Teams</button>
-          <div class="roster-team-name" id="detail-team-name"></div>
-        </div>
-        <div id="detail-slots"></div>
-      </div>
+      <div id="detail-slots"></div>
     </div>
   </div>
+</div>
 
-  <!-- RULES VIEW -->
-  <div class="view" id="view-rules">
-    <div class="loading" id="rules-loading">
-      <div class="spinner"></div>
-      LOADING RULES
+<!-- DRAFT LOTTERY VIEW -->
+<div class="view" id="view-lottery">
+  <div class="loading" id="lottery-loading">
+    <div class="spinner"></div>
+    LOADING LOTTERY
+  </div>
+  <div id="lottery-content" style="display:none">
+    <div class="lottery-banner" id="lottery-banner"></div>
+    <div class="section-title">NON-PLAYOFF POOL · PICKS 1–6</div>
+    <div class="table-wrap" style="margin-bottom:32px">
+      <table>
+        <thead>
+          <tr>
+            <th>Finish</th>
+            <th>Team</th>
+            <th>Raw Balls</th>
+            <th class="lottery-hide-mobile">Payroll</th>
+            <th>Tax Owed</th>
+            <th>Skim</th>
+            <th>Adj. Balls</th>
+            <th>Win %</th>
+            <th>Final Pick</th>
+          </tr>
+        </thead>
+        <tbody id="lottery-tbody-nonplayoff"></tbody>
+      </table>
     </div>
-    <div id="rules-content" style="display:none">
-      <div class="rules-grid" id="rules-grid"></div>
+    <div class="section-title">PLAYOFF POOL · PICKS 7–12</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Finish</th>
+            <th>Team</th>
+            <th>Raw Balls</th>
+            <th class="lottery-hide-mobile">Payroll</th>
+            <th>Tax Owed</th>
+            <th>Skim</th>
+            <th>Adj. Balls</th>
+            <th>Win %</th>
+            <th>Final Pick</th>
+          </tr>
+        </thead>
+        <tbody id="lottery-tbody-playoff"></tbody>
+      </table>
+    </div>
+    <div class="lottery-note">
+      <strong>HOW IT WORKS</strong> · Two pools of six, split by playoff qualification. Within each pool, balls are
+      awarded by finish: the best finisher in the pool gets 6, down to 1 for the worst. The non-playoff pool draws
+      for picks 1–6; the playoff pool draws for picks 7–12. Over-cap teams (per the Aug 31 Tax Day snapshot) have
+      lottery weight skimmed at <strong>(tax owed ÷ $10M) × 5%</strong>, floored at 25% retained weight. Skimmed
+      weight redistributes to under-cap teams in the same pool, proportional to cap room. The draw itself is run
+      live off-app and results are logged here after — odds shown are final and locked before the draw.
     </div>
   </div>
+</div>
+
+<!-- RULES VIEW -->
+<div class="view" id="view-rules">
+  <div class="loading" id="rules-loading">
+    <div class="spinner"></div>
+    LOADING RULES
+  </div>
+  <div id="rules-content" style="display:none">
+    <div class="rules-grid" id="rules-grid"></div>
+  </div>
+</div>
 
 </main>
-
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────
 const SHEET_ID = '1FtMDNhzSpCgS2IdOFs4SHO7-IHoG6uAsK-UGA2NCSAs';
 const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=`;
 
 // ── STATE ─────────────────────────────────────────────────────────
-let PLAYERS  = [];
+let PLAYERS = [];
 let SETTINGS = { cap_threshold: 360, tax_rate_per_10m: 1.15, base_entry_fee: 20, num_teams: 12,
-                 tax_breakpoint: 50, tax_rate_tier1: 1.15, tax_rate_tier2: 2.00,
-                 prize_champion: 0.55, prize_runnerup: 0.20, prize_division_each: 0.075,
-                 prize_president: 0.05, prize_toilet: 0.05,
-                 escalation_rate: 0.12, min_salary: 3, salary_elite: 40, salary_star: 30,
-                 salary_solid: 20, salary_depth: 10, salary_minimum: 3,
-                 tier_elite_min: 3, tier_star_min: 2, tier_solid_min: 1, tier_depth_min: 0,
-                 na_pa_threshold: 50, na_ip_threshold: 30, na_service_threshold: 45,
-                 rookie_draft_rounds: 2, rookie_draft_clock_hrs: 8,
-                 trade_deadline: 'August 31', current_season: 2026 };
-let TEAMS    = {};
+  tax_breakpoint: 50, tax_rate_tier1: 1.15, tax_rate_tier2: 2.00,
+  prize_champion: 0.55, prize_runnerup: 0.20, prize_division_each: 0.075,
+  prize_president: 0.05, prize_toilet: 0.05,
+  escalation_rate: 0.12, min_salary: 3, salary_elite: 40, salary_star: 30,
+  salary_solid: 20, salary_depth: 10, salary_minimum: 3,
+  tier_elite_min: 3, tier_star_min: 2, tier_solid_min: 1, tier_depth_min: 0,
+  na_pa_threshold: 50, na_ip_threshold: 30, na_service_threshold: 45,
+  rookie_draft_rounds: 3, rookie_draft_clock_hrs: 8,
+  trade_deadline: 'August 20', current_season: 2026 };
+let TEAMS = {};
 
 // ── FETCH CSV ─────────────────────────────────────────────────────
 async function fetchCSV(sheet) {
-  const res  = await fetch(BASE_URL + encodeURIComponent(sheet));
+  const res = await fetch(BASE_URL + encodeURIComponent(sheet));
   const text = await res.text();
   return parseCSV(text);
 }
-
 function parseCSV(text) {
-  const lines   = text.trim().split('\n');
+  const lines = text.trim().split('\n');
   const headers = parseCSVLine(lines[0]);
   return lines.slice(1).map(line => {
     const vals = parseCSVLine(line);
-    const obj  = {};
+    const obj = {};
     headers.forEach((h, i) => obj[h.trim()] = (vals[i] || '').trim());
     return obj;
   });
 }
-
 function parseCSVLine(line) {
   const result = [];
   let cur = '', inQ = false;
@@ -644,7 +667,6 @@ async function loadData() {
 
   const rows = await fetchCSV('PLAYERS');
   PLAYERS = rows.filter(r => r.player_name);
-
   TEAMS = {};
   for (const p of PLAYERS) {
     const t = p.fantasy_team_name;
@@ -654,7 +676,6 @@ async function loadData() {
     TEAMS[t].players.push({ ...p, sal });
     TEAMS[t].payroll += sal;
   }
-
   document.getElementById('lastUpdated').textContent =
     'Updated ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
@@ -663,15 +684,14 @@ async function loadData() {
 function progressiveTax(over) {
   if (over <= 0) return 0;
   const bp = SETTINGS.tax_breakpoint, r1 = SETTINGS.tax_rate_tier1, r2 = SETTINGS.tax_rate_tier2;
-  const tier1 = Math.min(over, bp) / 10 * r1;        // first $bp M over
-  const tier2 = Math.max(0, over - bp) / 10 * r2;    // everything beyond
-  return Math.round((tier1 + tier2) * 2) / 2;        // nearest $0.50
+  const tier1 = Math.min(over, bp) / 10 * r1;   // first $bp M over
+  const tier2 = Math.max(0, over - bp) / 10 * r2; // everything beyond
+  return Math.round((tier1 + tier2) * 2) / 2;     // nearest $0.50
 }
 
 async function renderPayroll() {
   try {
     await loadData();
-
     const cap = SETTINGS.cap_threshold;
     const teamList = Object.values(TEAMS).sort((a, b) => b.payroll - a.payroll);
 
@@ -679,7 +699,7 @@ async function renderPayroll() {
     let totalTax = 0;
     teamList.forEach(t => {
       const over = Math.max(0, t.payroll - cap);
-      t.tax  = progressiveTax(over);
+      t.tax = progressiveTax(over);
       t.room = Math.max(0, cap - t.payroll);
       totalTax += t.tax;
     });
@@ -692,7 +712,7 @@ async function renderPayroll() {
 
     // Two pools: entry fees fund championship payouts; tax is rebated, not pooled.
     const champPool = SETTINGS.num_teams * SETTINGS.base_entry_fee;
-    const pc  = (k) => champPool * (SETTINGS[k] || 0);
+    const pc = (k) => champPool * (SETTINGS[k] || 0);
     const pct = (k) => (((SETTINGS[k] || 0) * 100).toFixed(1).replace(/\.0$/, '')) + '%';
 
     document.getElementById('prize-banner').innerHTML = `
@@ -723,12 +743,12 @@ async function renderPayroll() {
 
     const tbody = document.getElementById('payroll-tbody');
     tbody.innerHTML = teamList.map((t, i) => {
-      const over   = t.payroll - cap;
+      const over = t.payroll - cap;
       const isOver = over > 0;
       const netCell = t.tax > 0
         ? `<td class="mono red">-$${t.tax.toFixed(2)}</td>`
         : (t.rebate > 0 ? `<td class="mono green">+$${t.rebate.toFixed(2)}</td>`
-                        : `<td class="mono muted">$0.00</td>`);
+        : `<td class="mono muted">$0.00</td>`);
       return `<tr>
         <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
         <td><strong>${t.name}</strong></td>
@@ -782,14 +802,13 @@ async function renderStandings() {
 
     const tbody = document.getElementById('standings-tbody');
     tbody.innerHTML = standings.map(r => {
-      const rank    = parseInt(r.rank) || 0;
-      const isTop   = rank <= 3;
-      const isMe    = r.team_name === 'Chief Noc-A-Homa';
-      const gb      = r.games_back === '-' || r.games_back === '' ? '<span class="gb-dash">—</span>' : r.games_back;
-      const lwt     = r.last_week_wlt || '<span class="muted">—</span>';
-      const clinch  = r.playoff_clinched === 'Y'
+      const rank = parseInt(r.rank) || 0;
+      const isTop = rank <= 3;
+      const isMe = r.team_name === 'Chief Noc-A-Homa';
+      const gb = r.games_back === '-' || r.games_back === '' ? '<span class="gb-dash">—</span>' : r.games_back;
+      const lwt = r.last_week_wlt || '<span class="muted">—</span>';
+      const clinch = r.playoff_clinched === 'Y'
         ? '<span class="clinch-badge">✓ CLINCHED</span>' : '';
-
       return `<tr style="${isMe ? 'background:rgba(201,168,76,0.06);' : ''}">
         <td><span class="rank-badge ${isTop ? 'top' : ''}">${rank}</span></td>
         <td><strong ${isMe ? 'style="color:var(--gold)"' : ''}>${r.team_name}</strong>${clinch ? ' ' + clinch : ''}</td>
@@ -816,12 +835,10 @@ async function renderStandings() {
 // ── ROSTER VIEW ───────────────────────────────────────────────────
 async function renderRoster() {
   if (PLAYERS.length === 0) await loadData();
-
   const teamList = Object.values(TEAMS).sort((a, b) => a.name.localeCompare(b.name));
-
   document.getElementById('team-grid').innerHTML = teamList.map(t => {
     const active = t.players.filter(p => p.roster_slot === 'Active').length;
-    const na     = t.players.filter(p => p.roster_slot === 'NA').length;
+    const na = t.players.filter(p => p.roster_slot === 'NA').length;
     return `<div class="team-card" onclick="showRoster('${t.name.replace(/'/g, "\\'")}')">
       <div class="team-card-name">${t.name}</div>
       <div class="team-card-meta">
@@ -832,7 +849,6 @@ async function renderRoster() {
       </div>
     </div>`;
   }).join('');
-
   document.getElementById('roster-loading').style.display = 'none';
   document.getElementById('roster-content').style.display = 'block';
 }
@@ -840,18 +856,16 @@ async function renderRoster() {
 function showRoster(teamName) {
   const t = TEAMS[teamName];
   if (!t) return;
-
   document.getElementById('detail-team-name').textContent = teamName;
   document.getElementById('team-grid-view').style.display = 'none';
   document.getElementById('roster-detail-view').classList.add('active');
 
   const slots = {
     'Active': t.players.filter(p => p.roster_slot === 'Active'),
-    'BN':     t.players.filter(p => p.roster_slot === 'BN'),
-    'IL':     t.players.filter(p => p.roster_slot === 'IL'),
-    'NA':     t.players.filter(p => p.roster_slot === 'NA'),
+    'BN': t.players.filter(p => p.roster_slot === 'BN'),
+    'IL': t.players.filter(p => p.roster_slot === 'IL'),
+    'NA': t.players.filter(p => p.roster_slot === 'NA'),
   };
-
   const slotLabels = { Active: 'ACTIVE ROSTER', BN: 'BENCH', IL: 'INJURED LIST', NA: 'PROSPECTS (NA)' };
 
   document.getElementById('detail-slots').innerHTML = Object.entries(slots)
@@ -875,12 +889,151 @@ function showTeamGrid() {
   document.getElementById('roster-detail-view').classList.remove('active');
 }
 
+// ── DRAFT LOTTERY VIEW ────────────────────────────────────────────
+// Two pools of 6 split by playoff qualification. Within each pool,
+// balls awarded by finish: best finisher in pool = 6, worst = 1.
+// Non-playoff pool draws picks 1–6; playoff pool draws picks 7–12.
+// Cap penalty: over-cap teams (Aug 31 Tax Day snapshot) skim lottery
+// weight at (tax_owed / 10) * 5%, floored at 25% retained. Skimmed
+// weight redistributes to under-cap teams IN THE SAME POOL,
+// proportional to cap room. Skim never crosses the pool boundary.
+const BALL_TABLE = [6, 5, 4, 3, 2, 1]; // index 0 = best finish in pool
+const SKIM_RATE_PER_10M = 0.05;        // 5% weight skim per $10M tax owed
+const SKIM_FLOOR = 0.25;               // never retain less than 25% of raw weight
+
+function computePoolOdds(poolTeams) {
+  // poolTeams sorted best-finish-first. Mutates and returns.
+  poolTeams.forEach((t, i) => {
+    t.rawBalls = BALL_TABLE[i] !== undefined ? BALL_TABLE[i] : 1;
+    const skimPct = Math.min(1 - SKIM_FLOOR, (t.tax_owed_snapshot / 10) * SKIM_RATE_PER_10M);
+    t.skimPct = t.tax_owed_snapshot > 0 ? skimPct : 0;
+    t.adjBalls = t.rawBalls * (1 - t.skimPct);
+  });
+
+  const totalSkimmed = poolTeams.reduce((s, t) => s + t.rawBalls * t.skimPct, 0);
+  const underCapTeams = poolTeams.filter(t => t.tax_owed_snapshot <= 0);
+  const totalRoom = underCapTeams.reduce((s, t) =>
+    s + Math.max(0, (SETTINGS.cap_threshold - t.payroll_snapshot)), 0);
+
+  poolTeams.forEach(t => {
+    if (t.tax_owed_snapshot <= 0 && totalRoom > 0) {
+      const room = Math.max(0, SETTINGS.cap_threshold - t.payroll_snapshot);
+      t.adjBalls += totalSkimmed * (room / totalRoom);
+    }
+  });
+
+  const poolTotal = poolTeams.reduce((s, t) => s + t.adjBalls, 0);
+  poolTeams.forEach(t => { t.winPct = poolTotal > 0 ? (t.adjBalls / poolTotal * 100) : 0; });
+  return poolTeams;
+}
+
+async function renderLottery() {
+  try {
+    if (PLAYERS.length === 0) await loadData();
+    const standings = await fetchCSV('STANDINGS');
+    const lottery = await fetchCSV('LOTTERY');
+
+    // Build lookup + validate LOTTERY names against STANDINGS names.
+    const standingsNames = new Set(standings.filter(r => r.team_name).map(r => r.team_name));
+    const lotteryMap = {};
+    const orphanRows = [];
+    lottery.forEach(r => {
+      if (!r.team_name) return;
+      lotteryMap[r.team_name] = r;
+      if (!standingsNames.has(r.team_name)) orphanRows.push(r.team_name);
+    });
+    if (orphanRows.length) {
+      console.warn('LOTTERY tab has team names with no STANDINGS match (typo? trailing space?):', orphanRows);
+    }
+
+    const ranked = standings
+      .filter(r => r.team_name)
+      .sort((a, b) => parseInt(a.rank) - parseInt(b.rank));
+
+    // Playoff pool: ranks 1–6, reversed so index 0 = 6th place = best odds.
+    // Non-playoff pool: ranks 7–12, natural order so index 0 = 7th = best odds.
+    const playoffPool = ranked.slice(0, 6).reverse();
+    const nonPlayoffPool = ranked.slice(6, 12);
+
+    function buildPoolTeams(pool) {
+      return pool.map(r => {
+        const l = lotteryMap[r.team_name];
+        return {
+          team_name: r.team_name,
+          rank: r.rank,
+          hasSnapshot: !!l,
+          payroll_snapshot: l ? (parseFloat(l.payroll_snapshot) || 0) : 0,
+          tax_owed_snapshot: l ? (parseFloat(l.tax_owed_snapshot) || 0) : 0,
+          final_pick: l ? (l.final_pick || '') : ''
+        };
+      });
+    }
+
+    const nonPlayoffTeams = computePoolOdds(buildPoolTeams(nonPlayoffPool));
+    const playoffTeams = computePoolOdds(buildPoolTeams(playoffPool));
+
+    // Banner
+    const allTeams = [...nonPlayoffTeams, ...playoffTeams];
+    const overCapCount = allTeams.filter(t => t.tax_owed_snapshot > 0).length;
+    const drawn = allTeams.filter(t => t.final_pick).length;
+    const totalTaxSnap = allTeams.reduce((s, t) => s + t.tax_owed_snapshot, 0);
+    const missingSnapshots = allTeams.filter(t => !t.hasSnapshot).length;
+
+    document.getElementById('lottery-banner').innerHTML = `
+      <div class="prize-stat">
+        <div class="val">${SETTINGS.current_season ? (SETTINGS.current_season + 1) : '—'}</div>
+        <div class="lbl">Draft Year</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">${overCapCount}</div>
+        <div class="lbl">Teams Skimmed</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">$${totalTaxSnap.toFixed(2)}</div>
+        <div class="lbl">Tax Snapshot Total</div>
+      </div>
+      <div class="prize-stat">
+        <div class="val">${drawn}/12</div>
+        <div class="lbl">Picks Drawn</div>
+      </div>
+      ${missingSnapshots > 0 ? `
+      <div style="grid-column:1/-1;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--red);border-top:1px solid var(--border);padding-top:14px">
+        ⚠ ${missingSnapshots} team(s) missing from LOTTERY tab — treated as under-cap with $0 tax. Check team_name spelling against STANDINGS.
+      </div>` : ''}`;
+
+    function renderPoolRows(teams) {
+      return teams.map(t => `<tr>
+        <td><span class="rank-badge">${t.rank}</span></td>
+        <td><strong>${t.team_name}</strong>${!t.hasSnapshot ? ' <span class="mismatch-warn">NO SNAPSHOT</span>' : ''}</td>
+        <td class="mono">${t.rawBalls.toFixed(1)}</td>
+        <td class="mono muted lottery-hide-mobile">${t.hasSnapshot ? '$' + t.payroll_snapshot.toFixed(1) + 'M' : '—'}</td>
+        <td class="mono ${t.tax_owed_snapshot > 0 ? 'red' : 'muted'}">${t.tax_owed_snapshot > 0 ? '$' + t.tax_owed_snapshot.toFixed(2) : '—'}</td>
+        <td class="mono ${t.skimPct > 0 ? 'red' : 'muted'}">${t.skimPct > 0 ? '-' + (t.skimPct * 100).toFixed(0) + '%' : '—'}</td>
+        <td class="mono gold">${t.adjBalls.toFixed(2)}</td>
+        <td class="mono">${t.winPct.toFixed(1)}%</td>
+        <td class="mono ${t.final_pick ? 'green' : 'muted'}">${t.final_pick || 'TBD'}</td>
+      </tr>`).join('');
+    }
+
+    document.getElementById('lottery-tbody-nonplayoff').innerHTML = renderPoolRows(nonPlayoffTeams);
+    document.getElementById('lottery-tbody-playoff').innerHTML = renderPoolRows(playoffTeams);
+
+    document.getElementById('lottery-loading').style.display = 'none';
+    document.getElementById('lottery-content').style.display = 'block';
+  } catch(e) {
+    console.error('Lottery render failed:', e);
+    document.getElementById('lottery-loading').innerHTML =
+      `<div style="color:var(--red);font-family:'DM Mono',monospace;font-size:12px;text-align:center">
+        ⚠ Error loading lottery<br><span style="color:var(--dim);font-size:10px">${e.message}</span>
+      </div>`;
+  }
+}
+
 // ── RULES VIEW ────────────────────────────────────────────────────
 async function renderRules() {
   try {
     if (PLAYERS.length === 0) await loadData();
     const S = SETTINGS;
-
     const rate = S.escalation_rate || 0.12;
     let escalRows = '';
     let mult = 1;
@@ -888,10 +1041,9 @@ async function renderRules() {
       escalRows += `<tr><td>Year ${y}</td><td>${y === 1 ? 'Base salary' : 'Base × ' + mult.toFixed(2)}</td></tr>`;
       if (y >= 1) mult = Math.round(mult * (1 + rate) * 100) / 100;
     }
-
-    const pool   = (S.num_teams || 12) * (S.base_entry_fee || 20);
-    const money  = (k) => '$' + Math.round(pool * (S[k] || 0));
-    const pctOf  = (k) => (((S[k] || 0) * 100).toFixed(1).replace(/\.0$/, '')) + '%';
+    const pool = (S.num_teams || 12) * (S.base_entry_fee || 20);
+    const money = (k) => '$' + Math.round(pool * (S[k] || 0));
+    const pctOf = (k) => (((S[k] || 0) * 100).toFixed(1).replace(/\.0$/, '')) + '%';
 
     document.getElementById('rules-grid').innerHTML = `
       <div class="rules-card">
@@ -900,11 +1052,10 @@ async function renderRules() {
         <div class="rule-row"><span class="rule-key">Teams</span><span class="rule-val">${S.num_teams || 12} · two divisions of 6</span></div>
         <div class="rule-row"><span class="rule-key">Lineup</span><span class="rule-val">Daily</span></div>
         <div class="rule-row"><span class="rule-key">Platform</span><span class="rule-val">Yahoo Fantasy</span></div>
-        <div class="rule-row"><span class="rule-key">Trade Deadline</span><span class="rule-val">${S.trade_deadline || 'August 31'}</span></div>
+        <div class="rule-row"><span class="rule-key">Trade Deadline</span><span class="rule-val">${S.trade_deadline || 'August 20'}</span></div>
         <div class="rule-row"><span class="rule-key">Entry Fee</span><span class="rule-val">$${S.base_entry_fee || 20} / team</span></div>
         <div class="rule-row"><span class="rule-key">Season</span><span class="rule-val">${S.current_season || 2026}</span></div>
       </div>
-
       <div class="rules-card">
         <div class="rules-card-title">Scoring Categories</div>
         <div class="rule-row"><span class="rule-key">Hitting (5)</span><span class="rule-val">R · HR · RBI · SB · OPS</span></div>
@@ -912,7 +1063,6 @@ async function renderRules() {
         <div class="rule-row"><span class="rule-key">Matchup Week</span><span class="rule-val">Mon – Sun</span></div>
         <div class="rule-row"><span class="rule-key">Tie</span><span class="rule-val">0.5 each category</span></div>
       </div>
-
       <div class="rules-card">
         <div class="rules-card-title">Roster Structure</div>
         <div class="rule-row"><span class="rule-key">Active (17)</span><span class="rule-val">C · 1B · 2B · 3B · SS · OF×3 · UTIL · SP×2 · RP×2 · P-FLEX×4</span></div>
@@ -921,7 +1071,6 @@ async function renderRules() {
         <div class="rule-row"><span class="rule-key">NA (Prospects)</span><span class="rule-val">5</span></div>
         <div class="rule-row"><span class="rule-key">NA Eligibility</span><span class="rule-val">&lt;${S.na_pa_threshold || 50} PA / &lt;${S.na_ip_threshold || 30} IP / &lt;${S.na_service_threshold || 45} days</span></div>
       </div>
-
       <div class="rules-card">
         <div class="rules-card-title">Salary Cap System</div>
         <div class="rule-row"><span class="rule-key">Salary Cap</span><span class="rule-val">$${S.cap_threshold || 360}M (escalates ${Math.round(rate*100)}% each offseason)</span></div>
@@ -937,15 +1086,14 @@ async function renderRules() {
           <tr><td>Minimum (&lt; ${S.tier_depth_min})</td><td>$${S.salary_minimum}M</td></tr>
         </table>
       </div>
-
       <div class="rules-card">
         <div class="rules-card-title">Luxury Tax</div>
         <div class="rule-row"><span class="rule-key">Tier 1</span><span class="rule-val">$${S.tax_rate_tier1}/$10M over, up to +$${S.tax_breakpoint}M</span></div>
         <div class="rule-row"><span class="rule-key">Tier 2</span><span class="rule-val">$${S.tax_rate_tier2}/$10M over, beyond +$${S.tax_breakpoint}M</span></div>
         <div class="rule-row"><span class="rule-key">Distribution</span><span class="rule-val">Rebated to under-cap teams</span></div>
         <div class="rule-row"><span class="rule-key">Rebate Split</span><span class="rule-val">Proportional to cap room</span></div>
+        <div class="rule-row"><span class="rule-key">Draft Penalty</span><span class="rule-val">Lottery weight skim (see Rookie Draft)</span></div>
       </div>
-
       <div class="rules-card">
         <div class="rules-card-title">Prize Structure</div>
         <div class="rule-row"><span class="rule-key">Championship Pool</span><span class="rule-val">$${pool} (entry fees)</span></div>
@@ -956,19 +1104,21 @@ async function renderRules() {
         <div class="rule-row"><span class="rule-key">Toilet Bowl Champ</span><span class="rule-val">${money('prize_toilet')} (${pctOf('prize_toilet')})</span></div>
         <div class="rule-row"><span class="rule-key">Wake &amp; Bake</span><span class="rule-val">Best overall regular-season record</span></div>
       </div>
-
       <div class="rules-card">
         <div class="rules-card-title">Annual Rookie Draft</div>
-        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">${S.rookie_draft_rounds || 2}-Round Snake · WhatsApp</span></div>
+        <div class="rule-row"><span class="rule-key">Format</span><span class="rule-val">${S.rookie_draft_rounds || 3} Rounds · Linear</span></div>
         <div class="rule-row"><span class="rule-key">Date</span><span class="rule-val">Ides of March (Mar 15)</span></div>
         <div class="rule-row"><span class="rule-key">Pick Clock</span><span class="rule-val">${S.rookie_draft_clock_hrs || 8} hours</span></div>
-        <div class="rule-row"><span class="rule-key">Opt-In</span><span class="rule-val">Drop 1 player = R1 pick</span></div>
-        <div class="rule-row"><span class="rule-key"></span><span class="rule-val">Drop 2nd player = R2 pick</span></div>
         <div class="rule-row"><span class="rule-key">Order</span><span class="rule-val">Two-tier weighted lottery</span></div>
-        <div class="rule-row"><span class="rule-key">Tier A (1st–6th)</span><span class="rule-val">Picks 7–12 · Best odds → pick 12</span></div>
-        <div class="rule-row"><span class="rule-key">Tier B (7th–12th)</span><span class="rule-val">Picks 1–6 · Best odds → pick 1</span></div>
+        <div class="rule-row"><span class="rule-key">Tier A (Playoff, 1st–6th)</span><span class="rule-val">Picks 7–12 · Best odds → 6th place</span></div>
+        <div class="rule-row"><span class="rule-key">Tier B (Non-Playoff, 7th–12th)</span><span class="rule-val">Picks 1–6 · Best odds → 7th place</span></div>
+        <div class="rule-row"><span class="rule-key">Ball Distribution</span><span class="rule-val">6-5-4-3-2-1 per pool (best → worst finish)</span></div>
+        <div class="rule-row"><span class="rule-key">Cap Penalty</span><span class="rule-val">Weight skim: (tax ÷ $10M) × 5% · 25% floor · in-pool only</span></div>
+        <div class="rule-row"><span class="rule-key">Snapshot Date</span><span class="rule-val">Tax Day (Aug 31)</span></div>
+        <div class="rule-row"><span class="rule-key">Pick Trading</span><span class="rule-val">Fully tradeable · max 2 draft years out</span></div>
+        <div class="rule-row"><span class="rule-key">Rookie Salary</span><span class="rule-val">Standard DYN Z scoring · no special tiering</span></div>
+        <div class="rule-row"><span class="rule-key">Rounds 4+</span><span class="rule-val">Post-draft waiver FA</span></div>
       </div>
-
       <div class="rules-card">
         <div class="rules-card-title">Salary Escalation Table</div>
         <table class="escalation-table">${escalRows}</table>
@@ -986,24 +1136,26 @@ async function renderRules() {
 }
 
 // ── NAV ───────────────────────────────────────────────────────────
-let payrollLoaded   = false;
+let payrollLoaded = false;
 let standingsLoaded = false;
-let rosterLoaded    = false;
-let rulesLoaded     = false;
+let rosterLoaded = false;
+let rulesLoaded = false;
+let lotteryLoaded = false;
 
 function switchView(id, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + id).classList.add('active');
   btn.classList.add('active');
-
-  if (id === 'payroll'   && !payrollLoaded)   { payrollLoaded   = true; renderPayroll();   }
+  if (id === 'payroll' && !payrollLoaded) { payrollLoaded = true; renderPayroll(); }
   if (id === 'standings' && !standingsLoaded) { standingsLoaded = true; renderStandings(); }
-  if (id === 'roster'    && !rosterLoaded)    { rosterLoaded    = true; renderRoster();    }
-  if (id === 'rules'     && !rulesLoaded)     { rulesLoaded     = true; renderRules();     }
+  if (id === 'roster' && !rosterLoaded) { rosterLoaded = true; renderRoster(); }
+  if (id === 'lottery' && !lotteryLoaded) { lotteryLoaded = true; renderLottery(); }
+  if (id === 'rules' && !rulesLoaded) { rulesLoaded = true; renderRules(); }
 }
 
-// ── INIT ──────────────────────────────────────────────────────────
+// Initial load
+payrollLoaded = true;
 renderPayroll();
 </script>
 </body>
