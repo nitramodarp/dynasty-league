@@ -421,6 +421,18 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
   background: rgba(224,90,90,0.15);
   color: var(--red);
 }
+.status-tag {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  vertical-align: middle;
+}
+.status-tag.projected { background: rgba(201,168,76,0.15); color: var(--gold); }
+.status-tag.official  { background: rgba(76,175,130,0.15); color: var(--green); }
 @media (max-width: 640px) {
   header { padding: 20px 16px 0; }
   nav { padding: 0 8px; }
@@ -447,8 +459,8 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
   </div>
 </header>
 <nav>
-  <button class="nav-btn active" onclick="switchView('payroll', this)">Payroll</button>
-  <button class="nav-btn" onclick="switchView('standings', this)">Standings</button>
+  <button class="nav-btn" onclick="switchView('payroll', this)">Payroll</button>
+  <button class="nav-btn active" onclick="switchView('standings', this)">Standings</button>
   <button class="nav-btn" onclick="switchView('roster', this)">Rosters</button>
   <button class="nav-btn" onclick="switchView('lottery', this)">Draft Lottery</button>
   <button class="nav-btn" onclick="switchView('rules', this)">Rules</button>
@@ -458,7 +470,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
 <main>
 
 <!-- PAYROLL VIEW -->
-<div class="view active" id="view-payroll">
+<div class="view" id="view-payroll">
   <div class="loading" id="payroll-loading">
     <div class="spinner"></div>
     LOADING LEDGER
@@ -473,7 +485,6 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>#</th>
             <th>Team</th>
             <th>Payroll</th>
-            <th>Pool</th>
             <th>Cap Penalty*</th>
             <th>Ball Impact*</th>
             <th>Proj. Win %*</th>
@@ -489,7 +500,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
 </div>
 
 <!-- STANDINGS VIEW -->
-<div class="view" id="view-standings">
+<div class="view active" id="view-standings">
   <div class="loading" id="standings-loading">
     <div class="spinner"></div>
     LOADING STANDINGS
@@ -546,7 +557,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
   </div>
   <div id="lottery-content" style="display:none">
     <div class="lottery-banner" id="lottery-banner"></div>
-    <div class="section-title">NON-PLAYOFF POOL · PICKS 1–6</div>
+    <div class="section-title" id="lottery-title-np">NON-PLAYOFF POOL · PICKS 1–6</div>
     <div class="table-wrap" style="margin-bottom:32px">
       <table>
         <thead>
@@ -555,7 +566,6 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>Team</th>
             <th>Raw Balls</th>
             <th class="lottery-hide-mobile">Payroll</th>
-            <th>Tax Owed</th>
             <th>Cap Penalty</th>
             <th>Adj. Balls</th>
             <th>Win %</th>
@@ -565,7 +575,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
         <tbody id="lottery-tbody-nonplayoff"></tbody>
       </table>
     </div>
-    <div class="section-title">PLAYOFF POOL · PICKS 7–12</div>
+    <div class="section-title" id="lottery-title-p">PLAYOFF POOL · PICKS 7–12</div>
     <div class="table-wrap">
       <table>
         <thead>
@@ -574,7 +584,6 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>Team</th>
             <th>Raw Balls</th>
             <th class="lottery-hide-mobile">Payroll</th>
-            <th>Tax Owed</th>
             <th>Cap Penalty</th>
             <th>Adj. Balls</th>
             <th>Win %</th>
@@ -796,7 +805,7 @@ async function renderPayroll() {
         Champion $${pc('prize_champion').toFixed(0)} (${pct('prize_champion')}) &nbsp;·&nbsp;
         Runner-up $${pc('prize_runnerup').toFixed(0)} (${pct('prize_runnerup')}) &nbsp;·&nbsp;
         Division Winners $${pc('prize_division_each').toFixed(0)} ea (${pct('prize_division_each')}) &nbsp;·&nbsp;
-        Wake &amp; Bake $${pc('prize_president').toFixed(0)} (${pct('prize_president')}) &nbsp;·&nbsp;
+        Reg. Season Champ $${pc('prize_president').toFixed(0)} (${pct('prize_president')}) &nbsp;·&nbsp;
         Toilet Bowl $${pc('prize_toilet').toFixed(0)} (${pct('prize_toilet')})
       </div>`;
 
@@ -822,11 +831,6 @@ async function renderPayroll() {
         ballCell = `<td class="mono ${cls}">${t.projAdjBalls.toFixed(2)} <span class="muted" style="font-size:10px">(${deltaStr})</span></td>`;
       }
 
-      // Pool tag: P = playoff pool (picks 7–12), NP = non-playoff pool (picks 1–6)
-      const poolCell = hasProj && t.projPool
-        ? `<td class="mono ${t.projPool === 'NP' ? 'green' : 'muted'}">${t.projPool}</td>`
-        : `<td class="mono muted">—</td>`;
-
       // Projected win % at the TOP pick of that team's pool
       const winCell = hasProj
         ? `<td class="mono gold">${t.projWinPct.toFixed(1)}%</td>`
@@ -836,7 +840,6 @@ async function renderPayroll() {
         <td><span class="rank-badge ${i < 3 ? 'top' : ''}">${i + 1}</span></td>
         <td><strong>${t.name}</strong></td>
         <td class="mono gold">$${t.payroll.toFixed(1)}M</td>
-        ${poolCell}
         ${skimCell}
         ${ballCell}
         ${winCell}
@@ -848,10 +851,10 @@ async function renderPayroll() {
     document.getElementById('payroll-footnote').innerHTML =
       `* PROJECTED — computed as if Tax Day were today, using live payroll and current standings rank.
        Official lottery odds lock at the Aug 31 snapshot — see the <strong>Draft Lottery</strong> tab.
-       <br><strong>Pool:</strong> NP = non-playoff (drafts picks 1–6), P = playoff (drafts picks 7–12).
-       The two pools draw separately, so a team's Proj. Win % is its odds at the <em>top pick of its own pool</em> —
-       that's why an NP team can show higher odds than a better-finishing P team. Per-team dollar tax/rebate
-       lives on the <strong>Draft Lottery</strong> tab.`;
+       The lottery runs as two separate six-team pools (non-playoff drafts picks 1–6, playoff drafts picks 7–12),
+       so Proj. Win % is a team's odds at the top pick of <em>its own pool</em> — that's why a lower-finishing team
+       can show higher odds than a better-finishing one. The Draft Lottery tab breaks this out by pool, and also
+       holds per-team dollar tax/rebate.`;
 
     document.getElementById('payroll-loading').style.display = 'none';
     document.getElementById('payroll-content').style.display = 'block';
@@ -1099,6 +1102,16 @@ async function renderLottery() {
     const drawn = allTeams.filter(t => t.final_pick).length;
     const totalTaxSnap = allTeams.reduce((s, t) => s + t.tax_owed_snapshot, 0);
     const missingSnapshots = allTeams.filter(t => !t.hasSnapshot).length;
+    const hasAnySnapshot = allTeams.some(t => t.hasSnapshot);
+
+    // Smart status: OFFICIAL once real snapshot data exists, else PROJECTED.
+    const statusTag = hasAnySnapshot
+      ? '<span class="status-tag official">OFFICIAL · LOCKED AUG 31</span>'
+      : '<span class="status-tag projected">PROJECTED · PRE-SNAPSHOT</span>';
+    const npTitle = document.getElementById('lottery-title-np');
+    const pTitle = document.getElementById('lottery-title-p');
+    if (npTitle) npTitle.innerHTML = 'NON-PLAYOFF POOL · PICKS 1–6' + statusTag;
+    if (pTitle) pTitle.innerHTML = 'PLAYOFF POOL · PICKS 7–12' + statusTag;
 
     document.getElementById('lottery-banner').innerHTML = `
       <div class="prize-stat">
@@ -1128,7 +1141,6 @@ async function renderLottery() {
         <td><strong>${t.team_name}</strong>${!t.hasSnapshot ? ' <span class="mismatch-warn">NO SNAPSHOT</span>' : ''}</td>
         <td class="mono">${t.rawBalls.toFixed(1)}</td>
         <td class="mono muted lottery-hide-mobile">${t.hasSnapshot ? '$' + t.payroll_snapshot.toFixed(1) + 'M' : '—'}</td>
-        <td class="mono ${t.tax_owed_snapshot > 0 ? 'red' : 'muted'}">${t.tax_owed_snapshot > 0 ? '$' + t.tax_owed_snapshot.toFixed(2) : '—'}</td>
         <td class="mono ${t.skimPct > 0 ? 'red' : 'muted'}">${t.skimPct > 0 ? '-' + (t.skimPct * 100).toFixed(0) + '%' : '—'}</td>
         <td class="mono gold">${t.adjBalls.toFixed(2)}</td>
         <td class="mono">${t.winPct.toFixed(1)}%</td>
@@ -1221,9 +1233,9 @@ async function renderRules() {
         <div class="rule-row"><span class="rule-key">Champion</span><span class="rule-val">${money('prize_champion')} (${pctOf('prize_champion')})</span></div>
         <div class="rule-row"><span class="rule-key">Runner-Up</span><span class="rule-val">${money('prize_runnerup')} (${pctOf('prize_runnerup')})</span></div>
         <div class="rule-row"><span class="rule-key">Division Winners (×2)</span><span class="rule-val">${money('prize_division_each')} ea (${pctOf('prize_division_each')})</span></div>
-        <div class="rule-row"><span class="rule-key">Wake &amp; Bake Award</span><span class="rule-val">${money('prize_president')} (${pctOf('prize_president')})</span></div>
+        <div class="rule-row"><span class="rule-key">Regular Season Champion</span><span class="rule-val">${money('prize_president')} (${pctOf('prize_president')})</span></div>
         <div class="rule-row"><span class="rule-key">Toilet Bowl Champ</span><span class="rule-val">${money('prize_toilet')} (${pctOf('prize_toilet')})</span></div>
-        <div class="rule-row"><span class="rule-key">Wake &amp; Bake</span><span class="rule-val">Best overall regular-season record</span></div>
+        <div class="rule-row"><span class="rule-key">Reg. Season Champ</span><span class="rule-val">Best overall regular-season record</span></div>
       </div>
       <div class="rules-card">
         <div class="rules-card-title">Annual Rookie Draft</div>
@@ -1275,9 +1287,9 @@ function switchView(id, btn) {
   if (id === 'rules' && !rulesLoaded) { rulesLoaded = true; renderRules(); }
 }
 
-// Initial load
-payrollLoaded = true;
-renderPayroll();
+// Initial load — Standings is the landing page
+standingsLoaded = true;
+renderStandings();
 </script>
 </body>
 </html>
