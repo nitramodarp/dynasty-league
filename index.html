@@ -486,8 +486,8 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th>Team</th>
             <th>Payroll</th>
             <th>Cap Penalty*</th>
-            <th>Ball Impact*</th>
-            <th>Proj. Win %*</th>
+            <th>Lottery Balls*</th>
+            <th>1st Pick Odds*</th>
             <th>Status</th>
             <th>Roster</th>
           </tr>
@@ -568,7 +568,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th class="lottery-hide-mobile">Payroll</th>
             <th>Cap Penalty</th>
             <th>Adj. Balls</th>
-            <th>Win %</th>
+            <th>1st Pick Odds</th>
             <th>Final Pick</th>
           </tr>
         </thead>
@@ -586,7 +586,7 @@ tbody tr:hover { background: rgba(201,168,76,0.05); }
             <th class="lottery-hide-mobile">Payroll</th>
             <th>Cap Penalty</th>
             <th>Adj. Balls</th>
-            <th>Win %</th>
+            <th>1st Pick Odds</th>
             <th>Final Pick</th>
           </tr>
         </thead>
@@ -822,7 +822,7 @@ async function renderPayroll() {
           ? `<td class="mono red">-${(t.projSkimPct * 100).toFixed(0)}%</td>`
           : `<td class="mono muted">—</td>`);
 
-      // Ball Impact: adjusted balls vs raw balls (skim lost or redistribution gained)
+      // Lottery Balls: adjusted balls vs raw balls (penalty lost or redistribution gained)
       let ballCell = `<td class="mono muted">—</td>`;
       if (hasProj) {
         const delta = t.projAdjBalls - t.projRawBalls;
@@ -852,7 +852,7 @@ async function renderPayroll() {
       `* PROJECTED — computed as if Tax Day were today, using live payroll and current standings rank.
        Official lottery odds lock at the Aug 31 snapshot — see the <strong>Draft Lottery</strong> tab.
        The lottery runs as two separate six-team pools (non-playoff drafts picks 1–6, playoff drafts picks 7–12),
-       so Proj. Win % is a team's odds at the top pick of <em>its own pool</em> — that's why a lower-finishing team
+       so 1st Pick Odds is a team's chance at the top pick of <em>its own pool</em> — that's why a lower-finishing team
        can show higher odds than a better-finishing one. The Draft Lottery tab breaks this out by pool, and also
        holds per-team dollar tax/rebate.`;
 
@@ -870,6 +870,10 @@ async function renderPayroll() {
 // ── STANDINGS VIEW ────────────────────────────────────────────────
 async function renderStandings() {
   try {
+    // Standings is the landing page, so it may render before SETTINGS is
+    // loaded elsewhere. Ensure SETTINGS (and TEAMS) are available for the
+    // payout figures below.
+    if (PLAYERS.length === 0) await loadData();
     const rows = await fetchCSV('STANDINGS');
     const standings = rows.filter(r => r.team_name && r.wins !== undefined);
 
@@ -877,6 +881,10 @@ async function renderStandings() {
     const leader = standings[0];
     const myTeam = standings.find(r => r.team_name === 'Chief Noc-A-Homa');
     const clinched = standings.filter(r => r.playoff_clinched === 'Y').length;
+
+    const champPool = (SETTINGS.num_teams || 12) * (SETTINGS.base_entry_fee || 20);
+    const pc = (k) => champPool * (SETTINGS[k] || 0);
+    const pct = (k) => (((SETTINGS[k] || 0) * 100).toFixed(1).replace(/\.0$/, '')) + '%';
 
     document.getElementById('standings-banner').innerHTML = `
       <div class="prize-stat">
@@ -892,8 +900,16 @@ async function renderStandings() {
         <div class="lbl">Chief Noc-A-Homa</div>
       </div>
       <div class="prize-stat">
-        <div class="val">$${(SETTINGS.num_teams||12) * (SETTINGS.base_entry_fee||20)}</div>
+        <div class="val">$${champPool}</div>
         <div class="lbl">Championship Pool</div>
+      </div>
+      <div style="grid-column:1/-1;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);line-height:1.8;border-top:1px solid var(--border);padding-top:14px">
+        CHAMPIONSHIP POOL PAYOUT &nbsp;·&nbsp;
+        Champion $${pc('prize_champion').toFixed(0)} (${pct('prize_champion')}) &nbsp;·&nbsp;
+        Runner-up $${pc('prize_runnerup').toFixed(0)} (${pct('prize_runnerup')}) &nbsp;·&nbsp;
+        Division Winners $${pc('prize_division_each').toFixed(0)} ea (${pct('prize_division_each')}) &nbsp;·&nbsp;
+        Reg. Season Champ $${pc('prize_president').toFixed(0)} (${pct('prize_president')}) &nbsp;·&nbsp;
+        Toilet Bowl $${pc('prize_toilet').toFixed(0)} (${pct('prize_toilet')})
       </div>`;
 
     const tbody = document.getElementById('standings-tbody');
