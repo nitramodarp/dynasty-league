@@ -86,6 +86,9 @@ async function fetchStandings(leagueKey, token) {
 
     // ── Basic team info ──────────────────────────────────────────
     const teamName = infoArr.find(x => x?.name)?.name || `Team ${i + 1}`;
+    // Stable Yahoo team id. The app joins STANDINGS on this instead of
+    // team_name so a mid-season rename never breaks the link.
+    const teamId   = infoArr.find(x => x?.team_id)?.team_id ?? (i + 1);
 
     // ── Standings record ─────────────────────────────────────────
     const standings = statsArr?.team_standings;
@@ -118,12 +121,14 @@ async function fetchStandings(leagueKey, token) {
     const categoriesWon  = '';
     const playoffClinch  = standings?.clinched_playoffs === 1 ? 'Y' : '';
 
-    // Columns match STANDINGS tab header row (A through J):
-    // rank | team_name | wins | losses | ties | win_pct |
-    // categories_won | playoff_clinched | last_week_wlt | games_back |
-    // luxury_tax_owed | prize_pool_contrib | total_prize_pool
-    // (tax/prize cols stay blank — managed by PAYROLL tab formulas)
+    // Columns match STANDINGS tab header row (A through K):
+    // fantasy_team_id | rank | team_name | wins | losses | ties | win_pct |
+    // categories_won | playoff_clinched | last_week_wlt | games_back
+    // NOTE: column A is fantasy_team_id. If you add or remove a column here,
+    // update the header row AND the clear range below to match, or every
+    // value lands under the wrong label.
     rows.push([
+      teamId,
       rank,
       teamName,
       wins,
@@ -138,7 +143,7 @@ async function fetchStandings(leagueKey, token) {
   }
 
   // Sort by rank ascending before writing
-  rows.sort((a, b) => Number(a[0]) - Number(b[0]));
+  rows.sort((a, b) => Number(a[1]) - Number(b[1]));
 
   return rows;
 }
@@ -152,7 +157,7 @@ async function writeStandings(rows) {
   // Clear data rows only — leave header row (row 1) intact
   await sheets.spreadsheets.values.clear({
     spreadsheetId: SHEET_ID,
-    range:         'STANDINGS!A2:J50',
+    range:         'STANDINGS!A2:K50',
   });
 
   await sheets.spreadsheets.values.update({
