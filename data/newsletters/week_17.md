@@ -11,7 +11,7 @@ Yahoo has designated **Bad MoFo's def. The Chicago Way, 5-3-2** as the Matchup o
 
 **LAST WEEK'S RESULTS**
 
-**Chief Noc-A-Homa def. F CJ Abrams, 7-3.** The commissioner swept seven categories including R, HR, RBI, SB, OPS, K, and ERA — the kind of line that looks like a clerical error until you realize it's just the standings table doing what the standings table always does. F CJ Abrams salvaged WHIP, QS, and SV+H, which is a respectable showing for a team getting outscored in the same way a house gets outscored by a wrecking ball.
+**Chief Noc-A-Homa def. F CJ Abrams, 7-3.** The commissioner swept seven categories including R, HR, RBI, SB, OPS, K, and ERA — the kind of line that looks like a clerical error until you realize it's just the standings table doing what the standings table always does. F CJ Abrams salvaged WHIP, QS, and SV+H, which is a respectable showing for a team getting outscored in the same way a house gets outscored by a wrecking ball. Real life CJ Abrams was seemingly unfazed by Thurgood Jenkins' midweek name change -- he just kept raking.
 
 **Bad MoFo's def. The Chicago Way, 5-3-2.** Covered above. Worth adding that The Chicago Way has now lost a week it was not supposed to lose, to a team that was not supposed to beat it, in a matchup Yahoo then decided deserved special recognition. This is the sort of thing that gets quietly filed away and returned to in October.
 
