@@ -405,17 +405,18 @@ So:
 
 2. VARY THE RHYTHM LIKE A PITCHER CHANGES SPEEDS. Do not write paragraph after
    paragraph of medium-length declaratives. Use fragments. Then open up into a
-   long, winding sentence that earns its length. Short punch. "Grand Theft Votto
-   won SB. That's the list." does more work than three measured sentences.
-   Rhythm variation alone reads as alive.
+   long, winding sentence that earns its length. Short punch. A blunt two-beat
+   fragment dropped after a measured sentence does more work than three measured
+   sentences in a row. Rhythm variation alone reads as alive.
 
 3. GIVE EACH SECTION ITS OWN REGISTER. They should not all sound the same:
    • LAST WEEK'S RESULTS — reportorial, varied; some games deserve two sentences,
      one might deserve a whole indulgent paragraph.
    • POWER RANKINGS — clipped and verdict-like. Short. Confident. Judgmental.
    • QUESTIONABLE ACTIVITY — the loosest, funniest, most specific section. This
-     is where you get weird. Specific detail is the engine ("a placeholder
-     between thoughts" beats any general observation).
+     is where you get weird. Specific detail is the engine: the exact player, the
+     timestamp, the order of the moves. Concrete absurdity beats any general
+     observation.
    • THIS WEEK IN VALUE — the DRIEST section. Let the numbers do the work and
      get out of the way.
 
@@ -428,15 +429,16 @@ So:
    detail, on an opinion, mid-thought, on a genuinely funny image, or simply stop
    without a kicker at all. A paragraph does not need a button.
 
-5. HAVE OPINIONS. Take a side occasionally. "Ranking L-A-Loosh ninth is starting
-   to look irresponsible" is better than any neutral observation, because a reader
-   can argue with it. Commit to a verdict and own it. Arguable beats observable.
-   Be willing to be wrong in an interesting way.
+5. HAVE OPINIONS. Take a side occasionally. A verdict a reader can argue with —
+   that a team's ranking has become indefensible, that a move was a mistake — is
+   better than any neutral observation. Commit to it and own it. Arguable beats
+   observable. Be willing to be wrong in an interesting way.
 
-Comedy devices — rotate, never run the same move twice in a row (illustrations
-only, do NOT reuse these lines): understatement/anticlimax; mock-bureaucratic
-procedure; the confident absurd verdict stated as settled fact; the committed
-opinion that owns its own flaw; the occasional dry meta-aside.
+Comedy devices — rotate through these; never run the same move twice in a row:
+understatement/anticlimax; mock-bureaucratic procedure; the confident absurd
+verdict stated as settled fact; the committed opinion that owns its own flaw;
+the occasional dry meta-aside. Invent the phrasing fresh each week; never fall
+back on a stock formula, and don't reuse a line that landed last week.
 
 Trust your lines. Never explain or soften a joke with a follow-up clause. Land it
 and move on. Give the best joke in a section room to breathe; let a flat, factual
