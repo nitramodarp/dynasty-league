@@ -30,29 +30,26 @@ function parseCSV(t) {
   });
 }
 
-async function getStandings() {
-  try {
-    const res = await fetch(STANDINGS_CSV);
-    const rows = parseCSV(await res.text());
-    // Tolerant of column naming. rank is trusted from the sheet (it carries
-    // Yahoo's real tiebreakers); w/l/t are used for the playoff math.
-    return rows
-      .filter(r => Object.values(r).some(v => v))
-      .map(r => ({
-        name: r.team_name || r.team || r.name || '',
-        rank: parseInt(r.rank || r.Rank || r.seed || '', 10) || null,
-        w: parseInt(r.wins || r.W || r.w || '0', 10) || 0,
-        l: parseInt(r.losses || r.L || r.l || '0', 10) || 0,
-        t: parseInt(r.ties || r.T || r.t || '0', 10) || 0,
-        // Yahoo's real games-back. NEVER let the model compute this from W-L —
-        // it hallucinates (it once put a 5-back team at "twelve games back").
-        gb: (r.games_back ?? r.games_behind ?? r.GB ?? r.gb ?? '').toString().trim(),
-      }))
-      .filter(r => r.name);
-  } catch (e) {
-    console.log('  (standings fetch failed, power rankings will lean on matchup data):', e.message);
-    return [];
+// Standings now come from newsletter_data.json (pulled by sync_newsletter.js in
+// the same run as the matchups), so names/records/GB are current and keyed —
+// no dependency on the STANDINGS tab, which could go stale and disagree with the
+// live scoreboard after a mid-season team rename.
+function buildStandings(data) {
+  const rows = (data.standings || []).map(r => ({
+    key: r.key || '',
+    name: r.name || '',
+    rank: parseInt(r.rank, 10) || null,
+    w: parseInt(r.w, 10) || 0,
+    l: parseInt(r.l, 10) || 0,
+    t: parseInt(r.t, 10) || 0,
+    // Yahoo's real games-back. NEVER let the model compute this from W-L —
+    // it hallucinates (it once put a 5-back team at "twelve games back").
+    gb: (r.gb ?? '').toString().trim(),
+  })).filter(r => r.name);
+  if (!rows.length) {
+    console.log('  (no standings in newsletter_data.json — regenerate it with the updated sync_newsletter.js)');
   }
+  return rows;
 }
 
 function standingsLines(rows) {
@@ -355,7 +352,23 @@ async function main() {
   const data = JSON.parse(fs.readFileSync('./data/newsletter_data.json', 'utf8'));
   console.log(`✓ Generating week ${data.week}: ${data.matchups.length} matchups, ${data.transactions.length} txns`);
 
-  const standingsRows = await getStandings();
+  const standingsRows = buildStandings(data);
+
+  // Reconcile display names by team_key: a team is one entity even after a
+  // rename. Standings is canonical (it drives rankings + playoff picture); if a
+  // matchup carries the same key under a different name, rewrite it to match, so
+  // the reader never sees one team under two names or a phantom "no matchup" row.
+  const keyToName = new Map(standingsRows.filter(r => r.key).map(r => [r.key, r.name]));
+  for (const m of (data.matchups || [])) {
+    if (m.winnerKey && keyToName.has(m.winnerKey)) m.winner = keyToName.get(m.winnerKey);
+    if (m.loserKey && keyToName.has(m.loserKey)) m.loser = keyToName.get(m.loserKey);
+  }
+  if (data.matchupOfTheWeek) {
+    const mw = data.matchupOfTheWeek;
+    if (mw.winnerKey && keyToName.has(mw.winnerKey)) mw.winner = keyToName.get(mw.winnerKey);
+    if (mw.loserKey && keyToName.has(mw.loserKey)) mw.loser = keyToName.get(mw.loserKey);
+  }
+
   const standings = standingsLines(standingsRows);
   // Categories per week = total categories decided in a matchup (won + lost + tied).
   // Drives how much movement remains; falls back to 10 if matchup data is thin.
