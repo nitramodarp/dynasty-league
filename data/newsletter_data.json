@@ -6,6 +6,8 @@
     {
       "winner": "Chief Noc-A-Homa",
       "loser": "F CJ Abrams",
+      "winnerKey": "469.l.3862.t.1",
+      "loserKey": "469.l.3862.t.12",
       "score": "7-3",
       "isTied": false,
       "isMatchupOfTheWeek": false,
@@ -52,6 +54,8 @@
     {
       "winner": "Bad MoFo's",
       "loser": "The Chicago Way",
+      "winnerKey": "469.l.3862.t.2",
+      "loserKey": "469.l.3862.t.11",
       "score": "5-3-2",
       "isTied": false,
       "isMatchupOfTheWeek": true,
@@ -99,6 +103,8 @@
     {
       "winner": "Bell Biv Devo",
       "loser": "Bip Roberts",
+      "winnerKey": "469.l.3862.t.3",
+      "loserKey": "469.l.3862.t.4",
       "score": "7-3",
       "isTied": false,
       "isMatchupOfTheWeek": false,
@@ -145,6 +151,8 @@
     {
       "winner": "Section 34",
       "loser": "Grand Theft Votto",
+      "winnerKey": "469.l.3862.t.10",
+      "loserKey": "469.l.3862.t.5",
       "score": "8-2",
       "isTied": false,
       "isMatchupOfTheWeek": false,
@@ -191,6 +199,8 @@
     {
       "winner": "Stone Jack Ballers",
       "loser": "Old Fashioned",
+      "winnerKey": "469.l.3862.t.6",
+      "loserKey": "469.l.3862.t.9",
       "score": "6-2-2",
       "isTied": false,
       "isMatchupOfTheWeek": false,
@@ -238,6 +248,8 @@
     {
       "winner": "L-A-Loosh",
       "loser": "MayTheSchwarBeWithU",
+      "winnerKey": "469.l.3862.t.7",
+      "loserKey": "469.l.3862.t.8",
       "score": "9-1",
       "isTied": false,
       "isMatchupOfTheWeek": false,
@@ -285,6 +297,8 @@
   "matchupOfTheWeek": {
     "winner": "Bad MoFo's",
     "loser": "The Chicago Way",
+    "winnerKey": "469.l.3862.t.2",
+    "loserKey": "469.l.3862.t.11",
     "score": "5-3-2",
     "isTied": false,
     "isMatchupOfTheWeek": true,
@@ -329,6 +343,116 @@
       "SV+H": "6"
     }
   },
+  "standings": [
+    {
+      "key": "469.l.3862.t.1",
+      "name": "Chief Noc-A-Homa",
+      "rank": 1,
+      "w": 103,
+      "l": 61,
+      "t": 6,
+      "gb": "-"
+    },
+    {
+      "key": "469.l.3862.t.6",
+      "name": "Stone Jack Ballers",
+      "rank": 2,
+      "w": 96,
+      "l": 62,
+      "t": 12,
+      "gb": "4"
+    },
+    {
+      "key": "469.l.3862.t.2",
+      "name": "Bad MoFo's",
+      "rank": 3,
+      "w": 91,
+      "l": 68,
+      "t": 11,
+      "gb": "9.5"
+    },
+    {
+      "key": "469.l.3862.t.4",
+      "name": "Bip Roberts",
+      "rank": 4,
+      "w": 84,
+      "l": 77,
+      "t": 9,
+      "gb": "17.5"
+    },
+    {
+      "key": "469.l.3862.t.7",
+      "name": "L-A-Loosh",
+      "rank": 5,
+      "w": 81,
+      "l": 78,
+      "t": 11,
+      "gb": "19.5"
+    },
+    {
+      "key": "469.l.3862.t.11",
+      "name": "The Chicago Way",
+      "rank": 6,
+      "w": 82,
+      "l": 79,
+      "t": 9,
+      "gb": "19.5"
+    },
+    {
+      "key": "469.l.3862.t.10",
+      "name": "Section 34",
+      "rank": 7,
+      "w": 75,
+      "l": 77,
+      "t": 18,
+      "gb": "22"
+    },
+    {
+      "key": "469.l.3862.t.3",
+      "name": "Bell Biv Devo",
+      "rank": 8,
+      "w": 78,
+      "l": 82,
+      "t": 10,
+      "gb": "23"
+    },
+    {
+      "key": "469.l.3862.t.12",
+      "name": "F CJ Abrams",
+      "rank": 9,
+      "w": 71,
+      "l": 88,
+      "t": 11,
+      "gb": "29.5"
+    },
+    {
+      "key": "469.l.3862.t.5",
+      "name": "Grand Theft Votto",
+      "rank": 10,
+      "w": 71,
+      "l": 89,
+      "t": 10,
+      "gb": "30"
+    },
+    {
+      "key": "469.l.3862.t.8",
+      "name": "MayTheSchwarBeWithU",
+      "rank": 11,
+      "w": 70,
+      "l": 92,
+      "t": 8,
+      "gb": "32"
+    },
+    {
+      "key": "469.l.3862.t.9",
+      "name": "Old Fashioned",
+      "rank": 12,
+      "w": 56,
+      "l": 105,
+      "t": 9,
+      "gb": "45.5"
+    }
+  ],
   "transactions": [
     {
       "type": "add",
@@ -1208,31 +1332,7 @@
           "destTeam": ""
         }
       ]
-    },
-    {
-      "type": "add/drop",
-      "timestamp": 1783982650,
-      "moves": [
-        {
-          "name": "Tommy Edman",
-          "pos": "2B,3B,OF",
-          "mlb": "LAD",
-          "action": "add",
-          "team": "Stone Jack Ballers",
-          "sourceTeam": "",
-          "destTeam": "Stone Jack Ballers"
-        },
-        {
-          "name": "Mauricio Dubón",
-          "pos": "2B,3B,SS,OF",
-          "mlb": "ATL",
-          "action": "drop",
-          "team": "Stone Jack Ballers",
-          "sourceTeam": "Stone Jack Ballers",
-          "destTeam": ""
-        }
-      ]
     }
   ],
-  "generatedAt": "2026-07-27T11:39:33.307Z"
+  "generatedAt": "2026-07-27T13:11:42.819Z"
 }
