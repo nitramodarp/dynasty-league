@@ -138,18 +138,21 @@ async function fetchMatchups(leagueKey, token) {
     const isTied = (m.is_tied === 1 || m.is_tied === '1');
     const isMOTW = (m.is_matchup_of_the_week === '1' || m.is_matchup_of_the_week === 1);
 
-    let winner, loser, winnerCats, loserCats, winnerStats, loserStats;
+    let winner, loser, winnerKey, loserKey, winnerCats, loserCats, winnerStats, loserStats;
     if (isTied) {
       // No true winner — present in stored order
       winner = t0.name; loser = t1.name;
+      winnerKey = t0.key; loserKey = t1.key;
       winnerCats = cats0; loserCats = cats1;
       winnerStats = t0.stats; loserStats = t1.stats;
     } else if (m.winner_team_key === t0.key) {
       winner = t0.name; loser = t1.name;
+      winnerKey = t0.key; loserKey = t1.key;
       winnerCats = cats0; loserCats = cats1;
       winnerStats = t0.stats; loserStats = t1.stats;
     } else {
       winner = t1.name; loser = t0.name;
+      winnerKey = t1.key; loserKey = t0.key;
       winnerCats = cats1; loserCats = cats0;
       winnerStats = t1.stats; loserStats = t0.stats;
     }
@@ -158,7 +161,7 @@ async function fetchMatchups(leagueKey, token) {
     const score = t > 0 ? `${w}-${l}-${t}` : `${w}-${l}`;
 
     const entry = {
-      winner, loser, score, isTied,
+      winner, loser, winnerKey, loserKey, score, isTied,
       isMatchupOfTheWeek: isMOTW,
       winnerCats, loserCats, tiedCats,
       winnerStats, loserStats,
@@ -170,6 +173,36 @@ async function fetchMatchups(leagueKey, token) {
   }
 
   return { week: lastWeek, weekStart, weekEnd, matchups, matchupOfTheWeek };
+}
+
+// Lean, keyed standings pull — same run as the matchups, so team names and
+// records are always consistent and current. This is what makes the newsletter
+// self-contained: it no longer depends on the STANDINGS tab, which can go stale
+// (or fail to sync) and disagree with the live scoreboard after a team rename.
+async function fetchStandings(leagueKey, token) {
+  const data = await yget(`/league/${leagueKey}/standings`, token);
+  const teamsObj = data.fantasy_content.league[1].standings[0].teams;
+  const teamCount = teamsObj.count || 0;
+  const rows = [];
+  for (let i = 0; i < teamCount; i++) {
+    const teamArr = teamsObj[String(i)].team;
+    const info = teamArr[0];
+    const name = info.find(x => x && x.name)?.name || `Team ${i + 1}`;
+    const key = info.find(x => x && x.team_key)?.team_key || '';
+    const st = teamArr[2]?.team_standings;
+    rows.push({
+      key,
+      name,
+      rank: parseInt(st?.rank ?? (i + 1), 10) || (i + 1),
+      w: parseInt(st?.outcome_totals?.wins ?? 0, 10) || 0,
+      l: parseInt(st?.outcome_totals?.losses ?? 0, 10) || 0,
+      t: parseInt(st?.outcome_totals?.ties ?? 0, 10) || 0,
+      gb: (st?.games_back ?? '-').toString(),   // Yahoo's real GB — never computed downstream
+    });
+  }
+  rows.sort((a, b) => a.rank - b.rank);
+  console.log(`✓ Standings fetched — ${rows.length} teams (keyed)`);
+  return rows;
 }
 
 async function fetchTransactions(leagueKey, token, weekStart, weekEnd) {
@@ -231,6 +264,7 @@ async function main() {
   const leagueKey = await getLeagueKey(token);
   const mu = await fetchMatchups(leagueKey, token);
   const txns = await fetchTransactions(leagueKey, token, mu.weekStart, mu.weekEnd);
+  const standings = await fetchStandings(leagueKey, token);
 
   const output = {
     week: mu.week,
@@ -238,6 +272,7 @@ async function main() {
     weekEnd: mu.weekEnd,
     matchups: mu.matchups,
     matchupOfTheWeek: mu.matchupOfTheWeek,
+    standings,
     transactions: txns,
     generatedAt: new Date().toISOString(),
   };
