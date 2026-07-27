@@ -1,0 +1,112 @@
+# 40s and Blunts Weekly Rolling Coverage
+### Week 17 · The All-Star break was three days; the accounting took longer
+
+---
+
+**MATCHUP OF THE WEEK**
+
+Bad MoFo's defeated The Chicago Way, 5-3-2, and Yahoo saw fit to badge this one as Matchup of the Week, which says something about the week. The Chicago Way took R, RBI, and SV+H and still lost. Bad MoFo's swept the pitching ratios — ERA, WHIP, QS — and added OPS and strikeouts for good measure, while HR and SB finished in a handshake. The Chicago Way entered this matchup 5th in the standings and left it 5th in the standings. The primary thing that changed is that Bad MoFo's is now 3rd in the standings and the phrase "Bad MoFo's is third" has been written in a newsletter without irony.
+
+---
+
+**LAST WEEK'S RESULTS**
+
+**Chief Noc-A-Homa def. F CJ Abrams, 7-3.** Chief Noc-A-Homa took R, HR, RBI, SB, OPS, K, and ERA. F CJ Abrams, showing genuine teeth, answered with WHIP, QS, and SV+H — the kind of pitching-ratio haul that wins matchups against lesser ratio teams. Against the commissioner's squad, it was not enough. It is rarely enough.
+
+**Bad MoFo's def. The Chicago Way, 5-3-2.** See above.
+
+**Bell Biv Devo def. Bip Roberts, 7-3.** This is genuinely good. Bell Biv Devo walked into a matchup against the league's resident powerhouse and took seven categories — R, RBI, SB, OPS, K, ERA, and QS — leaving Bip Roberts with HR, WHIP, and SV+H and a Monday morning that did not go as planned. Bip Roberts is 4th in the standings. Bell Biv Devo is 7th. The gap between those two facts was supposed to be the story this week. It was not.
+
+**Section 34 def. Grand Theft Votto, 8-2.** Grand Theft Votto won SB and K. That is the list. Section 34 took everything else — R, HR, RBI, OPS, ERA, WHIP, QS, SV+H — and did so without apparent difficulty. Grand Theft Votto is currently 3.5 games back of the playoff line with five weeks to play.
+
+**Stone Jack Ballers def. Old Fashioned, 6-2-2.** Stone Jack took R, HR, RBI, OPS, K, and WHIP. Old Fashioned, operating at whatever frequency Old Fashioned operates at, actually claimed SB and ERA. QS and SV+H finished tied. Credit where it is due: two categories and two ties against an actively managed roster is a performance that would be encouraging if there were any indication the lineup was set intentionally.
+
+**L-A-Loosh def. MayTheSchwarBeWithU, 9-1.** L-A-Loosh took nine categories. MayTheSchwarBeWithU took RBI. The nine categories L-A-Loosh took were R, HR, SB, OPS, K, ERA, WHIP, QS, and SV+H. It is July. L-A-Loosh is doing this in July. Nine titles. The league keeps not worrying about this.
+
+---
+
+**POWER RANKINGS**
+
+1. **Chief Noc-A-Homa (96-58-6)** — First place by 4 games and building ERA tables like a HOA treasurer nobody elected.
+2. **Stone Jack Ballers (90-60-10)** — Second place, 4 back. Close enough to smell it, far enough to be polite about it.
+3. **Bad MoFo's (86-65-9)** — Third. In the standings. Right now. This column will not be revisiting that sentence because it speaks for itself.
+4. **Bip Roberts (81-70-9)** — Got taken apart by a 7th-place team and still holds fourth. The structural advantage of being Bip Roberts.
+5. **The Chicago Way (79-74-7)** — Lost to Bad MoFo's, somehow only 3 spots behind them. Fine. This is fine.
+6. **L-A-Loosh (72-77-11)** — Won 9-1 in July, sits 21.5 games back, holds the last playoff spot by 1.5. The sleeping giant is not asleep. This is everyone's problem.
+7. **Bell Biv Devo (71-79-10)** — Beat Bip Roberts 7-3. One and a half games out of the playoffs. The resume is there.
+8. **Section 34 (67-75-18)** — Also 1.5 back, also just won 8-2. Eighteen ties. Eighteen. The league has opinions about this.
+9. **Grand Theft Votto (69-81-10)** — 3.5 back. Won two categories in an 8-2 loss. The math is not cooperating.
+10. **Thurgood Jenkins (68-81-11)** — 4 back, no matchup data this week, which means Week 17 passed more or less as a weather event.
+11. **MayTheSchwarBeWithU (69-83-8)** — Gave up nine categories to L-A-Loosh. Four and a half back. The RBI category was won; this is acknowledged.
+12. **Old Fashioned (54-99-7, 41.5 GB)** — Won SB and ERA against Stone Jack Ballers. The number 41.5 appears in the standings column labeled "GB." We report; you decide.
+
+---
+
+**PLAYOFF PICTURE**
+
+The top six currently sit: Chief Noc-A-Homa, Stone Jack Ballers, Bad MoFo's, Bip Roberts, The Chicago Way, and L-A-Loosh — in, all six of them, with 1.5 separating L-A-Loosh from the cut line. Below it, Bell Biv Devo and Section 34 are each exactly 1.5 back of that sixth seat, tied in deficit if not in record, with five weeks and roughly fifty category decisions remaining. Grand Theft Votto is 3.5 back. Thurgood Jenkins is 4 back. MayTheSchwarBeWithU is 4.5 back.
+
+The bubble is genuinely crowded, and L-A-Loosh just went 9-1. Bell Biv Devo just beat Bip Roberts. Section 34 just won 8-2. None of these teams are behaving like teams that have accepted their situation. What happens below the cut line in the next two weeks will matter considerably.
+
+Old Fashioned is 20 games back of the sixth seed. This paragraph exists for completeness.
+
+---
+
+**QUESTIONABLE ACTIVITY**
+
+Stone Jack Ballers added Tommy Edman on Sunday evening, dropped him Tuesday at 11:54 PM to make room for Ben Brown, added Eugenio Suárez three minutes later, then brought Edman back on Wednesday and dropped him again on Sunday. Tommy Edman spent the week as a revolving door in the Stone Jack roster — added, dropped, re-added, dropped again — which is either a meticulous deployment strategy or what happens when you refuse to commit to a decision during the All-Star break. Stone Jack Ballers finished second in the standings, so the methodology is not currently up for debate.
+
+F CJ Abrams treated the week as a pitching carousel. Nick Gonzales and Gage Jump came in Monday. Casey Mize replaced André Pallante on Thursday. Michael McGreevy replaced Mize on Sunday. A Shane Drohan spot start appeared Friday and was gone by Saturday. Tanner Bibee came back Saturday, replacing Drohan. Dalton Rushing arrived Sunday morning. The roster turned over almost entirely across eleven days, and the result was a 3-7 loss to the commissioner. We have reviewed the activity log and can confirm it is accurate.
+
+Section 34 made five moves on the morning of July 16 — Jack Flaherty, Andrew Morris, Josuar Gonzalez, Garrett Cleavinger, and Michael Wacha — then followed up later in the week with Brady Singer, who lasted three days before being swapped for Robert Gasser. The overall shape of the activity suggests a person who planned their Thursday morning with the energy of someone who had been waiting since Monday.
+
+L-A-Loosh dropped Freddy Peralta to add Brandyn Garcia. The team that just won 9-1 decided its bullpen needed attention. Perhaps it did. Perhaps the 9-1 line was not the relevant signal here. Either way: Tyler Wells and Cody Bellinger also arrived this week, and the rotation now contains people who are actually on major-league rosters, which L-A-Loosh apparently found preferable to Devin Williams.
+
+The Chicago Way made five moves in an 18-minute window on July 17 — Kody Clemens, dropping Justin Sterner, Luke Weaver, Ezequiel Duran, Shane Baz — and then lost the matchup anyway. Full credit for the effort. The outcome is a separate matter.
+
+Bell Biv Devo added JoJo Romero on Friday, dropped him Sunday, added Kyle Leahy on Monday, then added Shane Bieber on Wednesday. The Romero-to-Leahy-to-Bieber arc covers nine days and ends in a reasonable place. The detour was the notable part.
+
+Bad MoFo's added Eduard Bazardo on Thursday, dropped him five days later. Picked up a win against The Chicago Way in the interim. Unclear whether Bazardo contributed. His tenure has ended.
+
+---
+
+**SALARY STOCK TICKER**
+
+```
+SALARY STOCK TICKER — WEEK 17
+(prices move with production; this is who re-rated)
+
+RISERS ▲
+  Drake Baldwin        $3M -> $30M      ▲ $27M   Chief Noc-A-Homa
+  Willson Contreras    $30M -> $40M     ▲ $10M   Stone Jack Ballers
+  Elly De La Cruz      $30M -> $40M     ▲ $10M   L-A-Loosh
+  Justin Wrobleski     $20M -> $30M     ▲ $10M   Bad MoFo's
+  Tarik Skubal         $20M -> $30M     ▲ $10M   Bell Biv Devo
+
+FALLERS ▼
+  Braxton Ashcraft     $30M -> $10M     ▼ $20M   Section 34
+  Bryce Harper         $40M -> $30M     ▼ $10M   Chief Noc-A-Homa
+  Byron Buxton         $40M -> $30M     ▼ $10M   Chief Noc-A-Homa
+  Dylan Lee            $40M -> $30M     ▼ $10M   Chief Noc-A-Homa
+  Bryan Reynolds       $40M -> $30M     ▼ $10M   Bell Biv Devo
+```
+
+Chief Noc-A-Homa is first in the standings, and three of its players dropped in value this week. First place has its own accounting department.
+
+---
+
+**THIS WEEK IN VALUE**
+
+- **The Moneyball Award — MayTheSchwarBeWithU:** 29.5 wins per $100M ($234M payroll, 69 wins). A team that gave up nine categories to L-A-Loosh on Saturday is, technically, the league's best value roster. The award is real. The week was not.
+
+- **The Salary-Cap Sucker — F CJ Abrams:** 0 wins per $100M ($356M payroll, 0 wins). The team cycled through seven pitchers in eleven days and holds the most expensive winless record in the league. These numbers are presented without further comment.
+
+- **Dead Money — Grand Theft Votto:** $73M of salary on the IL. Won two categories. The math between those two facts is left as an exercise for the reader.
+
+- **The $3M Hero — Drake Baldwin (Chief Noc-A-Homa):** up $27M this week. A $3M catcher producing like a $30M catcher is the kind of inefficiency that makes everyone else feel slightly worse about their roster decisions.
+
+- **The $40M Ghost — Bryce Harper (Chief Noc-A-Homa):** down $10M this week. First place, three declining assets. The commissioner contains multitudes.
+
+---
+
+Week 18 begins today. The trade deadline is Thursday, August 20 — five weeks from Thursday, for those tracking it. The All-Star break is behind us; the long stretch of real baseball is ahead. Eleven days of this matchup came and went. The next one will be a standard seven, which will feel short by comparison and is not.
