@@ -1,12 +1,14 @@
 # .github/workflows/newsletter.yml
-# Every Monday 11 AM ET: sync the completed week's data, generate the newsletter,
+# Every Monday 6:30 AM ET: sync the completed week's data, generate the newsletter,
 # commit it to data/newsletters/. You review and copy it to WhatsApp/email.
+# Start time is buffered ~1 hr before 7:30 so it completes even if GitHub's
+# scheduler lags (scheduled runs are best-effort and often delayed 5-20 min).
 
 name: Generate Newsletter
 
 on:
   schedule:
-    - cron: '0 12 * * 1'   # Monday 8 AM ET (EDT, UTC-4)
+    - cron: '30 10 * * 1'   # Mon 6:30 AM ET in-season (EDT, UTC-4); fires 5:30 AM ET in winter (EST). GitHub cron is UTC-only and can't follow DST.
   workflow_dispatch:
 
 permissions:
