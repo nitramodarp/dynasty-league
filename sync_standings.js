@@ -55,10 +55,22 @@ async function yahooGet(path, token) {
 // ── LEAGUE KEY ────────────────────────────────────────────────────────────────
 
 async function getLeagueKey(token) {
-  const data    = await yahooGet('/users;use_login=1/games;game_keys=mlb/leagues', token);
-  const league  = data.fantasy_content.users[0].user[1].games[0].game[1].leagues[0].league[0];
-  console.log(`✓ League: ${league.name} (${league.league_key})`);
-  return league.league_key;
+  // League discovery hits /users;use_login=1, a USER-scoped endpoint on a
+  // different permission surface than league reads. When Yahoo breaks or
+  // restricts it, every script dies here before doing any real work — so fall
+  // back to the known key rather than failing the whole run.
+  const configured = (process.env.YAHOO_LEAGUE_KEY || '469.l.3862').trim();
+  try {
+    const data    = await yahooGet('/users;use_login=1/games;game_keys=mlb/leagues', token);
+    const league  = data.fantasy_content.users[0].user[1].games[0].game[1].leagues[0].league[0];
+    console.log(`✓ League: ${league.name} (${league.league_key})`);
+    return league.league_key;
+  } catch (e) {
+    const first = String(e.message || e).split('\n')[0];
+    console.log(`⚠ League discovery failed (${first})`);
+    console.log(`  → falling back to configured league key: ${configured}`);
+    return configured;
+  }
 }
 
 // ── STANDINGS FETCH ───────────────────────────────────────────────────────────
