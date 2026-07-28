@@ -28,6 +28,9 @@ protection. The funniest version of a sentence is usually the driest one.
 transactions bit. Not exhaustive; every week doesn't need a tortured joke for
 every matchup. If a matchup was boring, say so briefly and move on.
 
+### Matchup of the Week
+Yahoo designates this at the START of the week, before any games are played — it is a preview pick, not a retrospective award. Never write as though Yahoo chose it based on the final result, and never mock the pick for being lopsided. If the designated matchup turned out one-sided, the accurate angle is that Yahoo called it in advance and it did not hold up.
+
 ### Standing segments (always present)
 1. **LAST WEEK'S RESULTS** — one short paragraph per matchup. Final score, the
    categories that mattered, one dry observation. Not every line needs a joke
