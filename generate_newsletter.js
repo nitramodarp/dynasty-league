@@ -272,7 +272,17 @@ function describeTransactions(txns) {
       return `${mv.action === 'add' ? 'added' : 'dropped'} ${mv.name} (${mv.pos}, ${mv.mlb})${tag}`;
     });
     const team = t.moves[0]?.team || 'A team';
-    return `[${fmtEt(t.timestamp)}] ${team}: ${parts.join('; ')}`;
+    // A drop with NO paired add means the manager needed a roster spot, not that
+    // they soured on the player — almost always activating someone off the IL or
+    // a prospect losing NA eligibility. Rosters are full; nobody cuts for fun.
+    const hasAdd    = t.moves.some(mv => mv.action === 'add');
+    const drops     = t.moves.filter(mv => mv.action === 'drop');
+    // A streamer being cut after his start is a CHOICE, not a squeeze — don't
+    // label those as forced, or the two tags contradict each other.
+    const allStreamerDrops = drops.length > 0 && drops.every(mv => streamed.has(mv.name));
+    const crunchTag = (!hasAdd && drops.length > 0 && !allStreamerDrops)
+      ? ' [roster crunch — no add; spot was needed]' : '';
+    return `[${fmtEt(t.timestamp)}] ${team}: ${parts.join('; ')}${crunchTag}`;
   }).join('\n');
 }
 
@@ -522,6 +532,14 @@ Write "40s and Blunts Weekly Rolling Coverage" for Week ${data.week}. Structure:
    dropped by one team within 24 hours, almost always a two-start pitcher grabbed
    for a day of counting stats. Treat these as normal, competent strategy; never
    frame a [streamer] move as suspicious, indecisive, or questionable.
+   Moves tagged [roster crunch] are drops with NO accompanying add. On full
+   30-man rosters this means the manager was FORCED to open a spot — activating a
+   player off the IL, or a prospect losing NA eligibility — not that they soured
+   on the player. Never mock a [roster crunch] drop as indecision, panic, or a
+   change of heart. If it fits, note dryly that the roster made the decision. And
+   when a player is dropped, re-added, and dropped again across an issue, do NOT
+   narrate it as the manager being fickle unless the drops are paired with adds;
+   forced moves can produce that pattern with no whim involved.
 7. **SALARY STOCK TICKER** — reproduce the ticker block above EXACTLY as given
    (names, teams, dollar figures verbatim, in a code block so it stays aligned).
    You may add one short deadpan line before or after it. If it says baseline was
