@@ -188,5 +188,4 @@ The trade deadline is Thursday, August 20.
 A note on the numbers: the salary ledger is frozen. Yahoo changed how it grants
 API access last week and cut off existing applications mid-season, including
 ours. Payrolls, the stock ticker, and the value awards are unavailable until
-access is restored, which has been applied for. Everything above was compiled by
-hand. Standings and results are accurate; the money is on hold.
+access is restored, which has been applied for. Damn the man. 
