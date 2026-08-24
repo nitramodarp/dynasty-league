@@ -94,7 +94,7 @@ Bip Roberts sits eighth, 19.5 back and three behind Chicago — alive, barely,
 after Sunday's sweep cost it the ground it would have needed.
 
 None of these three teams play each other in the final week. Chicago plays the
-league's presumptive #1 seed. Votto plays a top-four team. Section 34 plays
+team fighting to reclaim the #1 spot. Votto plays a top-four team. Section 34 plays
 the team fighting Chief for the top of the bracket. Nobody controls their own
 fate directly — all three just have to win, and hope the scoreboard breaks
 their way.
